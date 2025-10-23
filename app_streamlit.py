@@ -69,7 +69,7 @@ with tab1:
     st.header("Temukan Perpustakaan Terbaik di Kota Anda")
     
     if not library_data.empty:
-        available_cities = sorted(library_data['kota'].unique())
+        available_cities = sorted(library_data['city'].unique())
         if available_cities:
             selected_city = st.selectbox(
                 "📍 Pilih Kota Anda:",
@@ -82,7 +82,7 @@ with tab1:
                 st.markdown("---")
                 st.subheader(f"Rekomendasi Perpustakaan Terbaik di {selected_city}:")
                 
-                city_libraries = library_data[library_data['kota'] == selected_city].copy()
+                city_libraries = library_data[library_data['city'] == selected_city].copy()
                 recommended_libraries = city_libraries.sort_values(by='skor_kualitas', ascending=False)
 
                 if not recommended_libraries.empty:
@@ -148,6 +148,7 @@ with tab2:
 # --- 7. Footer ---
 st.markdown("---")
 st.caption("Dibuat oleh Nanda | Analisis Sentimen & Sistem Rekomendasi Perpustakaan 📚")
+
 
 
 
