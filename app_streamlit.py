@@ -30,7 +30,7 @@ def load_models():
         return None, None, None
 
 @st.cache_data
-def load_library_data(file_path="data/data_perpustakaan_review.csv"):
+def load_library_data(file_path="data_perpustakaan_review.csv"):
     """
     Memuat data perpustakaan yang sudah diolah dari file CSV.
     File ini digunakan untuk Tab Rekomendasi.
@@ -148,5 +148,6 @@ with tab2:
 # --- 7. Footer ---
 st.markdown("---")
 st.caption("Dibuat oleh Nanda | Analisis Sentimen & Sistem Rekomendasi Perpustakaan 📚")
+
 
 
