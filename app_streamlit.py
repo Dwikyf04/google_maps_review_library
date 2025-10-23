@@ -3,7 +3,7 @@
 import streamlit as st
 import pandas as pd
 import joblib
-import numpy as np  # Diperlukan oleh model scikit-learn
+import numpy as np
 
 # --- Konfigurasi Halaman ---
 st.set_page_config(page_title="Analisis & Rekomendasi Perpus", layout="wide")
@@ -14,7 +14,6 @@ st.set_page_config(page_title="Analisis & Rekomendasi Perpus", layout="wide")
 def load_models():
     """
     Memuat model TF-IDF, SVM, dan K-Means dari file .pkl.
-    Fungsi ini hanya dijalankan sekali.
     """
     try:
         tfidf = joblib.load("Models/tfidf_vectorizer.pkl")
@@ -23,7 +22,6 @@ def load_models():
         return tfidf, svm_model, kmeans_model
     except FileNotFoundError:
         st.error("File model (.pkl) tidak ditemukan di folder /Models.")
-        st.warning("Pastikan folder 'Models' berisi file .pkl sudah ada di repositori GitHub.")
         return None, None, None
     except Exception as e:
         st.error(f"Gagal memuat model: {e}")
@@ -32,30 +30,63 @@ def load_models():
 @st.cache_data
 def load_library_data(file_path="data_perpustakaan.csv"):
     """
-    Memuat data perpustakaan yang sudah diolah dari file CSV.
+    Memuat data perpustakaan yang SUDAH DIOLAH (RINGKASAN) dari file CSV.
     File ini digunakan untuk Tab Rekomendasi.
     """
     try:
         df = pd.read_csv(file_path)
+        # (Pastikan nama kolom 'kota' dan 'nama_perpustakaan' sesuai dengan file Anda)
         df['rating'] = pd.to_numeric(df['rating'], errors='coerce')
         df['skor_kualitas'] = pd.to_numeric(df['skor_kualitas'], errors='coerce')
         df['persen_positif'] = pd.to_numeric(df['persen_positif'], errors='coerce')
-        df.dropna(subset=['skor_kualitas', 'rating', 'city', 'Place_name'], inplace=True)
+        df['latitude'] = pd.to_numeric(df['latitude'], errors='coerce')
+        df['longitude'] = pd.to_numeric(df['longitude'], errors='coerce')
+        df.dropna(subset=['skor_kualitas', 'rating', 'city', 'Place_name', 'latitude', 'longitude'], inplace=True)
         return df
     except FileNotFoundError:
-        st.error(f"File data '{file_path}' tidak ditemukan.")
-        st.warning("Pastikan file 'data_perpustakaan.csv' sudah ada di repositori GitHub.")
+        st.error(f"File data '{file_path}' (RINGKASAN) tidak ditemukan.")
+        return pd.DataFrame()
+    except KeyError as e:
+        st.error(f"Kolom {e} tidak ditemukan di 'data_perpustakaan.csv'.")
         return pd.DataFrame()
     except Exception as e:
-        st.error(f"Terjadi kesalahan saat memuat data CSV: {e}")
+        st.error(f"Terjadi kesalahan saat memuat data CSV (Ringkasan): {e}")
         return pd.DataFrame()
 
-# --- 2. Memuat Semua Data & Model ---
+# --- BARU: Fungsi untuk memuat SEMUA ulasan individual ---
+@st.cache_data
+def load_review_data(file_path="data_perpustakaan_review.csv"):
+    """
+    Memuat data ulasan MENTAH/INDIVIDUAL dari file CSV.
+    File ini digunakan untuk menampilkan contoh ulasan.
+    """
+    try:
+        # Kita hanya butuh kolom-kolom ini untuk menghemat memori
+        df_reviews = pd.read_csv(
+            file_path,
+            usecols=['nama_perpustakaan', 'sentimen', 'preprocessed'] 
+        )
+        df_reviews.dropna(inplace=True)
+        return df_reviews
+    except FileNotFoundError:
+        st.warning(f"File '{file_path}' (Ulasan Individual) tidak ditemukan. Contoh ulasan tidak akan ditampilkan.")
+        return pd.DataFrame()
+    except ValueError:
+        # Error jika usecols tidak ditemukan
+        st.warning(f"Kolom di '{file_path}' tidak lengkap. Setidaknya butuh 'nama_perpustakaan', 'sentimen', 'preprocessed'.")
+        return pd.DataFrame()
+    except Exception as e:
+        st.warning(f"Gagal memuat file ulasan individual: {e}")
+        return pd.DataFrame()
+# ---------------------------------------------------------
 
-# Memuat model untuk Tab 2
+
+# --- 2. Memuat Semua Data & Model ---
 tfidf, svm_model, kmeans_model = load_models()
-# Memuat data CSV untuk Tab 1
 library_data = load_library_data()
+# --- BARU: Memuat semua ulasan ---
+all_reviews = load_review_data()
+# ---------------------------------
 
 # --- 3. Judul Utama Aplikasi ---
 st.title("📊 Sistem Analisis & Rekomendasi Ulasan Perpustakaan")
@@ -64,7 +95,7 @@ st.markdown("Pilih tab di bawah untuk melihat rekomendasi perpustakaan atau meng
 # --- 4. Membuat Tab ---
 tab1, tab2 = st.tabs(["🏆 Rekomendasi Perpustakaan", "🔍 Analisis Ulasan Individual"])
 
-# --- 5. Isi Tab 1: Rekomendasi Perpustakaan (Kode Aplikasi #2) ---
+# --- 5. Isi Tab 1: Rekomendasi Perpustakaan ---
 with tab1:
     st.header("Temukan Perpustakaan Terbaik di Kota Anda")
     
@@ -83,10 +114,16 @@ with tab1:
                 st.subheader(f"Rekomendasi Perpustakaan Terbaik di {selected_city}:")
                 
                 city_libraries = library_data[library_data['city'] == selected_city].copy()
-                recommended_libraries = city_libraries.sort_values(by='skor_kualitas', ascending=False)
+                recommended_libraries = city_libraries.sort_values(by='skor_kualitas', ascending=False).head(5)
 
                 if not recommended_libraries.empty:
-                    for i, (_, row) in enumerate(recommended_libraries.head(5).iterrows()):
+                    # Tampilkan Peta
+                    st.subheader("Peta Lokasi Teratas")
+                    map_data = recommended_libraries[['latitude', 'longitude']]
+                    st.map(map_data)
+                    
+                    st.subheader("Detail Peringkat")
+                    for i, (_, row) in enumerate(recommended_libraries.iterrows()):
                         st.markdown(f"#### {i + 1}. {row['Place_name']}")
                         col1, col2 = st.columns(2)
                         with col1:
@@ -98,43 +135,76 @@ with tab1:
                                 st.metric(label="💯 Skor Kualitas", value=f"{row['skor_kualitas']:.2f}")
                         
                         if 'url_google_maps' in row and pd.notna(row['url_google_maps']) and row['url_google_maps'].startswith('http'):
-                            st.link_button("Lihat di Google Maps 😎", row['url_google_maps'])
+                            st.link_button("Lihat di Google Maps ↗️", row['url_google_maps'])
+
+                        # --- BARU: Expander untuk menampilkan ulasan ---
+                        with st.expander(f"Lihat contoh ulasan untuk {row['Place_name']}"):
+                            if not all_reviews.empty:
+                                # Filter ulasan untuk perpustakaan ini
+                                library_reviews = all_reviews[all_reviews['Place_name'] == row['Place_name']]
+                                
+                                # Tampilkan 3 ulasan positif teratas
+                                st.write("**Contoh Ulasan Positif:**")
+                                pos_reviews = library_reviews[library_reviews['sentiment'] == 'Positive']['preprocessed'].head(3)
+                                if not pos_reviews.empty:
+                                    for review_text in pos_reviews:
+                                        st.success(f"• {review_text}")
+                                else:
+                                    st.caption("Tidak ada contoh ulasan positif.")
+                                
+                                # Tampilkan 3 ulasan negatif teratas
+                                st.write("**Contoh Ulasan Negatif:**")
+                                # Ganti 'Negatif' dengan label negatif Anda jika berbeda
+                                neg_reviews = library_reviews[library_reviews['sentiment'] == 'Negative']['preprocessed'].head(3)
+                                if not neg_reviews.empty:
+                                    for review_text in neg_reviews:
+                                        st.warning(f"• {review_text}")
+                                else:
+                                    st.caption("Tidak ada contoh ulasan negatif.")
+                            else:
+                                st.caption("File ulasan individual tidak dapat dimuat.")
+                        # ---------------------------------------------
                         st.divider()
                 else:
                     st.info(f"Belum ada data rekomendasi perpustakaan untuk {selected_city}.")
         else:
             st.warning("Tidak ada data kota yang tersedia di file CSV.")
     else:
-        st.error("Data perpustakaan tidak dapat dimuat. Periksa file 'data_perpustakaan.csv'.")
+        st.error("Data perpustakaan (Ringkasan) tidak dapat dimuat.")
 
-# --- 6. Isi Tab 2: Analisis Ulasan Individual (Kode Aplikasi #1) ---
+# --- 6. Isi Tab 2: Analisis Ulasan Individual ---
 with tab2:
-    st.header("Analisis Sentimen & Cluster Ulasan Baru")
+    st.header("Analisis Sentimen & Topik Ulasan Baru")
     st.markdown("Model: **SVM (Sentimen)** + **K-Means (Clustering)** + **TF-IDF (Feature Extraction)**")
 
-    # Memeriksa apakah model berhasil dimuat
+    # (Pastikan nama cluster ini sesuai dengan analisis Anda)
+    nama_cluster = {
+        0: "Fasilitas & Kenyamanan",
+        1: "Kelengkapan Koleksi Buku",
+        2: "Kualitas Pelayanan Staf"
+    }
+
     if tfidf is not None and svm_model is not None and kmeans_model is not None:
         user_input = st.text_area("Masukkan ulasan pengguna di sini:", "", key="input_ulasan")
 
         if st.button("Analisis Ulasan"):
             if user_input.strip():
                 try:
-                    # Proses prediksi
                     X = tfidf.transform([user_input])
                     sentiment_pred = svm_model.predict(X)[0]
                     cluster_pred = kmeans_model.predict(X)[0]
-
+                    cluster_name = nama_cluster.get(cluster_pred, f"Cluster {cluster_pred}")
+                    
                     st.subheader("🔍 Hasil Analisis:")
                     st.write(f"**Sentimen:** {sentiment_pred}")
-                    st.write(f"**Cluster:** {cluster_pred}")
-
-                    # Rekomendasi berdasarkan cluster
+                    st.write(f"**Topik Utama Ulasan:** {cluster_name}")
+                    
                     if cluster_pred == 0:
-                        st.success("📚 Rekomendasi: Ulasan ini mirip dengan kelompok pembaca yang memberikan **ulasan positif** dan sering merekomendasikan layanan pustaka digital.")
+                        st.success(f"📚 Rekomendasi: Ulasan ini berfokus pada **{cluster_name}**.")
                     elif cluster_pred == 1:
-                        st.info("🧐 Rekomendasi: Ulasan ini termasuk kelompok dengan **penilaian netral**, mungkin perlu peningkatan pelayanan.")
+                        st.info(f"🧐 Rekomendasi: Ulasan ini berfokus pada **{cluster_name}**.")
                     else:
-                        st.warning("😔 Rekomendasi: Termasuk cluster dengan **ulasan negatif**, fokuskan perbaikan pada pengalaman pengunjung.")
+                        st.warning(f"😔 Rekomendasi: Ulasan ini berfokus pada **{cluster_name}**.")
                 
                 except Exception as e:
                     st.error(f"Gagal melakukan prediksi: {e}")
@@ -144,14 +214,6 @@ with tab2:
     else:
         st.error("Model analisis (SVM/K-Means/TF-IDF) gagal dimuat. Tab ini tidak dapat berfungsi.")
 
-
 # --- 7. Footer ---
 st.markdown("---")
 st.caption("Dibuat oleh Nanda | Analisis Sentimen & Sistem Rekomendasi Perpustakaan 📚")
-
-
-
-
-
-
-
