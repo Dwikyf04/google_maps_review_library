@@ -64,7 +64,7 @@ def load_review_data(file_path="data_perpustakaan_review.csv"):
         # Kita hanya butuh kolom-kolom ini untuk menghemat memori
         df_reviews = pd.read_csv(
             file_path,
-            usecols=['Place_name', 'sentiment', 'preprocessed'] 
+            usecols=['Place_name', 'sentiment', 'Komentar'] 
         )
         df_reviews.dropna(inplace=True)
         return df_reviews
@@ -73,7 +73,7 @@ def load_review_data(file_path="data_perpustakaan_review.csv"):
         return pd.DataFrame()
     except ValueError:
         # Error jika usecols tidak ditemukan
-        st.warning(f"Kolom di '{file_path}' tidak lengkap. Setidaknya butuh 'Place_name', 'sentiment', 'preprocessed'.")
+        st.warning(f"Kolom di '{file_path}' tidak lengkap. Setidaknya butuh 'Place_name', 'sentiment', 'Komentar'.")
         return pd.DataFrame()
     except Exception as e:
         st.warning(f"Gagal memuat file ulasan individual: {e}")
@@ -145,7 +145,7 @@ with tab1:
                                 
                                 # Tampilkan 3 ulasan positif teratas
                                 st.write("**Contoh Ulasan Positif:**")
-                                pos_reviews = library_reviews[library_reviews['sentiment'] == 'Positive']['preprocessed'].head(3)
+                                pos_reviews = library_reviews[library_reviews['sentiment'] == 'Positive']['Komentar'].head(3)
                                 if not pos_reviews.empty:
                                     for review_text in pos_reviews:
                                         st.success(f"• {review_text}")
@@ -155,7 +155,7 @@ with tab1:
                                 # Tampilkan 3 ulasan negatif teratas
                                 st.write("**Contoh Ulasan Negatif:**")
                                 # Ganti 'Negatif' dengan label negatif Anda jika berbeda
-                                neg_reviews = library_reviews[library_reviews['sentiment'] == 'Negative']['preprocessed'].head(3)
+                                neg_reviews = library_reviews[library_reviews['sentiment'] == 'Negative']['Komentar'].head(3)
                                 if not neg_reviews.empty:
                                     for review_text in neg_reviews:
                                         st.warning(f"• {review_text}")
@@ -217,4 +217,5 @@ with tab2:
 # --- 7. Footer ---
 st.markdown("---")
 st.caption("Dibuat oleh Nanda | Analisis Sentimen & Sistem Rekomendasi Perpustakaan 📚")
+
 
