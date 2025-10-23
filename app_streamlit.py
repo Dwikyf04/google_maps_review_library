@@ -98,7 +98,7 @@ with tab1:
                                 st.metric(label="💯 Skor Kualitas", value=f"{row['skor_kualitas']:.2f}")
                         
                         if 'url_google_maps' in row and pd.notna(row['url_google_maps']) and row['url_google_maps'].startswith('http'):
-                            st.link_button("Lihat di Google Maps ↗️", row['url_google_maps'])
+                            st.link_button("Lihat di Google Maps 😎", row['url_google_maps'])
                         st.divider()
                 else:
                     st.info(f"Belum ada data rekomendasi perpustakaan untuk {selected_city}.")
@@ -148,6 +148,7 @@ with tab2:
 # --- 7. Footer ---
 st.markdown("---")
 st.caption("Dibuat oleh Nanda | Analisis Sentimen & Sistem Rekomendasi Perpustakaan 📚")
+
 
 
 
