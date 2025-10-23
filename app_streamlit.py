@@ -105,7 +105,7 @@ with tab1:
         else:
             st.warning("Tidak ada data kota yang tersedia di file CSV.")
     else:
-        st.error("Data perpustakaan tidak dapat dimuat. Periksa file 'data/data_perpustakaan.csv'.")
+        st.error("Data perpustakaan tidak dapat dimuat. Periksa file 'data_perpustakaan.csv'.")
 
 # --- 6. Isi Tab 2: Analisis Ulasan Individual (Kode Aplikasi #1) ---
 with tab2:
@@ -148,4 +148,5 @@ with tab2:
 # --- 7. Footer ---
 st.markdown("---")
 st.caption("Dibuat oleh Nanda | Analisis Sentimen & Sistem Rekomendasi Perpustakaan 📚")
+
 
