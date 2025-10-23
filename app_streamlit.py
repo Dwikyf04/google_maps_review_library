@@ -64,7 +64,7 @@ def load_review_data(file_path="data_perpustakaan_review.csv"):
         # Kita hanya butuh kolom-kolom ini untuk menghemat memori
         df_reviews = pd.read_csv(
             file_path,
-            usecols=['nama_perpustakaan', 'sentimen', 'preprocessed'] 
+            usecols=['Place_name', 'sentiment', 'preprocessed'] 
         )
         df_reviews.dropna(inplace=True)
         return df_reviews
@@ -73,7 +73,7 @@ def load_review_data(file_path="data_perpustakaan_review.csv"):
         return pd.DataFrame()
     except ValueError:
         # Error jika usecols tidak ditemukan
-        st.warning(f"Kolom di '{file_path}' tidak lengkap. Setidaknya butuh 'nama_perpustakaan', 'sentimen', 'preprocessed'.")
+        st.warning(f"Kolom di '{file_path}' tidak lengkap. Setidaknya butuh 'Place_name', 'sentiment', 'preprocessed'.")
         return pd.DataFrame()
     except Exception as e:
         st.warning(f"Gagal memuat file ulasan individual: {e}")
@@ -217,3 +217,4 @@ with tab2:
 # --- 7. Footer ---
 st.markdown("---")
 st.caption("Dibuat oleh Nanda | Analisis Sentimen & Sistem Rekomendasi Perpustakaan 📚")
+
