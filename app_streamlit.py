@@ -87,7 +87,7 @@ with tab1:
 
                 if not recommended_libraries.empty:
                     for i, (_, row) in enumerate(recommended_libraries.head(5).iterrows()):
-                        st.markdown(f"#### {i + 1}. {row['nama_perpustakaan']}")
+                        st.markdown(f"#### {i + 1}. {row['Place_name']}")
                         col1, col2 = st.columns(2)
                         with col1:
                             st.metric(label="⭐ Rating Google", value=f"{row['rating']:.1f} / 5")
@@ -148,6 +148,7 @@ with tab2:
 # --- 7. Footer ---
 st.markdown("---")
 st.caption("Dibuat oleh Nanda | Analisis Sentimen & Sistem Rekomendasi Perpustakaan 📚")
+
 
 
 
