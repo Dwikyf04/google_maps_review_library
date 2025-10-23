@@ -30,7 +30,7 @@ def load_models():
         return None, None, None
 
 @st.cache_data
-def load_library_data(file_path="data_perpustakaan_review.csv"):
+def load_library_data(file_path="data_perpustakaan.csv"):
     """
     Memuat data perpustakaan yang sudah diolah dari file CSV.
     File ini digunakan untuk Tab Rekomendasi.
@@ -40,7 +40,7 @@ def load_library_data(file_path="data_perpustakaan_review.csv"):
         df['rating'] = pd.to_numeric(df['rating'], errors='coerce')
         df['skor_kualitas'] = pd.to_numeric(df['skor_kualitas'], errors='coerce')
         df['persen_positif'] = pd.to_numeric(df['persen_positif'], errors='coerce')
-        df.dropna(subset=['skor_kualitas', 'rating', 'kota', 'nama_perpustakaan'], inplace=True)
+        df.dropna(subset=['skor_kualitas', 'rating', 'city', 'Place_name'], inplace=True)
         return df
     except FileNotFoundError:
         st.error(f"File data '{file_path}' tidak ditemukan.")
@@ -148,6 +148,7 @@ with tab2:
 # --- 7. Footer ---
 st.markdown("---")
 st.caption("Dibuat oleh Nanda | Analisis Sentimen & Sistem Rekomendasi Perpustakaan 📚")
+
 
 
 
