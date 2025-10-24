@@ -111,13 +111,27 @@ with tab1:
                 index=None,
                 placeholder="Pilih kota..."
             )
+            sort_options = {
+                "Skor Terbaik (Rekomendasi)": "skor_kualitas",
+                "Rating Google Tertinggi": "rating",
+                "Sentimen Paling Positif": "persen_positif"
+            }
+            
+            # Buat selectbox untuk memilih cara urut
+            sort_by_label = st.selectbox(
+                "📊 Urutkan berdasarkan:",
+                options=sort_options.keys() # Tampilkan label yang mudah dibaca
+            )
+            
+            # Dapatkan nama kolom teknis dari pilihan pengguna
+            sort_by_column = sort_options[sort_by_label]
 
             if selected_city:
                 st.markdown("---")
                 st.subheader(f"Rekomendasi Perpustakaan Terbaik di {selected_city}:")
                 
                 city_libraries = library_data[library_data['city'] == selected_city].copy()
-                recommended_libraries = city_libraries.sort_values(by='skor_kualitas', ascending=False).head(5)
+                recommended_libraries = city_libraries.sort_values(by=sort_by_column, ascending=False).head(5)
 
                 if not recommended_libraries.empty:
                     # Tampilkan Peta
@@ -239,6 +253,7 @@ with tab2:
 # --- 7. Footer ---
 st.markdown("---")
 st.caption("Dibuat oleh Nanda | Analisis Sentimen & Sistem Rekomendasi Perpustakaan 📚")
+
 
 
 
