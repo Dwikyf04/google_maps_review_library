@@ -62,7 +62,7 @@ def load_library_data(file_path="data_perpustakaan.csv"):
 def load_review_data(file_path="data_perpustakaan_review.csv"):
     """
     Memuat data ulasan MENTAH/INDIVIDUAL dari file CSV.
-    File ini digunakan untuk menampilkan contoh ulasan.
+    File ini digunakan untuk menampilkan ulasan.
     """
     try:
         # Kita hanya butuh kolom-kolom ini untuk menghemat memori
@@ -184,29 +184,29 @@ elif selected_page == "Rekomendasi":
                             st.link_button("Lihat di Google Maps ↗️", row['url_google_maps'])
 
                         # --- BARU: Expander untuk menampilkan ulasan ---
-                        with st.expander(f"Lihat contoh ulasan untuk {row['Place_name']}"):
+                        with st.expander(f"Lihat ulasan untuk {row['Place_name']}"):
                             if not all_reviews.empty:
                                 # Filter ulasan untuk perpustakaan ini
                                 library_reviews = all_reviews[all_reviews['Place_name'] == row['Place_name']]
                                 
                                 # Tampilkan 3 ulasan positif teratas
-                                st.write("**Contoh Ulasan Positif:**")
+                                st.write("**Ulasan Positif:**")
                                 pos_reviews = library_reviews[library_reviews['sentiment'] == 'Positive']['Komentar'].head(3)
                                 if not pos_reviews.empty:
                                     for review_text in pos_reviews:
                                         st.success(f"• {review_text}")
                                 else:
-                                    st.caption("Tidak ada contoh ulasan positif.")
+                                    st.caption("Tidak ada ulasan positif.")
                                 
                                 # Tampilkan 3 ulasan negatif teratas
-                                st.write("**Contoh Ulasan Negatif:**")
+                                st.write("**Ulasan Negatif:**")
                                 # Ganti 'Negatif' dengan label negatif Anda jika berbeda
                                 neg_reviews = library_reviews[library_reviews['sentiment'] == 'Negative']['Komentar'].head(3)
                                 if not neg_reviews.empty:
                                     for review_text in neg_reviews:
                                         st.warning(f"• {review_text}")
                                 else:
-                                    st.caption("Tidak ada contoh ulasan negatif.")
+                                    st.caption("Tidak ada ulasan negatif.")
                             else:
                                 st.caption("File ulasan individual tidak dapat dimuat.")
                         # ---------------------------------------------
@@ -312,6 +312,7 @@ elif selected_page == "About":
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     * Proses *preprocessing* teks melibatkan *case folding*, *stemming* (Sastrawi), dan *stopword removal*.
     """)
+
 
 
 
