@@ -96,7 +96,7 @@ with st.sidebar:
     st.image("https://i.pinimg.com/736x/12/f9/ed/12f9ed73b852fd466830c23ab8fb575e.jpg", width=100) # Opsional: Ganti dengan URL logo Anda
     selected_page = option_menu(
         menu_title="Menu Utama",
-        options=["Beranda", "Rekomendasi", "Analisis Ulasan", "Tentang Proyek"],
+        options=["Beranda", "Rekomendasi", "Analisis Ulasan", "About"],
         icons=["house-door-fill", "star-fill", "search", "info-circle-fill"],
         menu_icon="compass-fill",
         default_index=0
@@ -312,5 +312,6 @@ elif selected_page == "About":
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     * Proses *preprocessing* teks melibatkan *case folding*, *stemming* (Sastrawi), dan *stopword removal*.
     """)
+
 
 
