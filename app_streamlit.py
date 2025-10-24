@@ -279,8 +279,8 @@ with tab2:
     else:
         st.error("Model analisis (SVM/K-Means/TF-IDF) gagal dimuat. Tab ini tidak dapat berfungsi.")
 
-elif selected_page == "Tentang Proyek":
-    st.header("ℹ️ Tentang Proyek Ini")
+elif selected_page == "About":
+    st.header("About")
     st.markdown("""
     Aplikasi ini dibuat oleh **Nanda** sebagai proyek untuk... 
     Tujuannya adalah untuk membangun sistem rekomendasi perpustakaan berdasarkan ulasan otentik dari Google Maps.
@@ -312,9 +312,3 @@ elif selected_page == "Tentang Proyek":
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     * Proses *preprocessing* teks melibatkan *case folding*, *stemming* (Sastrawi), dan *stopword removal*.
     """)
-
-
-
-
-
-
