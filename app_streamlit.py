@@ -93,7 +93,7 @@ all_reviews = load_review_data()
 # ---------------------------------
 
 with st.sidebar:
-    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Undip_logo.png/175px-Undip_logo.png", width=100) # Opsional: Ganti dengan URL logo Anda
+    st.image("https://pin.it/7JyE1uJcJ", width=100) # Opsional: Ganti dengan URL logo Anda
     selected_page = option_menu(
         menu_title="Menu Utama",
         options=["Beranda", "Rekomendasi", "Analisis Ulasan", "Tentang Proyek"],
@@ -105,7 +105,7 @@ with st.sidebar:
     st.sidebar.caption("Dibuat oleh Nanda | 2025")
 
 if selected_page == "Beranda":
-    st.header("🏠 Selamat Datang di Portal Analisis & Rekomendasi Perpustakaan")
+    st.header("Analisis & Rekomendasi Perpustakaan")
     st.markdown("Aplikasi ini membantu Anda menemukan perpustakaan terbaik berdasarkan ulasan nyata pengguna Google Maps.")
     st.divider()
 
@@ -128,7 +128,7 @@ if selected_page == "Beranda":
         st.bar_chart(top_cities)
 
 # --- 5. Isi Tab 1: Rekomendasi Perpustakaan ---
-with tab1:
+elif selected_page == "Rekomendasi":
     st.header("Temukan Perpustakaan Terbaik di Kota Anda")
     
     if not library_data.empty:
@@ -219,7 +219,7 @@ with tab1:
         st.error("Data perpustakaan (Ringkasan) tidak dapat dimuat.")
 
 # --- 6. Isi Tab 2: Analisis Ulasan Individual ---
-with tab2:
+elif selected_page == "Analisis Ulasan":
     st.header("Analisis Sentimen & Topik Ulasan Baru")
     st.markdown("Model: **SVM (Sentimen)** + **K-Means (Clustering)** + **TF-IDF (Feature Extraction)**")
 
@@ -312,3 +312,4 @@ elif selected_page == "About":
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     * Proses *preprocessing* teks melibatkan *case folding*, *stemming* (Sastrawi), dan *stopword removal*.
     """)
+
