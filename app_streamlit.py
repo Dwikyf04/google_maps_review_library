@@ -5,6 +5,7 @@ import pandas as pd
 import joblib
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
+from streamlit_option_menu import option_menu
 
 # --- Konfigurasi Halaman ---
 st.set_page_config(page_title="Analisis & Rekomendasi Perpus", layout="wide")
@@ -91,12 +92,40 @@ library_data = load_library_data()
 all_reviews = load_review_data()
 # ---------------------------------
 
-# --- 3. Judul Utama Aplikasi ---
-st.title("📊 Sistem Analisis & Rekomendasi Ulasan Perpustakaan")
-st.markdown("Pilih tab di bawah untuk melihat rekomendasi perpustakaan atau menganalisis ulasan baru.")
+with st.sidebar:
+    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Undip_logo.png/175px-Undip_logo.png", width=100) # Opsional: Ganti dengan URL logo Anda
+    selected_page = option_menu(
+        menu_title="Menu Utama",
+        options=["Beranda", "Rekomendasi", "Analisis Ulasan", "Tentang Proyek"],
+        icons=["house-door-fill", "star-fill", "search", "info-circle-fill"],
+        menu_icon="compass-fill",
+        default_index=0
+    )
+    st.sidebar.markdown("---")
+    st.sidebar.caption("Dibuat oleh Nanda | 2025")
 
-# --- 4. Membuat Tab ---
-tab1, tab2 = st.tabs(["🏆 Rekomendasi Perpustakaan", "🔍 Analisis Ulasan Individual"])
+if selected_page == "Beranda":
+    st.header("🏠 Selamat Datang di Portal Analisis & Rekomendasi Perpustakaan")
+    st.markdown("Aplikasi ini membantu Anda menemukan perpustakaan terbaik berdasarkan ulasan nyata pengguna Google Maps.")
+    st.divider()
+
+    st.subheader("Ringkasan Data")
+    if not library_data.empty and not all_reviews.empty:
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Total Perpustakaan", f"{library_data['Place_name'].nunique()} Perpus")
+        col2.metric("Total Ulasan Dianalisis", f"{len(all_reviews)} Ulasan")
+        col3.metric("Jumlah Kota", f"{library_data['city'].nunique()} Kota")
+    else:
+        st.info("Data sedang dimuat atau tidak ditemukan.")
+
+    st.subheader("Peta Sebaran Perpustakaan")
+    if not library_data.empty:
+        st.map(library_data[['latitude', 'longitude', 'Place_name']])
+    
+    st.subheader("Kota dengan Skor Kualitas Rata-rata Tertinggi")
+    if not library_data.empty:
+        top_cities = library_data.groupby('city')['skor_kualitas'].mean().nlargest(5)
+        st.bar_chart(top_cities)
 
 # --- 5. Isi Tab 1: Rekomendasi Perpustakaan ---
 with tab1:
@@ -250,9 +279,39 @@ with tab2:
     else:
         st.error("Model analisis (SVM/K-Means/TF-IDF) gagal dimuat. Tab ini tidak dapat berfungsi.")
 
-# --- 7. Footer ---
-st.markdown("---")
-st.caption("Dibuat oleh Nanda | Analisis Sentimen & Sistem Rekomendasi Perpustakaan 📚")
+elif selected_page == "Tentang Proyek":
+    st.header("ℹ️ Tentang Proyek Ini")
+    st.markdown("""
+    Aplikasi ini dibuat oleh **Nanda** sebagai proyek untuk... 
+    Tujuannya adalah untuk membangun sistem rekomendasi perpustakaan berdasarkan ulasan otentik dari Google Maps.
+
+    ### Metodologi
+    Proyek ini menggabungkan dua pendekatan *machine learning*:
+    
+    1.  **Analisis Sentimen (Supervised Learning)**
+        * **Model:** `LinearSVC` (Support Vector Machine).
+        * **Tujuan:** Mengklasifikasikan setiap ulasan ke dalam sentimen **Positif**, **Negatif**, atau **Netral**.
+        * **Fitur:** `TfidfVectorizer` (n-grams 1-2, max 3000 fitur).
+    
+    2.  **Clustering Topik (Unsupervised Learning)**
+        * **Model:** `K-Means Clustering` (K=3).
+        * **Tujuan:** Mengelompokkan ulasan ke dalam 3 topik utama secara otomatis. Berdasarkan analisis, topik tersebut adalah:
+            * **Cluster 0: Fasilitas & Kenyamanan** (membahas wifi, ac, tempat duduk, gedung).
+            * **Cluster 1: Kelengkapan Koleksi** (membahas buku, jurnal, digital, lengkap).
+            * **Cluster 2: Kualitas Pelayanan** (membahas staf, antrian, pelayanan, ramah).
+    
+    3.  **Skor Rekomendasi (Tab Rekomendasi)**
+        * Skor dihitung secara offline menggunakan formula:
+        * `skor_kualitas = (0.6 * Rating_Google_Normalized) + (0.4 * Persentase_Sentimen_Positif)`
+    
+    4.  **Rekomendasi Sesuai Selera (Tab Analisis)**
+        * Menggunakan **Content-Based Filtering**.
+        * Profil TF-IDF dari setiap perpustakaan dicocokkan dengan vektor TF-IDF dari input pengguna menggunakan **Cosine Similarity**.
+    
+    ### Dataset
+    * Seluruh data ulasan dan rating diambil dari **Google Maps**.
+    * Proses *preprocessing* teks melibatkan *case folding*, *stemming* (Sastrawi), dan *stopword removal*.
+    """)
 
 
 
