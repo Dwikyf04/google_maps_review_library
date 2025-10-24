@@ -128,49 +128,107 @@ if selected_page == "Beranda":
         st.bar_chart(top_cities)
 
 # --- 5. Isi Tab 1: Rekomendasi Perpustakaan ---
+# ===============================================
+# Halaman 2: REKOMENDASI (Kode Tab 1 Lama Anda)
+# ===============================================
 elif selected_page == "Rekomendasi":
-    st.header("Temukan Perpustakaan Terbaik di Kota Anda")
+    st.header("🏆 Temukan Perpustakaan Terbaik di Kota Anda")
     
     if not library_data.empty:
-        available_cities = sorted(library_data['city'].unique())
+        # Asumsi kolom Anda bernama 'kota'
+        available_cities = sorted(library_data['kota'].unique()) 
         if available_cities:
+            
+            # --- 1. KUMPULKAN SEMUA INPUT PENGGUNA ---
+            
+            # INPUT 1: Pilih Kota
             selected_city = st.selectbox(
                 "📍 Pilih Kota Anda:",
                 options=available_cities,
                 index=None,
                 placeholder="Pilih kota..."
             )
+            
+            # INPUT 2: Opsi Urut
             sort_options = {
                 "Skor Terbaik (Rekomendasi)": "skor_kualitas",
                 "Rating Google Tertinggi": "rating",
                 "Sentimen Paling Positif": "persen_positif"
             }
-            
-            # Buat selectbox untuk memilih cara urut
             sort_by_label = st.selectbox(
                 "📊 Urutkan berdasarkan:",
-                options=sort_options.keys() # Tampilkan label yang mudah dibaca
+                options=sort_options.keys()
             )
-            
-            # Dapatkan nama kolom teknis dari pilihan pengguna
-            sort_by_column = sort_options[sort_by_label]
+            sort_by_column = sort_options[sort_by_label] # Dapatkan nama kolom
 
+            # INPUT 3: Filter Rating
+            min_rating = st.slider(
+                "Tampilkan perpustakaan dengan minimal rating:",
+                min_value=1.0, max_value=5.0, value=3.5, step=0.1
+            )
+
+            # INPUT 4: Filter Keyword (PINDAHKAN KE SINI)
+            st.markdown("---")
+            st.subheader("Filter Tambahan Berdasarkan Topik Ulasan")
+            filter_options = {
+                "Tampilkan Semua": None,
+                "Koleksi Lengkap": "lengkap",
+                "Ramah Disabilitas": "disabilitas",
+                "Tempat Nyaman": "nyaman",
+                "Pelayanan Staf": "ramah" # Contoh
+            }
+            selected_filter_label = st.selectbox(
+                "Tampilkan perpustakaan yang sering disebut:",
+                options=filter_options.keys()
+            )
+            # Variabel 'selected_keyword' sekarang dibuat SEBELUM digunakan
+            selected_keyword = filter_options[selected_filter_label]
+
+            
+            # --- 2. PROSES & FILTER DATA ---
+            
+            # Hanya jalankan jika pengguna sudah memilih kota
             if selected_city:
                 st.markdown("---")
-                st.subheader(f"Rekomendasi Perpustakaan Terbaik di {selected_city}:")
+                st.subheader(f"Rekomendasi di {selected_city} (Filter: {sort_by_label}, Min Rating: {min_rating}⭐)")
                 
-                city_libraries = library_data[library_data['city'] == selected_city].copy()
-                recommended_libraries = city_libraries.sort_values(by=sort_by_column, ascending=False).head(5)
+                # Filter Awal: Berdasarkan Kota dan Rating
+                city_libraries = library_data[
+                    (library_data['city'] == selected_city) &
+                    (library_data['rating'] >= min_rating)
+                ].copy()
 
+                # Filter Kedua: Berdasarkan Keyword (jika dipilih)
+                if selected_keyword and not all_reviews.empty:
+                    # Cari di ulasan mentah
+                    matching_reviews = all_reviews[
+                        all_reviews['Komentar'].str.contains(selected_keyword, case=False, na=False)
+                    ]
+                    # Dapatkan daftar nama perpustakaan yang lolos
+                    matching_libraries_names = matching_reviews['Place_name'].unique()
+                    
+                    # Filter data perpustakaan agar hanya menampilkan yang lolos
+                    city_libraries = city_libraries[
+                        city_libraries['Place_name'].isin(matching_libraries_names)
+                    ]
+                
+                # Terakhir: Urutkan hasil akhir
+                recommended_libraries = city_libraries.sort_values(
+                    by=sort_by_column, 
+                    ascending=False
+                ).head(5)
+
+                
+                # --- 3. TAMPILKAN HASIL ---
+                
                 if not recommended_libraries.empty:
-                    # Tampilkan Peta
                     st.subheader("Peta Lokasi Teratas")
-                    map_data = recommended_libraries[['latitude', 'longitude']]
-                    st.map(map_data)
+                    st.map(recommended_libraries[['latitude', 'longitude']])
                     
                     st.subheader("Detail Peringkat")
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
-                        st.markdown(f"#### {i + 1}. {row['Place_name']}")
+                        # Asumsi kolom Anda 'nama_perpustakaan'
+                        st.markdown(f"#### {i + 1}. {row['Place_name']}") 
                         col1, col2 = st.columns(2)
                         with col1:
                             st.metric(label="⭐ Rating Google", value=f"{row['rating']:.1f} / 5")
@@ -183,46 +241,42 @@ elif selected_page == "Rekomendasi":
                         if 'url_google_maps' in row and pd.notna(row['url_google_maps']) and row['url_google_maps'].startswith('http'):
                             st.link_button("Lihat di Google Maps ↗️", row['url_google_maps'])
 
-                        # --- BARU: Expander untuk menampilkan ulasan ---
-                        with st.expander(f"Lihat ulasan untuk {row['Place_name']}"):
+                        # Expander untuk ulasan
+                        # Asumsi kolom Anda 'nama_perpustakaan', 'sentiment', 'Komentar'
+                        # dan label sentimen 'Positif' / 'Negatif'
+                        with st.expander(f"Lihat contoh ulasan untuk {row['Place_name']}"):
                             if not all_reviews.empty:
-                                # Filter ulasan untuk perpustakaan ini
                                 library_reviews = all_reviews[all_reviews['Place_name'] == row['Place_name']]
                                 
-                                # Tampilkan 3 ulasan positif teratas
-                                st.write("**Ulasan Positif:**")
+                                st.write("**Contoh Ulasan Positif:**")
                                 pos_reviews = library_reviews[library_reviews['sentiment'] == 'Positive']['Komentar'].head(3)
                                 if not pos_reviews.empty:
                                     for review_text in pos_reviews:
                                         st.success(f"• {review_text}")
                                 else:
-                                    st.caption("Tidak ada ulasan positif.")
+                                    st.caption("Tidak ada contoh ulasan positif.")
                                 
-                                # Tampilkan 3 ulasan negatif teratas
-                                st.write("**Ulasan Negatif:**")
-                                # Ganti 'Negatif' dengan label negatif Anda jika berbeda
+                                st.write("**Contoh Ulasan Negatif:**")
                                 neg_reviews = library_reviews[library_reviews['sentiment'] == 'Negative']['Komentar'].head(3)
                                 if not neg_reviews.empty:
                                     for review_text in neg_reviews:
                                         st.warning(f"• {review_text}")
                                 else:
-                                    st.caption("Tidak ada ulasan negatif.")
+                                    st.caption("Tidak ada contoh ulasan negatif.")
                             else:
                                 st.caption("File ulasan individual tidak dapat dimuat.")
-                        # ---------------------------------------------
                         st.divider()
                 else:
-                    st.info(f"Belum ada data rekomendasi perpustakaan untuk {selected_city}.")
+                    st.info(f"Tidak ada perpustakaan di {selected_city} yang memenuhi kriteria filter Anda.")
         else:
             st.warning("Tidak ada data kota yang tersedia di file CSV.")
     else:
         st.error("Data perpustakaan (Ringkasan) tidak dapat dimuat.")
 
+
 # --- 6. Isi Tab 2: Analisis Ulasan Individual ---
 elif selected_page == "Analisis Ulasan":
     st.header("Analisis Sentimen & Topik Ulasan Baru")
-    st.markdown("Model: **SVM (Sentimen)** + **K-Means (Clustering)** + **TF-IDF (Feature Extraction)**")
-
     # (Pastikan nama cluster ini sesuai dengan analisis Anda)
     nama_cluster = {
         0: "Fasilitas & Kenyamanan",
@@ -312,6 +366,7 @@ elif selected_page == "About":
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     * Proses *preprocessing* teks melibatkan *case folding*, *stemming* (Sastrawi), dan *stopword removal*.
     """)
+
 
 
 
