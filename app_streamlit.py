@@ -4,6 +4,7 @@ import streamlit as st
 import pandas as pd
 import joblib
 import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
 
 # --- Konfigurasi Halaman ---
 st.set_page_config(page_title="Analisis & Rekomendasi Perpus", layout="wide")
@@ -19,7 +20,9 @@ def load_models():
         tfidf = joblib.load("Models/tfidf_vectorizer.pkl")
         svm_model = joblib.load("Models/svm_sentiment_model.pkl")
         kmeans_model = joblib.load("Models/kmeans.pkl")
-        return tfidf, svm_model, kmeans_model
+        profil_nama = joblib.load("Models/profil_nama.pkl")
+        profil_vektor = joblib.load("Models/profil_vektor.pkl")
+        return tfidf, svm_model, kmeans_model, profil_name, profil_vektor
     except FileNotFoundError:
         st.error("File model (.pkl) tidak ditemukan di folder /Models.")
         return None, None, None
@@ -82,7 +85,7 @@ def load_review_data(file_path="data_perpustakaan_review.csv"):
 
 
 # --- 2. Memuat Semua Data & Model ---
-tfidf, svm_model, kmeans_model = load_models()
+tfidf, svm_model, kmeans_model, profil_nama, profil_vektor = load_models()
 library_data = load_library_data()
 # --- BARU: Memuat semua ulasan ---
 all_reviews = load_review_data()
@@ -180,7 +183,7 @@ with tab2:
     # (Pastikan nama cluster ini sesuai dengan analisis Anda)
     nama_cluster = {
         0: "Fasilitas & Kenyamanan",
-        1: "Kelengkapan Koleksi Buku",
+        1: "Kelengkapan Koleksi",
         2: "Kualitas Pelayanan Staf"
     }
 
@@ -205,7 +208,24 @@ with tab2:
                         st.info(f"🧐 Rekomendasi: Ulasan ini berfokus pada **{cluster_name}**.")
                     else:
                         st.warning(f"😔 Rekomendasi: Ulasan ini berfokus pada **{cluster_name}**.")
-                
+
+                    st.markdown("---")
+                    st.subheader("💡 Rekomendasi Perpustakaan Sesuai Selera Anda:")
+                  
+                    similarity_scores = cosine_similarity(X, profil_vektor)[0] 
+                    
+                    top_3_indices = np.argsort(similarity_scores)[-3:][::-1]
+                    
+                    for i, idx in enumerate(top_3_indices):
+                        nama_perpus = profil_nama[idx]
+                        skor = similarity_scores[idx]
+                        
+                        st.info(f"**{i+1}. {nama_perpus}** (Skor Kemiripan: {skor:.2f})")
+                        
+                        if not library_data.empty:
+                            lib_info = library_data[library_data['nama_perpustakaan'] == nama_perpus].iloc[0]
+                            st.write(f"Rating Google: {lib_info['rating']:.1f} ⭐ | Lokasi: {lib_info['kota']}")
+              
                 except Exception as e:
                     st.error(f"Gagal melakukan prediksi: {e}")
 
@@ -217,5 +237,6 @@ with tab2:
 # --- 7. Footer ---
 st.markdown("---")
 st.caption("Dibuat oleh Nanda | Analisis Sentimen & Sistem Rekomendasi Perpustakaan 📚")
+
 
 
