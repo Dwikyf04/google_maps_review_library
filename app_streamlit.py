@@ -210,21 +210,23 @@ with tab2:
                         st.warning(f"😔 Rekomendasi: Ulasan ini berfokus pada **{cluster_name}**.")
 
                     st.markdown("---")
-                    st.subheader("💡 Rekomendasi Perpustakaan Sesuai Selera Anda:")
-                  
-                    similarity_scores = cosine_similarity(X, profil_vektor)[0] 
+                    st.subheader("Kata Kunci Paling Berpengaruh:")
+                
+                    feature_names = tfidf.get_feature_names_out()
                     
-                    top_3_indices = np.argsort(similarity_scores)[-3:][::-1]
+                    scores = X.toarray().flatten() 
                     
-                    for i, idx in enumerate(top_3_indices):
-                        nama_perpus = profil_nama[idx]
-                        skor = similarity_scores[idx]
-                        
-                        st.info(f"**{i+1}. {nama_perpus}** (Skor Kemiripan: {skor:.2f})")
-                        
-                        if not library_data.empty:
-                            lib_info = library_data[library_data['nama_perpustakaan'] == nama_perpus].iloc[0]
-                            st.write(f"Rating Google: {lib_info['rating']:.1f} ⭐ | Lokasi: {lib_info['kota']}")
+                    df_scores = pd.DataFrame({'kata': feature_names, 'skor_tfidf': scores})
+                    
+                    top_words = df_scores[df_scores['skor_tfidf'] > 0].sort_values(
+                        by='skor_tfidf', 
+                        ascending=False
+                    ).head(5)
+                    
+                    if not top_words.empty:
+                        st.dataframe(top_words, use_container_width=True)
+                    else:
+                        st.caption("Tidak ada kata kunci yang dikenali (mungkin semua stopwords).")
               
                 except Exception as e:
                     st.error(f"Gagal melakukan prediksi: {e}")
@@ -237,6 +239,7 @@ with tab2:
 # --- 7. Footer ---
 st.markdown("---")
 st.caption("Dibuat oleh Nanda | Analisis Sentimen & Sistem Rekomendasi Perpustakaan 📚")
+
 
 
 
