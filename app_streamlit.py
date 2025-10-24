@@ -238,7 +238,7 @@ elif selected_page == "Rekomendasi":
                             st.link_button("Lihat di Google Maps ↗️", row['url_google_maps'])
 
                         # --- PERUBAHAN DI SINI: Logika Expander ---
-                        with st.expander(f"Lihat contoh ulasan untuk {row['Place_name']}"):
+                        with st.expander(f"Lihat riview  untuk {row['Place_name']}"):
                             if not all_reviews.empty:
                                 # Filter ulasan hanya untuk perpustakaan ini
                                 library_reviews = all_reviews[all_reviews['Place_name'] == row['Place_name']]
@@ -246,7 +246,7 @@ elif selected_page == "Rekomendasi":
                                 # --- LOGIKA BARU ---
                                 # JIKA PENGGUNA MEMILIH KEYWORD FILTER
                                 if selected_keyword:
-                                    st.write(f"**Contoh Ulasan yang Menyebut '{selected_keyword}':**")
+                                    st.write(f"**review yang Menyebut '{selected_keyword}':**")
                                     # Filter ulasan yang mengandung keyword
                                     matching_keyword_reviews = library_reviews[
                                         library_reviews['Komentar'].str.contains(selected_keyword, case=False, na=False)
@@ -262,11 +262,11 @@ elif selected_page == "Rekomendasi":
                                             else:
                                                 st.info(f"• {review_row['Komentar']}")
                                     else:
-                                        st.caption(f"Tidak ada contoh ulasan yang menyebut '{selected_keyword}'.")
+                                        st.caption(f"Tidak ada review yang menyebut '{selected_keyword}'.")
                                 
                                 # JIKA PENGGUNA TIDAK MEMILIH FILTER (Tampilkan Semua)
                                 else:
-                                    st.write("**Contoh Ulasan Positif:**")
+                                    st.write("**review positif:**")
                                     pos_reviews = library_reviews[library_reviews['sentiment'] == 'Positive']['Komentar'].head(3)
                                     if not pos_reviews.empty:
                                         for review_text in pos_reviews:
@@ -274,7 +274,7 @@ elif selected_page == "Rekomendasi":
                                     else:
                                         st.caption("Tidak ada contoh ulasan positif.")
                                     
-                                    st.write("**Contoh Ulasan Negatif:**")
+                                    st.write("**review negatif:**")
                                     neg_reviews = library_reviews[library_reviews['sentiment'] == 'Negative']['Komentar'].head(3)
                                     if not neg_reviews.empty:
                                         for review_text in neg_reviews:
@@ -383,6 +383,7 @@ elif selected_page == "About":
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     * Proses *preprocessing* teks melibatkan *case folding*, *stemming* (Sastrawi), dan *stopword removal*.
     """)
+
 
 
 
