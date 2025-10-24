@@ -22,7 +22,7 @@ def load_models():
         kmeans_model = joblib.load("Models/kmeans.pkl")
         profil_nama = joblib.load("Models/profil_nama.pkl")
         profil_vektor = joblib.load("Models/profil_vektor.pkl")
-        return tfidf, svm_model, kmeans_model, profil_name, profil_vektor
+        return tfidf, svm_model, kmeans_model, profil_nama, profil_vektor
     except FileNotFoundError:
         st.error("File model (.pkl) tidak ditemukan di folder /Models.")
         return None, None, None
@@ -237,6 +237,7 @@ with tab2:
 # --- 7. Footer ---
 st.markdown("---")
 st.caption("Dibuat oleh Nanda | Analisis Sentimen & Sistem Rekomendasi Perpustakaan 📚")
+
 
 
 
