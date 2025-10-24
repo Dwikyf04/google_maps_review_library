@@ -151,6 +151,7 @@ elif selected_page == "Rekomendasi":
             
             # INPUT 2: Opsi Urut
             sort_options = {
+                "Tampilkan Semua": None,
                 "Skor Terbaik (Rekomendasi)": "skor_kualitas",
                 "Rating Google Tertinggi": "rating",
                 "Sentimen Paling Positif": "persen_positif"
@@ -366,6 +367,7 @@ elif selected_page == "About":
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     * Proses *preprocessing* teks melibatkan *case folding*, *stemming* (Sastrawi), dan *stopword removal*.
     """)
+
 
 
 
