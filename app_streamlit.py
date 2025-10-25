@@ -184,8 +184,7 @@ if selected_page == "Beranda":
             f"• **{best_city}** memiliki skor kualitas tertinggi: **{best_score:.2f}** ✅\n"
             f"• Menunjukkan kualitas layanan dan fasilitas yang sangat baik."
         )
-
-    st.sidebar.markdown("---")
+    st.divider()
     # ⭐ Distribusi Rating
     st.subheader("Distribusi Rating Perpustakaan")
     if not library_data.empty:
@@ -536,6 +535,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
