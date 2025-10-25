@@ -480,7 +480,12 @@ elif selected_page == "Analisis Ulasan":
                                     library_data['Place_name'].isin(rekomendasi_df['Perpustakaan'])
                                 ]
                                 st.map(display_map[['latitude', 'longitude']])
-
+                                st.markdown("### 🔗 Akses Google Maps:")
+                                for _, row in display_map.iterrows():
+                                    if pd.notna(row['url_google_maps']) and row['url_google_maps'].startswith("http"):
+                                        st.link_button(f"📍 {row['Place_name']}", row['url_google_maps'])
+                                else:
+                                    st.caption(f"{row['Place_name']} tidak memiliki tautan Google Maps.")
                         except Exception as e:
                             st.warning(f"Gagal menghitung similarity: {e}")
 
@@ -573,6 +578,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
