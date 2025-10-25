@@ -128,30 +128,16 @@ if selected_page == "Beranda":
         st.bar_chart(top_cities)
     col1, col2 = st.columns([1, 2]) # Kolom 1 lebih kecil
 
-    if not library_data.empaty:
-        st.subheader("Peta Lokasi Teratas")
-        st.map(recommended_libraries[['latitude', 'longitude']])
-        st.subheader("Detail Peringkat")
-        for i, (_, row) in enumerate(recommended_libraries.iterrows()):
-        with st.container(border=True):
-    with col1:
-            st.metric(label="⭐ Rating Google", value=f"{row['rating']:.1f} / 5")
-            st.metric(label="👍 Sentimen Positif", value=f"{row['persen_positif']:.0%}")
-    with col2:
-            st.write("**Distribusi Sentimen:**")
-            try:
-             # Buat DataFrame mini untuk bagan
-             chart_data = pd.DataFrame({
-                 "Tipe Sentimen": ["Positif", "Negatif", "Netral"],
-                  "Jumlah Ulasan": [
-                   row['jumlah_positif'], 
-                   row['jumlah_negatif'], 
-                   row['jumlah_netral']
-                     ]
-                })
-                st.bar_chart(chart_data, x="Tipe Sentimen", y="Jumlah Ulasan", color="Tipe Sentimen")
-                except KeyError:
-                st.caption("Kolom (jumlah_negatif/netral) tidak ada di CSV.")
+    if not library_data.empty:
+        try:
+            # Mengelompokkan berdasarkan kota dan menghitung rata-rata skor kualitas
+            top_cities = library_data.groupby('city')['skor_kualitas'].mean().nlargest(5)
+            # Menampilkan BARCHART TOP 5 KOTA
+            st.bar_chart(top_cities, color="#FF8C00") # Anda bisa ganti warnanya
+        except KeyError as e:
+            st.error(f"Kolom {e} tidak ditemukan di data_perpustakaan.csv untuk bagan.")
+        except Exception as e:
+            st.error(f"Gagal membuat bagan kota: {e}")
     
             
 elif selected_page == "Rekomendasi":
@@ -403,6 +389,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
