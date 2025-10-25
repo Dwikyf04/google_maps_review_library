@@ -217,18 +217,18 @@ if selected_page == "Beranda":
         )
     st.divider()
     
-    if not all_reviews.empty:
-        st.subheader("☁️ Word Cloud Ulasan Perpustakaan (Semua Kota)")
-        text_reviews = " ".join(all_reviews['Komentar'].astype(str))
-        if text_reviews.strip():
-            wc = WordCloud(width=800, height=500, background_color="white").generate(text_reviews)
+    #if not all_reviews.empty:
+        #st.subheader("☁️ Word Cloud Ulasan Perpustakaan (Semua Kota)")
+        #text_reviews = " ".join(all_reviews['Komentar'].astype(str))
+        #if text_reviews.strip():
+            #wc = WordCloud(width=800, height=500, background_color="white").generate(text_reviews)
             
-            fig_wc, ax_wc = plt.subplots()
-            ax_wc.imshow(wc, interpolation='bilinear')
-            ax_wc.axis('off')
-            st.pyplot(fig_wc)
-        else:
-            st.caption("Tidak ada ulasan.")
+            #fig_wc, ax_wc = plt.subplots()
+            #ax_wc.imshow(wc, interpolation='bilinear')
+            #ax_wc.axis('off')
+            #st.pyplot(fig_wc)
+        #else:
+            #st.caption("Tidak ada ulasan.")
 
 
 # ===============================================
@@ -601,6 +601,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
