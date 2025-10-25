@@ -223,8 +223,11 @@ elif selected_page == "Rekomendasi":
                             try:
                                 chart_data = pd.DataFrame({"Tipe Sentimen": ["Positif", "Negative", "Netral"],
                                                         "Jumlah Ulasan": [row["jumlah_positif"],row["jumlah_negative"],row["jumlah_netral"]
-                                                                         ]             ]
+                                                                 ]
                                                           })
+                                st.bar_chart(chart_data, x="Tipe Sentimen", y="Jumlah Ulasan", color="Tipe Sentimen")
+                                except KeyError:
+                                    st.caption("Kolom (jumlah_negatif/netral) tidak ada di CSV.")
 
                         # ... (Kode st.link_button Anda) ...
                         if 'url_google_maps' in row and pd.notna(row['url_google_maps']) and row['url_google_maps'].startswith('http'):
@@ -373,6 +376,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
