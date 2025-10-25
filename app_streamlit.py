@@ -258,7 +258,7 @@ elif selected_page == "Rekomendasi":
                                             st.caption("Tidak ada data ulasan positif.")
                                     with col2:
                                         st.write("**Distribusi Sentimen:**")
-                                             try:
+                                            try:
                                                 chart_data = pd.DataFrame({
                                                 "Tipe Sentimen": ["Positif", "Negatif", "Netral"],
                                                 "Jumlah Ulasan": [
@@ -419,6 +419,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
