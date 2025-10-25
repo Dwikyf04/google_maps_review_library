@@ -403,7 +403,7 @@ elif selected_page == "Rekomendasi":
 
 # --- 6. Isi Tab 2: Analisis Ulasan Individual ---
 elif selected_page == "Analisis Ulasan":
-    st.header("nalisis Sentimen & Topik Ulasan Baru")
+    st.header("Analisis Sentimen & Topik Ulasan Baru")
     st.write("Masukkan ulasan dan sistem akan memprediksi sentimen + topik ulasan berdasarkan clustering.")
     
     nama_cluster = {
@@ -573,6 +573,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
