@@ -180,6 +180,17 @@ if selected_page == "Beranda":
     if not library_data.empty:
         rating_counts = library_data['rating'].value_counts().sort_index()
         st.bar_chart(rating_counts)
+        # Insight Distribusi Rating
+    if not library_data.empty:
+        avg_rating = library_data['rating'].mean()
+        high_rating_pct = (library_data['rating'] >= 4.0).mean() * 100
+
+        st.markdown(f"🔍 **Insight Rating:**")
+        st.write(
+            f"• Rata-rata rating perpustakaan: **{avg_rating:.2f} / 5**\n"
+            f"• {high_rating_pct:.1f}% perpustakaan memiliki rating **≥ 4.0** ⭐\n"
+        )
+
 
     # 👍 Sentimen Positif vs Negatif
     st.subheader("Distribusi Sentimen Positif vs Negatif")
@@ -505,6 +516,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
