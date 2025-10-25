@@ -222,7 +222,7 @@ elif selected_page == "Rekomendasi":
                             st.write("**Distribusi sentimen:**")
                             try:
                                 chart_data = pd.DataFrame({
-                                    "Tipe Sentimen": ["Positif", "Negative", "Neutral"],
+                                    "Tipe Sentimen": ["Positif", "Negatife", "Netral"],
                                     "Jumlah Ulasan": [row["jumlah_positif"],row["jumlah_negative"],row["jumlah_neutral"]
                                     ]
                                 })
@@ -377,6 +377,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
