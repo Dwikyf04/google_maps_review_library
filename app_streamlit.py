@@ -415,7 +415,7 @@ elif selected_page == "Rekomendasi":
 
 # --- 6. Isi Tab 2: Analisis Ulasan Individual ---
 elif selected_page == "Analisis Ulasan":
-     st.markdown("""
+    st.markdown("""
         <div style='text-align:center; padding: 20px;'>
             <h1> Analisis Sentimen & Topik Ulasan Baru</h1>
             <p style='font-size:18px;'>Cari perpustakaan terbaik berbasis analisis ribuan ulasan Google Maps dengan NLP & Machine Learning</p>
@@ -610,6 +610,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
