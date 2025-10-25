@@ -132,144 +132,199 @@ if selected_page == "Beranda":
 # Halaman 2: REKOMENDASI (Kode Tab 1 Lama Anda)
 # ===============================================
 # Di app_streamlit.py
+# ===============================================
+# Halaman 2: REKOMENDASI 
+# ===============================================
 elif selected_page == "Rekomendasi":
     st.header("🏆 Temukan Perpustakaan Terbaik di Kota Anda")
     
+    # Periksa apakah data ringkasan perpustakaan berhasil dimuat
     if not library_data.empty:
-        # PERBAIKAN: Gunakan 'kota'
+        # Ambil daftar kota unik dari data ringkasan
+        # Ganti 'kota' jika nama kolom di data_perpustakaan.csv berbeda
         available_cities = sorted(library_data['city'].unique()) 
+        
         if available_cities:
             
             # --- 1. KUMPULKAN SEMUA INPUT PENGGUNA ---
+            
+            # INPUT 1: Pilih Kota
             selected_city = st.selectbox(
-                "📍 Pilih Kota Anda:", options=available_cities, index=None, placeholder="Pilih kota..."
+                "📍 Pilih Kota Anda:",
+                options=available_cities,
+                index=None, # Default tidak ada yang terpilih
+                placeholder="Pilih kota..."
             )
+            
+            # INPUT 2: Opsi Urut
             sort_options = {
                 "Skor Terbaik (Rekomendasi)": "skor_kualitas",
                 "Rating Google Tertinggi": "rating",
                 "Sentimen Paling Positif": "persen_positif"
             }
-            sort_by_label = st.selectbox("📊 Urutkan berdasarkan:", options=sort_options.keys())
-            sort_by_column = sort_options[sort_by_label]
-            min_rating = st.slider("Minimal rating:", min_value=1.0, max_value=5.0, value=3.5, step=0.1)
+            sort_by_label = st.selectbox(
+                "📊 Urutkan berdasarkan:",
+                options=sort_options.keys() # Tampilkan label
+            )
+            sort_by_column = sort_options[sort_by_label] # Dapatkan nama kolom teknis
+
+            # INPUT 3: Filter Rating
+            min_rating = st.slider(
+                "Tampilkan perpustakaan dengan minimal rating:",
+                min_value=1.0, 
+                max_value=5.0, 
+                value=3.5, # Nilai default
+                step=0.1
+            )
+
+            # INPUT 4: Filter Keyword
             st.markdown("---")
             st.subheader("Filter Tambahan Berdasarkan Topik Ulasan")
             filter_options = {
-                "Tampilkan Semua": None, "Koleksi Lengkap": "lengkap", "Ramah Disabilitas": "disabilitas",
-                "Tempat Nyaman": "nyaman", "Pelayanan Staf": "ramah"
+                "Tampilkan Semua": None,
+                "Koleksi Lengkap": "lengkap",
+                "Ramah Disabilitas": "disabilitas",
+                "Tempat Nyaman": "nyaman",
+                "Pelayanan Staf": "ramah" # Sesuaikan keyword jika perlu
             }
-            selected_filter_label = st.selectbox("Tampilkan perpustakaan yang sering disebut:", options=filter_options.keys())
-            selected_keyword = filter_options[selected_filter_label]
+            selected_filter_label = st.selectbox(
+                "Tampilkan perpustakaan yang sering disebut:",
+                options=filter_options.keys()
+            )
+            selected_keyword = filter_options[selected_filter_label] # Dapatkan keyword (atau None)
 
+            
             # --- 2. PROSES & FILTER DATA ---
+            
+            # Hanya jalankan jika pengguna sudah memilih kota
             if selected_city:
                 st.markdown("---")
-                st.subheader(f"Rekomendasi di {selected_city} (Filter: {sort_by_label}, Min Rating: {min_rating}⭐)")
+                st.subheader(f"Rekomendasi di {selected_city} (Diurutkan: {sort_by_label}, Min Rating: {min_rating}⭐)")
                 
-                # PERBAIKAN: Gunakan 'kota'
+                # Filter Awal: Berdasarkan Kota dan Rating
+                # Ganti 'kota' jika nama kolom Anda berbeda
                 city_libraries = library_data[
                     (library_data['city'] == selected_city) & 
                     (library_data['rating'] >= min_rating)
                 ].copy()
 
+                # Filter Kedua: Berdasarkan Keyword (jika dipilih dan data ulasan ada)
                 if selected_keyword and not all_reviews.empty:
-                    # PERBAIKAN: Gunakan 'nama_perpustakaan' (jika kolom di all_reviews juga ini)
+                    # Cari di ulasan mentah ('all_reviews')
+                    # Pastikan nama kolom 'Komentar' dan 'nama_perpustakaan' sesuai
                     matching_reviews = all_reviews[
                         all_reviews['Komentar'].str.contains(selected_keyword, case=False, na=False)
                     ]
                     matching_libraries_names = matching_reviews['Place_name'].unique() 
+                    
+                    # Filter data perpustakaan agar hanya menampilkan yang lolos keyword
+                    # Ganti 'nama_perpustakaan' jika nama kolom Anda berbeda
                     city_libraries = city_libraries[
-                        # PERBAIKAN: Gunakan 'nama_perpustakaan'
                         city_libraries['Place_name'].isin(matching_libraries_names) 
                     ]
                 
+                # Terakhir: Urutkan hasil akhir berdasarkan pilihan pengguna
                 recommended_libraries = city_libraries.sort_values(
-                    by=sort_by_column, ascending=False
-                ).head(5)
+                    by=sort_by_column, 
+                    ascending=False
+                ).head(5) # Ambil 5 teratas
 
+                
                 # --- 3. TAMPILKAN HASIL ---
+                
                 if not recommended_libraries.empty:
+                    # Tampilkan Peta
                     st.subheader("Peta Lokasi Teratas")
-                    st.map(recommended_libraries[['latitude', 'longitude']])
-                    
+                    try:
+                        # Pastikan kolom 'latitude' dan 'longitude' ada
+                        st.map(recommended_libraries[['latitude', 'longitude']])
+                    except KeyError as e:
+                         st.warning(f"Kolom {e} tidak ada untuk peta.")
+
+                    # Tampilkan Detail Peringkat dalam bentuk Kartu
                     st.subheader("Detail Peringkat")
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
+                        # Membuat kontainer (kartu) dengan border
                         with st.container(border=True):
-                            # PERBAIKAN: Gunakan 'nama_perpustakaan'
+                            # Ganti 'nama_perpustakaan' jika perlu
                             st.markdown(f"### {i + 1}. {row['Place_name']}") 
                             
-                            col1, col2 = st.columns([1, 2])
+                            # Kolom untuk metrik dan bagan
+                            col1, col2 = st.columns([1, 2]) # Kolom 1 lebih kecil
                             with col1:
                                 st.metric(label="⭐ Rating Google", value=f"{row['rating']:.1f} / 5")
                                 st.metric(label="👍 Sentimen Positif", value=f"{row['persen_positif']:.0%}")
                             with col2:
                                 st.write("**Distribusi Sentimen:**")
                                 try:
+                                    # Buat DataFrame mini untuk bagan
                                     chart_data = pd.DataFrame({
-                                        # PERBAIKAN: "Negatif"
-                                        "Tipe Sentimen": ["Positif", "Negatif", "Netral"], 
+                                        "Tipe Sentimen": ["Positif", "Negatif", "Netral"],
                                         "Jumlah Ulasan": [
-                                            row["jumlah_positif"], 
-                                            # PERBAIKAN: 'jumlah_negatif'
-                                            row["jumlah_negatif"], 
-                                            # PERBAIKAN: 'jumlah_netral'
-                                            row["jumlah_netral"] 
+                                            row['jumlah_positif'], 
+                                            row['jumlah_negatif'], # Pastikan kolom ini ada
+                                            row['jumlah_netral']   # Pastikan kolom ini ada
                                         ]
                                     })
                                     st.bar_chart(chart_data, x="Tipe Sentimen", y="Jumlah Ulasan", color="Tipe Sentimen")
                                 except KeyError:
-                                    st.caption("Kolom (jumlah_negatif/netral) tidak ada di CSV.")
+                                    st.caption("Kolom jumlah sentimen (negatif/netral) tidak ditemukan di data_perpustakaan.csv.")
                                 except Exception as e:
                                      st.caption(f"Gagal membuat bagan: {e}")
-
+                            
+                            # Tombol Link Google Maps
                             if 'url_google_maps' in row and pd.notna(row['url_google_maps']) and row['url_google_maps'].startswith('http'):
                                 st.link_button("Lihat di Google Maps ↗️", row['url_google_maps'])
 
-                            # PERBAIKAN: Gunakan 'nama_perpustakaan'
+                            # Expander untuk Word Cloud
+                            # Ganti 'nama_perpustakaan' jika perlu
                             with st.expander(f"Lihat Analisis Word Cloud untuk {row['Place_name']}"): 
                                 if not all_reviews.empty:
-                                    # PERBAIKAN: Gunakan 'nama_perpustakaan'
-                                    library_reviews = all_reviews[all_reviews['Place_name'] == row['Place_name']]
-                                    
-                                    # PERBAIKAN: Gunakan variabel LABEL_POSITIF/NEGATIF
-                                    text_positif = " ".join(review for review in library_reviews[library_reviews['sentiment'] == LABEL_POSITIf]['Komentar'])
-                                    text_negatif = " ".join(review for review in library_reviews[library_reviews['sentiment'] == LABEL_NEGATIVE]['Komentar'])
-                                    
-                                    wc_col1, wc_col2 = st.columns(2)
-                                    with wc_col1:
-                                        st.write("**Kata Kunci Positif:**")
-                                        if text_positif:
-                                            try:
-                                                wc_pos = WordCloud(background_color="white", colormap="Greens", max_words=30, contour_width=1, contour_color='green').generate(text_positif)
+                                    try:
+                                        # Filter ulasan untuk perpustakaan ini
+                                        # Ganti 'nama_perpustakaan' jika perlu
+                                        library_reviews = all_reviews[all_reviews['Place_name'] == row['Place_name']] 
+                                        
+                                        # Gabungkan teks (Gunakan LABEL_POSITIF/NEGATIF yang didefinisikan di atas)
+                                        # Ganti 'sentiment' dan 'Komentar' jika perlu
+                                        text_positif = " ".join(review for review in library_reviews[library_reviews['sentiment'] == LABEL_POSITIF]['Komentar'])
+                                        text_negatif = " ".join(review for review in library_reviews[library_reviews['sentiment'] == LABEL_NEGATIF]['Komentar'])
+                                        
+                                        wc_col1, wc_col2 = st.columns(2)
+                                        with wc_col1:
+                                            st.write("**Kata Kunci Positif:**")
+                                            if text_positif:
+                                                wc_pos = WordCloud(background_color="white", colormap="Greens", max_words=30, width=400, height=200).generate(text_positif)
                                                 fig_pos, ax_pos = plt.subplots()
                                                 ax_pos.imshow(wc_pos, interpolation='bilinear')
                                                 ax_pos.axis('off')
                                                 st.pyplot(fig_pos, use_container_width=True)
-                                            except Exception as e:
-                                                st.caption(f"Gagal membuat word cloud: {e}")
-                                        else:
-                                            st.caption("Tidak ada data ulasan positif.")
-                                    with wc_col2:
-                                        st.write("**Kata Kunci Negatif:**")
-                                        if text_negatif:
-                                            try:
-                                                wc_neg = WordCloud(background_color="black", colormap="Reds", max_words=30, contour_width=1, contour_color='red').generate(text_negatif)
+                                            else:
+                                                st.caption("Tidak ada data ulasan positif.")
+                                        with wc_col2:
+                                            st.write("**Kata Kunci Negatif:**")
+                                            if text_negatif:
+                                                wc_neg = WordCloud(background_color="black", colormap="Reds", max_words=30, width=400, height=200).generate(text_negatif)
                                                 fig_neg, ax_neg = plt.subplots()
                                                 ax_neg.imshow(wc_neg, interpolation='bilinear')
                                                 ax_neg.axis('off')
                                                 st.pyplot(fig_neg, use_container_width=True)
-                                            except Exception as e:
-                                                st.caption(f"Gagal membuat word cloud: {e}")
-                                        else:
-                                            st.caption("Tidak ada data ulasan negatif.")
+                                            else:
+                                                st.caption("Tidak ada data ulasan negatif.")
+                                    except KeyError as e:
+                                         st.caption(f"Kolom {e} tidak ditemukan di data ulasan individual.")
+                                    except Exception as e:
+                                         st.caption(f"Gagal membuat Word Cloud: {e}")
                                 else:
                                     st.caption("File ulasan individual tidak dapat dimuat.")
-                        st.write("") # Spasi antar kartu
+                        st.write("") # Memberi spasi antar kartu
                 else:
+                    # Pesan jika tidak ada perpustakaan yang lolos semua filter
                     st.info(f"Tidak ada perpustakaan di {selected_city} yang memenuhi kriteria filter Anda.")
         else:
             st.warning("Tidak ada data kota yang tersedia di file CSV.")
     else:
+        # Pesan jika data_perpustakaan.csv gagal dimuat
         st.error("Data perpustakaan (Ringkasan) tidak dapat dimuat.")
 
 
@@ -365,6 +420,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
