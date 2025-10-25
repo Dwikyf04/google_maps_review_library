@@ -128,58 +128,23 @@ if selected_page == "Beranda":
     st.divider()
     if not library_data.empty and not all_reviews.empty:
         col1, col2, col3 = st.columns(3)
-        col1.metric("Total Perpustakaan", f"{library_data['Place_name'].nunique()}+ Lokasi")
-        col2.metric("Total Ulasan", f"{len(all_reviews)}+ Komentar")
+        col1.metric("Total Perpustakaan", f"{library_data['Place_name'].nunique()}+ Perpustkaaan")
+        col2.metric("Total Komentar", f"{len(all_reviews)}+ Komentar")
         col3.metric("Jumlah Kota", f"{library_data['city'].nunique()} Kota")
     else:
         st.info("Data sedang dimuat...")
 
     st.divider()
 
-    st.markdown("### ✨ Fitur Utama Aplikasi")
-    st.markdown("""
-    ✅ **Rekomendasi Perpustakaan Terbaik** berdasarkan:
-    - Rating Google
-    - Sentimen positif pengguna
-    - Analisis topik ulasan (fasilitas, koleksi, pelayanan)
-
-    ✅ **Analisis Sentimen Ulasan Baru**
-    - Prediksi apakah ulasan **positif / negatif / netral**
-    - Deteksi **topik utama** menggunakan K-Means Clustering  
-
-    ✅ **Visualisasi Interaktif**
-    - Peta lokasi perpustakaan
-    - Grafik distribusi rating dan sentimen
-
-    ✅ **Ulasan**
-    - Diambil langsung dari data Google Maps
-
-    ---
-    """)
-
-    st.markdown("### 🔬 Teknologi & Model Machine Learning")
-    st.markdown("""
-    | Komponen | Metode |
-    |---------|-------|
-    | Preprocessing Teks | Case Folding · Stopwords Removal · Stemming (Sastrawi) |
-    | Ekstraksi Fitur | **TF-IDF Vectorizer** |
-    | Analisis Sentimen | **Support Vector Machine (SVM)** |
-    | Analisis Topik | **K-Means Clustering (K=3)** |
-    | Sistem Rekomendasi | **Content-Based Filtering + Cosine Similarity** |
-    """)
+       # ✅ Fitur Utama
+    st.markdown("### 🚀 Fitur Utama Aplikasi")
+    fitur_cols = st.columns(3)
+    fitur_cols[0].info("🔎 Analisis Sentimen Ulasan Baru")
+    fitur_cols[1].success("🎯 Rekomendasi Perpustakaan Terbaik")
+    fitur_cols[2].warning("📊 Visualisasi Data Interaktif")
 
     st.divider()
     
-
-    # 📌 Ringkasan Data
-    st.subheader("Ringkasan Data")
-    if not library_data.empty and not all_reviews.empty:
-        col1, col2, col3 = st.columns(3)
-        col1.metric("Total Perpustakaan", f"{library_data['Place_name'].nunique()} Perpus")
-        col2.metric("Total Ulasan Dianalisis", f"{len(all_reviews)} Ulasan")
-        col3.metric("Jumlah Kota", f"{library_data['city'].nunique()} Kota")
-    else:
-        st.info("Data sedang dimuat atau tidak ditemukan.")
 
     # 🗺️ Peta Persebaran
     st.subheader("Peta Sebaran Perpustakaan")
@@ -619,6 +584,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
