@@ -114,6 +114,7 @@ if selected_page == "Beranda":
     st.markdown("Aplikasi ini membantu Anda menemukan perpustakaan terbaik berdasarkan ulasan nyata pengguna Google Maps.")
     st.divider()
 
+    # 📌 Ringkasan Data
     st.subheader("Ringkasan Data")
     if not library_data.empty and not all_reviews.empty:
         col1, col2, col3 = st.columns(3)
@@ -123,34 +124,43 @@ if selected_page == "Beranda":
     else:
         st.info("Data sedang dimuat atau tidak ditemukan.")
 
+    # 🗺️ Peta Persebaran
     st.subheader("Peta Sebaran Perpustakaan")
     if not library_data.empty:
         st.map(library_data[['latitude', 'longitude', 'Place_name']])
-    
+
+    # 📊 Lima Kota Skor Terbaik
     st.subheader("Kota dengan Skor Kualitas Rata-rata Tertinggi")
     if not library_data.empty:
         top_cities = library_data.groupby('city')['skor_kualitas'].mean().nlargest(5)
         st.bar_chart(top_cities)
-    col1, col2 = st.columns([1, 2]) # Kolom 1 lebih kecil
+
+    # ⭐ Distribusi Rating
     st.subheader("Distribusi Rating Perpustakaan")
     if not library_data.empty:
         rating_counts = library_data['rating'].value_counts().sort_index()
         st.bar_chart(rating_counts)
 
+    # 👍 Sentimen Positif vs Negatif
     st.subheader("Distribusi Sentimen Positif vs Negatif")
     if 'persen_positif' in library_data.columns:
         sentiment_summary = pd.DataFrame({
-        "Positif (%)": library_data['persen_positif'] * 100,
-        "Negatif (%)": (1 - library_data['persen_positif']) * 100
+            "Positif (%)": library_data['persen_positif'] * 100,
+            "Negatif (%)": (1 - library_data['persen_positif']) * 100
         })
         st.line_chart(sentiment_summary)
     else:
-    st.warning("Data sentimen positif belum tersedia!")
+        st.warning("Data sentimen positif belum tersedia!")
 
+    # 🏆 Top 10 Sentimen Positif
     st.subheader("Top 10 Perpustakaan dengan Sentimen Positif Tertinggi")
     if not library_data.empty:
         top_positive = library_data.sort_values(by="persen_positif", ascending=False).head(10)
-        st.dataframe(top_positive[['Place_name', 'city', 'rating', 'persen_positif']], use_container_width=True)
+        st.dataframe(
+            top_positive[['Place_name', 'city', 'rating', 'persen_positif']],
+            use_container_width=True
+        )
+
 
             
 # ===============================================
@@ -455,6 +465,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
