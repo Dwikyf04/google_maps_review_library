@@ -404,8 +404,10 @@ elif selected_page == "Rekomendasi":
 
 # --- 6. Isi Tab 2: Analisis Ulasan Individual ---
 elif selected_page == "Analisis Ulasan":
-    st.header("Analisis Sentimen & Topik Ulasan Baru")
-    # (Pastikan nama cluster ini sesuai dengan analisis Anda)
+    st.header("🔍 Analisis Sentimen & Topik Ulasan Baru")
+    st.write("Masukkan ulasan dan sistem akan memprediksi sentimen + topik ulasan berdasarkan clustering.")
+
+    # Mapping cluster ke topik
     nama_cluster = {
         0: "Fasilitas & Kenyamanan",
         1: "Kelengkapan Koleksi",
@@ -413,53 +415,64 @@ elif selected_page == "Analisis Ulasan":
     }
 
     if tfidf is not None and svm_model is not None and kmeans_model is not None:
-        user_input = st.text_area("Masukkan ulasan pengguna di sini:", "", key="input_ulasan")
+
+        user_input = st.text_area("✍️ Masukkan ulasan pengguna di sini:", "", key="input_ulasan")
 
         if st.button("Analisis Ulasan"):
             if user_input.strip():
+
                 try:
+                    # TF-IDF transform
                     X = tfidf.transform([user_input])
+
+                    # Prediksi sentimen & cluster
                     sentiment_pred = svm_model.predict(X)[0]
                     cluster_pred = kmeans_model.predict(X)[0]
                     cluster_name = nama_cluster.get(cluster_pred, f"Cluster {cluster_pred}")
-                    
-                    st.subheader("🔍 Hasil Analisis:")
-                    st.write(f"**Sentimen:** {sentiment_pred}")
-                    st.write(f"**Topik Utama Ulasan:** {cluster_name}")
-                    
-                    if cluster_pred == 0:
-                        st.success(f"📚 Rekomendasi: Ulasan ini berfokus pada **{cluster_name}**.")
-                    elif cluster_pred == 1:
-                        st.info(f"🧐 Rekomendasi: Ulasan ini berfokus pada **{cluster_name}**.")
-                    else:
-                        st.warning(f"😔 Rekomendasi: Ulasan ini berfokus pada **{cluster_name}**.")
+
+                    st.subheader("📈 Hasil Analisis")
+                    st.write(f"**Sentimen Terdeteksi:** 🗣️ {sentiment_pred}")
+                    st.write(f"**Topik Utama Ulasan:** 🧩 {cluster_name}")
+
+                    # Rekomendasi dinamis berdasarkan cluster
+                    rekomendasi_dic = {
+                        0: "Fasilitas nyaman seperti ruangan AC, WiFi, dan tempat duduk nyaman",
+                        1: "Ketersediaan koleksi buku dan akses digital sangat baik",
+                        2: "Pelayanan staf ramah dan cepat"
+                    }
+
+                    st.info(f"🎯 Insight otomatis: {rekomendasi_dic.get(cluster_pred)}")
 
                     st.markdown("---")
-                    st.subheader("Kata Kunci Paling Berpengaruh:")
-                
+                    st.subheader("🧠 Kata-Kata Paling Berpengaruh")
+
+                    # TOP TF-IDF WORDS
                     feature_names = tfidf.get_feature_names_out()
-                    
-                    scores = X.toarray().flatten() 
-                    
-                    df_scores = pd.DataFrame({'kata': feature_names, 'skor_tfidf': scores})
-                    
-                    top_words = df_scores[df_scores['skor_tfidf'] > 0].sort_values(
-                        by='skor_tfidf', 
-                        ascending=False
-                    ).head(5)
-                    
+                    scores = X.toarray().flatten()
+
+                    df_scores = pd.DataFrame({
+                        'Kata': feature_names,
+                        'Skor_TFIDF': scores
+                    })
+
+                    top_words = df_scores[df_scores['Skor_TFIDF'] > 0].sort_values(
+                        by="Skor_TFIDF", ascending=False
+                    ).head(7)
+
                     if not top_words.empty:
-                        st.dataframe(top_words, use_container_width=True)
+                        st.table(top_words)
                     else:
-                        st.caption("Tidak ada kata kunci yang dikenali (mungkin semua stopwords).")
-              
+                        st.caption("Tidak ada kata penting (mungkin terlalu pendek). ✅")
+                
                 except Exception as e:
-                    st.error(f"Gagal melakukan prediksi: {e}")
+                    st.error(f"❌ Gagal memprediksi: {e}")
 
             else:
-                st.warning("Harap masukkan teks terlebih dahulu!")
+                st.warning("Masukkan teks ulasan terlebih dahulu ✅")
+
     else:
-        st.error("Model analisis (SVM/K-Means/TF-IDF) gagal dimuat. Tab ini tidak dapat berfungsi.")
+        st.error("⚠️ Model gagal dimuat. Pastikan semua file .pkl sudah tersedia dalam folder Models.")
+
 
 elif selected_page == "About":
     st.header("About")
@@ -536,6 +549,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
