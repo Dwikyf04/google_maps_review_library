@@ -134,7 +134,7 @@ if selected_page == "Beranda":
     - Peta lokasi perpustakaan
     - Grafik distribusi rating dan sentimen
 
-    ✅ **Contoh Ulasan Otentik**
+    ✅ **Ulasan**
     - Diambil langsung dari data Google Maps
 
     ---
@@ -505,6 +505,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
