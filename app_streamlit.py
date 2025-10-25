@@ -213,6 +213,15 @@ if selected_page == "Beranda":
         st.line_chart(sentiment_summary)
     else:
         st.warning("Data sentimen positif belum tersedia!")
+    if 'persen_positif' in library_data.columns:
+        avg_positive = library_data['persen_positif'].mean() * 100
+
+        st.markdown("🔍 **Insight Sentimen:**")
+        st.write(
+            f"• Sentimen positif rata-rata: **{avg_positive:.1f}%** 👍\n"
+            f"• Pengunjung perpustakaan di Indonesia **dominan puas**."
+        )
+
 
     # 🏆 Top 10 Sentimen Positif
     st.subheader("Top 10 Perpustakaan dengan Sentimen Positif Tertinggi")
@@ -527,6 +536,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
