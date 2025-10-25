@@ -167,7 +167,7 @@ elif selected_page == "Rekomendasi":
                 
                 # PERBAIKAN: Gunakan 'kota'
                 city_libraries = library_data[
-                    (library_data['kota'] == selected_city) & 
+                    (library_data['city'] == selected_city) & 
                     (library_data['rating'] >= min_rating)
                 ].copy()
 
@@ -176,7 +176,7 @@ elif selected_page == "Rekomendasi":
                     matching_reviews = all_reviews[
                         all_reviews['Komentar'].str.contains(selected_keyword, case=False, na=False)
                     ]
-                    matching_libraries_names = matching_reviews['nama_perpustakaan'].unique() 
+                    matching_libraries_names = matching_reviews['Place_name'].unique() 
                     city_libraries = city_libraries[
                         # PERBAIKAN: Gunakan 'nama_perpustakaan'
                         city_libraries['nama_perpustakaan'].isin(matching_libraries_names) 
@@ -195,7 +195,7 @@ elif selected_page == "Rekomendasi":
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
                         with st.container(border=True):
                             # PERBAIKAN: Gunakan 'nama_perpustakaan'
-                            st.markdown(f"### {i + 1}. {row['nama_perpustakaan']}") 
+                            st.markdown(f"### {i + 1}. {row['Place_name']}") 
                             
                             col1, col2 = st.columns([1, 2])
                             with col1:
@@ -225,10 +225,10 @@ elif selected_page == "Rekomendasi":
                                 st.link_button("Lihat di Google Maps ↗️", row['url_google_maps'])
 
                             # PERBAIKAN: Gunakan 'nama_perpustakaan'
-                            with st.expander(f"Lihat Analisis Word Cloud untuk {row['nama_perpustakaan']}"): 
+                            with st.expander(f"Lihat Analisis Word Cloud untuk {row['Place_name']}"): 
                                 if not all_reviews.empty:
                                     # PERBAIKAN: Gunakan 'nama_perpustakaan'
-                                    library_reviews = all_reviews[all_reviews['nama_perpustakaan'] == row['nama_perpustakaan']] 
+                                    library_reviews = all_reviews[all_reviews['Place_name'] == row['Place_name]] 
                                     
                                     # PERBAIKAN: Gunakan variabel LABEL_POSITIF/NEGATIF
                                     text_positif = " ".join(review for review in library_reviews[library_reviews['sentiment'] == LABEL_POSITIF]['Komentar'])
@@ -364,6 +364,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
