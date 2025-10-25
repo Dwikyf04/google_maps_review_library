@@ -151,20 +151,7 @@ if selected_page == "Beranda":
     | Sistem Rekomendasi | **Content-Based Filtering + Cosine Similarity** |
     """)
 
-    st.markdown("### 📌 Dataset")
-    st.markdown(f"""
-    - Sumber: Google Maps Reviews
-    - Total Perpustakaan: **{library_data['Place_name'].nunique()} lokasi**
-    - Total Ulasan: **{len(all_reviews)} komentar dianalisis**
-    - Kota Dalam Dataset: **{library_data['city'].nunique()} kota**
-    """)
-
-    st.divider()
-
-
-    st.header("Analisis & Rekomendasi Perpustakaan")
-    st.markdown("Aplikasi ini membantu Anda menemukan perpustakaan terbaik berdasarkan ulasan nyata pengguna Google Maps.")
-    st.divider()
+     st.divider()
     
 
     # 📌 Ringkasan Data
@@ -518,6 +505,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
