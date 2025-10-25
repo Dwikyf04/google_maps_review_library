@@ -257,17 +257,13 @@ elif selected_page == "Rekomendasi":
                                         else:
                                             st.caption("Tidak ada data ulasan positif.")
                                   with col2:
-                            st.write("**Distribusi Sentimen:**")
-                            try:
-                                # Buat DataFrame mini untuk bagan
-                                chart_data = pd.DataFrame({
-                                    # PERBAIKAN 1: "Negatif" (bukan "Negatife")
-                                    "Tipe Sentimen": ["Positif", "Negatif", "Netral"],
-                                    "Jumlah Ulasan": [
+                                        st.write("**Distribusi Sentimen:**")
+                                            try:
+                                        chart_data = pd.DataFrame({
+                                        "Tipe Sentimen": ["Positif", "Negatif", "Netral"],
+                                        "Jumlah Ulasan": [
                                         row['jumlah_positif'],
-                                        # PERBAIKAN 2: 'jumlah_negatif' (pakai 'f')
                                         row['jumlah_negatif'],
-                                        # PERBAIKAN 3: 'jumlah_netral' (pakai 'l')
                                         row['jumlah_netral']
                                     ]
                                 })
@@ -423,6 +419,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
