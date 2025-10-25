@@ -201,7 +201,7 @@ if selected_page == "Beranda":
             f"• {high_rating_pct:.1f}% perpustakaan memiliki rating **≥ 4.0** ⭐\n"
         )
 
-
+    st.divider()
     # 👍 Sentimen Positif vs Negatif
     st.subheader("Distribusi Sentimen Positif vs Negatif")
     if 'persen_positif' in library_data.columns:
@@ -220,7 +220,8 @@ if selected_page == "Beranda":
             f"• Sentimen positif rata-rata: **{avg_positive:.1f}%** 👍\n"
             f"• Pengunjung perpustakaan di Indonesia **dominan puas**."
         )
-
+        
+    st.divider()
 
     # 🏆 Top 10 Sentimen Positif
     st.subheader("Top 10 Perpustakaan dengan Sentimen Positif Tertinggi")
@@ -231,8 +232,6 @@ if selected_page == "Beranda":
             use_container_width=True
         )
 
-
-            
 # ===============================================
 # Halaman 2: REKOMENDASI (Kode Tab 1 Lama Anda)
 # ===============================================
@@ -535,6 +534,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
