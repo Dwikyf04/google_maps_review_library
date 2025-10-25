@@ -214,6 +214,17 @@ if selected_page == "Beranda":
             use_container_width=True
         )
     st.divider()
+    
+    cities = ["Semua Kota"] + sorted(library_data['city'].unique().tolist())
+    selected_city = st.selectbox("Filter Kota:", cities)
+
+    if selected_city != "Semua Kota":
+        df_view = library_data[library_data['city'] == selected_city]
+    else:
+        df_view = library_data.copy()
+
+    st.divider() 
+    
     if not all_reviews.empty:
         st.subheader("☁️ Word Cloud Ulasan Perpustakaan (Semua Kota)")
         text_reviews = " ".join(all_reviews['Komentar'].astype(str))
@@ -598,6 +609,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
