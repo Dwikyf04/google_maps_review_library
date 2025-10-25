@@ -136,7 +136,7 @@ elif selected_page == "Rekomendasi":
     
     if not library_data.empty:
         # PERBAIKAN: Gunakan 'kota'
-        available_cities = sorted(library_data['kota'].unique()) 
+        available_cities = sorted(library_data['city'].unique()) 
         if available_cities:
             
             # --- 1. KUMPULKAN SEMUA INPUT PENGGUNA ---
@@ -364,6 +364,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
