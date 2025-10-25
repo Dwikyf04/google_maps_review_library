@@ -565,7 +565,7 @@ elif selected_page == "About":
 elif selected_page == "Feedback":
     st.markdown("""
         <div style='text-align:center; padding: 20px;'>
-            <h1> ormulir Feedback Pengguna </h1>
+            <h1> Formulir Feedback Pengguna </h1>
             <p style='font-size:18px;'>Feedback untuk kami</p>
         </div>
     """, unsafe_allow_html=True)
@@ -609,6 +609,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
