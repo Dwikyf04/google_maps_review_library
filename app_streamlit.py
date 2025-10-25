@@ -258,23 +258,22 @@ elif selected_page == "Rekomendasi":
                                             st.caption("Tidak ada data ulasan positif.")
                                     with col2:
                                         st.write("**Distribusi Sentimen:**")
-                                            try:
-                                                chart_data = pd.DataFrame({
+                                        try:
+                                            chart_data = pd.DataFrame({
                                                 "Tipe Sentimen": ["Positif", "Negatif", "Netral"],
                                                 "Jumlah Ulasan": [
-                                                row['jumlah_positif'],
-                                                row['jumlah_negatif'],
-                                                row['jumlah_netral']
-                                                    ]
-                                                })
+                                                    row['jumlah_positif'],
+                                                    row['jumlah_negatif'],
+                                                    row['jumlah_netral']
+                                                ]
+                                            })
                                 # Sekarang kode ini akan berjalan
-                                st.bar_chart(chart_data, x="Tipe Sentimen", y="Jumlah Ulasan", color="Tipe Sentimen")
+                                            st.bar_chart(chart_data, x="Tipe Sentimen", y="Jumlah Ulasan", color="Tipe Sentimen")
                             except KeyError:
                                 # Pesan ini hanya muncul jika file CSV Anda memang belum punya kolomnya
-                                st.caption("Kolom (jumlah_negatif/netral) tidak ada di CSV.")
+                                            st.caption("Kolom (jumlah_negatif/netral) tidak ada di CSV.")
                             except Exception as e:
-                                # Menangkap error lain jika terjadi
-                                st.caption(f"Gagal membuat bagan: {e}")
+                                            st.caption(f"Gagal membuat bagan: {e}")
 
                         # --- PERUBAHAN DI SINI: Logika Expander ---
                         with st.expander(f"Lihat riview  untuk {row['Place_name']}"):
@@ -419,6 +418,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
