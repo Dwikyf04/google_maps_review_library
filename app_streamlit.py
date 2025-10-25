@@ -112,6 +112,14 @@ with st.sidebar:
     st.sidebar.caption("Dibuat oleh Nanda | 2025")
 
 if selected_page == "Beranda":
+        st.markdown("""
+        <div style='text-align:center; padding: 20px;'>
+            <h1>Sistem Rekomendasi Perpustakaan Indonesia</h1>
+            <p style='font-size:18px;'>Cari perpustakaan terbaik berbasis analisis ribuan ulasan Google Maps dengan NLP & Machine Learning</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    st.divider()
 
     st.header("📚 Sistem Rekomendasi Perpustakaan Indonesia")
 
@@ -578,6 +586,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
