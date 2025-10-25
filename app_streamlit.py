@@ -133,24 +133,24 @@ if selected_page == "Beranda":
         st.bar_chart(top_cities)
     col1, col2 = st.columns([1, 2]) # Kolom 1 lebih kecil
     st.subheader("Distribusi Rating Perpustakaan")
-if not library_data.empty:
-    rating_counts = library_data['rating'].value_counts().sort_index()
-    st.bar_chart(rating_counts)
+    if not library_data.empty:
+        rating_counts = library_data['rating'].value_counts().sort_index()
+        st.bar_chart(rating_counts)
 
-st.subheader("Distribusi Sentimen Positif vs Negatif")
-if 'persen_positif' in library_data.columns:
-    sentiment_summary = pd.DataFrame({
+    st.subheader("Distribusi Sentimen Positif vs Negatif")
+    if 'persen_positif' in library_data.columns:
+        sentiment_summary = pd.DataFrame({
         "Positif (%)": library_data['persen_positif'] * 100,
         "Negatif (%)": (1 - library_data['persen_positif']) * 100
-    })
-    st.line_chart(sentiment_summary)
-else:
+        })
+        st.line_chart(sentiment_summary)
+    else:
     st.warning("Data sentimen positif belum tersedia!")
 
-st.subheader("Top 10 Perpustakaan dengan Sentimen Positif Tertinggi")
-if not library_data.empty:
-    top_positive = library_data.sort_values(by="persen_positif", ascending=False).head(10)
-    st.dataframe(top_positive[['Place_name', 'city', 'rating', 'persen_positif']], use_container_width=True)
+    st.subheader("Top 10 Perpustakaan dengan Sentimen Positif Tertinggi")
+    if not library_data.empty:
+        top_positive = library_data.sort_values(by="persen_positif", ascending=False).head(10)
+        st.dataframe(top_positive[['Place_name', 'city', 'rating', 'persen_positif']], use_container_width=True)
 
             
 # ===============================================
@@ -455,6 +455,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
