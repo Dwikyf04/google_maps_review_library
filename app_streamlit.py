@@ -258,15 +258,15 @@ elif selected_page == "Rekomendasi":
                                             st.caption("Tidak ada data ulasan positif.")
                                     with col2:
                                         st.write("**Distribusi Sentimen:**")
-                                            try:
-                                        chart_data = pd.DataFrame({
-                                        "Tipe Sentimen": ["Positif", "Negatif", "Netral"],
-                                        "Jumlah Ulasan": [
-                                        row['jumlah_positif'],
-                                        row['jumlah_negatif'],
-                                        row['jumlah_netral']
-                                    ]
-                                })
+                                             try:
+                                                chart_data = pd.DataFrame({
+                                                "Tipe Sentimen": ["Positif", "Negatif", "Netral"],
+                                                "Jumlah Ulasan": [
+                                                row['jumlah_positif'],
+                                                row['jumlah_negatif'],
+                                                row['jumlah_netral']
+                                                ]
+                                            })
                                 # Sekarang kode ini akan berjalan
                                 st.bar_chart(chart_data, x="Tipe Sentimen", y="Jumlah Ulasan", color="Tipe Sentimen")
                             except KeyError:
@@ -419,6 +419,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
