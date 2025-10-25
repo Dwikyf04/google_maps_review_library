@@ -236,7 +236,7 @@ elif selected_page == "Rekomendasi":
 
                         with st.expander(f"Lihat Analisis Word Cloud untuk {row['Place_name']}"):
                                 if not all_reviews.empty:
-                                    library_reviews = all_reviews[all_reviews['Place_name'] == row['Place_namme']]
+                                    library_reviews = all_reviews[all_reviews['Place_name'] == row['Place_name']]
                                     
                                     # Gabungkan teks
                                     text_positif = " ".join(review for review in library_reviews[library_reviews['sentiment'] == LABEL_POSITIF]['Komentar'])
@@ -416,6 +416,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
