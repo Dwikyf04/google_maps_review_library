@@ -110,9 +110,62 @@ with st.sidebar:
     st.sidebar.caption("Dibuat oleh Nanda | 2025")
 
 if selected_page == "Beranda":
+
+    st.header("📚 Sistem Rekomendasi Perpustakaan Indonesia")
+
+    st.write("""
+    Aplikasi ini menganalisis ribuan ulasan **Google Maps** untuk membantu pengguna menemukan 
+    perpustakaan terbaik di Indonesia. Sistem menggabungkan teknologi **NLP (Natural Language Processing)** 
+    dan **Machine Learning** untuk memberikan hasil yang akurat dan informatif.
+    """)
+
+    st.markdown("### ✨ Fitur Utama Aplikasi")
+    st.markdown("""
+    ✅ **Rekomendasi Perpustakaan Terbaik** berdasarkan:
+    - Rating Google
+    - Sentimen positif pengguna
+    - Analisis topik ulasan (fasilitas, koleksi, pelayanan)
+
+    ✅ **Analisis Sentimen Ulasan Baru**
+    - Prediksi apakah ulasan **positif / negatif / netral**
+    - Deteksi **topik utama** menggunakan K-Means Clustering  
+
+    ✅ **Visualisasi Interaktif**
+    - Peta lokasi perpustakaan
+    - Grafik distribusi rating dan sentimen
+
+    ✅ **Contoh Ulasan Otentik**
+    - Diambil langsung dari data Google Maps
+
+    ---
+    """)
+
+    st.markdown("### 🔬 Teknologi & Model Machine Learning")
+    st.markdown("""
+    | Komponen | Metode |
+    |---------|-------|
+    | Preprocessing Teks | Case Folding · Stopwords Removal · Stemming (Sastrawi) |
+    | Ekstraksi Fitur | **TF-IDF Vectorizer** |
+    | Analisis Sentimen | **Support Vector Machine (SVM)** |
+    | Analisis Topik | **K-Means Clustering (K=3)** |
+    | Sistem Rekomendasi | **Content-Based Filtering + Cosine Similarity** |
+    """)
+
+    st.markdown("### 📌 Dataset")
+    st.markdown(f"""
+    - Sumber: Google Maps Reviews
+    - Total Perpustakaan: **{library_data['Place_name'].nunique()} lokasi**
+    - Total Ulasan: **{len(all_reviews)} komentar dianalisis**
+    - Kota Dalam Dataset: **{library_data['city'].nunique()} kota**
+    """)
+
+    st.divider()
+
+
     st.header("Analisis & Rekomendasi Perpustakaan")
     st.markdown("Aplikasi ini membantu Anda menemukan perpustakaan terbaik berdasarkan ulasan nyata pengguna Google Maps.")
     st.divider()
+    
 
     # 📌 Ringkasan Data
     st.subheader("Ringkasan Data")
@@ -465,6 +518,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
