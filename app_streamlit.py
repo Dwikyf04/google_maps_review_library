@@ -126,14 +126,14 @@ if selected_page == "Beranda":
     if not library_data.empty:
         top_cities = library_data.groupby('city')['skor_kualitas'].mean().nlargest(5)
         st.bar_chart(top_cities)
-
-# --- 5. Isi Tab 1: Rekomendasi Perpustakaan ---
-# ===============================================
-# Halaman 2: REKOMENDASI (Kode Tab 1 Lama Anda)
-# ===============================================
-# ===============================================
-# Halaman 2: REKOMENDASI (Kode Tab 1 Lama Anda)
-# ===============================================
+    st.subheader("Kota dengan Skor Kualitas Rata-rata Tertinggi")
+    if not library_data.empty:
+        try:
+            top_cities = library_data.groupby('kota')['skor_kualitas'].mean().nlargest(5)
+            st.bar_chart(top_cities, color="#00A0B0") # Anda bisa ganti warnanya
+        except Exception as e:
+            st.error(f"Gagal membuat bagan kota: {e}")
+            
 elif selected_page == "Rekomendasi":
     st.header("🏆 Temukan Perpustakaan Terbaik di Kota Anda")
     
@@ -383,6 +383,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
