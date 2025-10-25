@@ -126,15 +126,7 @@ if selected_page == "Beranda":
     if not library_data.empty:
         top_cities = library_data.groupby('city')['skor_kualitas'].mean().nlargest(5)
         st.bar_chart(top_cities)
-    if not recommended_libraries.empty:
-         st.subheader("Peta Lokasi Teratas")
-         st.map(recommended_libraries[['latitude', 'longitude']])  
-         st.subheader("Detail Peringkat")
-         for i, (_, row) in enumerate(recommended_libraries.iterrows()):
-         with st.container(border=True):
-        st.markdown(f"### {i + 1}. {row['Place_name']}") 
-                            # --- BARCHART BARU DI SINI ---
-                            col1, col2 = st.columns([1, 2]) # Kolom 1 lebih kecil
+    col1, col2 = st.columns([1, 2]) # Kolom 1 lebih kecil
                             with col1:
                                 st.metric(label="⭐ Rating Google", value=f"{row['rating']:.1f} / 5")
                                 st.metric(label="👍 Sentimen Positif", value=f"{row['persen_positif']:.0%}")
@@ -153,6 +145,7 @@ if selected_page == "Beranda":
                                     st.bar_chart(chart_data, x="Tipe Sentimen", y="Jumlah Ulasan", color="Tipe Sentimen")
                                 except KeyError:
                                     st.caption("Kolom (jumlah_negatif/netral) tidak ada di CSV.")
+    
             
 elif selected_page == "Rekomendasi":
     st.header("🏆 Temukan Perpustakaan Terbaik di Kota Anda")
@@ -403,6 +396,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
