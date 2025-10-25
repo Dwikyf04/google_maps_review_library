@@ -217,7 +217,7 @@ elif selected_page == "Rekomendasi":
                         col1, col2 = st.columns([1,2])
                         with col1:
                             st.metric(label="⭐ Rating Google", value=f"{row['rating']:.1f} / 5")
-                             st.metric(label="👍 Sentimen Positif", value=f"{row['persen_positif']:.0%}")
+                            st.metric(label="👍 Sentimen Positif", value=f"{row['persen_positif']:.0%}")
                         with col2:
                             st.write("**Distribusi sentimen:**")
                             try:
@@ -376,6 +376,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
