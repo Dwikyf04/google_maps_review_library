@@ -384,11 +384,9 @@ elif selected_page == "About":
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
 
-
-
-
-
+  st.sidebar.markdown("---")
   st.sidebar.caption("Dibuat oleh Nanda | 2025")
+
 
 
 
