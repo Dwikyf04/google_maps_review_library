@@ -151,7 +151,7 @@ if selected_page == "Beranda":
     | Sistem Rekomendasi | **Content-Based Filtering + Cosine Similarity** |
     """)
 
-     st.divider()
+    st.divider()
     
 
     # 📌 Ringkasan Data
@@ -505,6 +505,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
