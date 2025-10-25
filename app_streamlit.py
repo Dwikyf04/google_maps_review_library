@@ -353,8 +353,9 @@ elif selected_page == "Analisis Ulasan":
 elif selected_page == "About":
     st.header("About")
     st.markdown("""
-    Aplikasi ini dibuat oleh **Nanda** sebagai proyek untuk... 
-    Tujuannya adalah untuk membangun sistem rekomendasi perpustakaan berdasarkan ulasan otentik dari Google Maps.
+    web ini dibbuat oleh saya sendiri sebagai proyek untuk portofolio saya dan pengimpelentasian ilmu-ilmu yang saya pelajari baik melalui perkuliahan maupun melalui bootchamp. 
+    Tujuannya adalah untuk membangun sistem rekomendasi perpustakaan berdasarkan ulasan otentik dari Google Maps. saya membuat website ini dilatarbelakangi oleh keresahan saya setiap ingin pergi ke perpustakaan tetapi 
+    masih perlu bertanya ke teman terkait review perpustakaan tersebut.
 
     ### Metodologi
     Proyek ini menggabungkan dua pendekatan *machine learning*:
@@ -381,12 +382,13 @@ elif selected_page == "About":
     
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
-    * Proses *preprocessing* teks melibatkan *case folding*, *stemming* (Sastrawi), dan *stopword removal*.
     """)
 
 
 
 
+
+  st.sidebar.caption("Dibuat oleh Nanda | 2025")
 
 
 
