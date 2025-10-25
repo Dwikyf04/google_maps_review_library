@@ -139,9 +139,9 @@ if selected_page == "Beranda":
        # ✅ Fitur Utama
     st.markdown("### 🚀 Fitur Utama Aplikasi")
     fitur_cols = st.columns(3)
-    fitur_cols[0].info("🔎 Analisis Sentimen Ulasan Baru")
     fitur_cols[1].success("🎯 Rekomendasi Perpustakaan Terbaik")
-    fitur_cols[2].warning("📊 Visualisasi Data Interaktif")
+    fitur_cols[0].info("🔎 Analisis Sentimen Ulasan Baru")
+    #fitur_cols[2].warning("📊 Visualisasi Data Interaktif")
 
     st.divider()
     
@@ -584,6 +584,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
