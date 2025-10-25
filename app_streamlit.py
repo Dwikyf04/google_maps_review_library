@@ -265,8 +265,8 @@ elif selected_page == "Rekomendasi":
                                                 row['jumlah_positif'],
                                                 row['jumlah_negatif'],
                                                 row['jumlah_netral']
-                                                ]
-                                            })
+                                                    ]
+                                                })
                                 # Sekarang kode ini akan berjalan
                                 st.bar_chart(chart_data, x="Tipe Sentimen", y="Jumlah Ulasan", color="Tipe Sentimen")
                             except KeyError:
@@ -419,6 +419,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
