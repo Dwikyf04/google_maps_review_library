@@ -252,7 +252,7 @@ if selected_page == "Beranda":
 elif selected_page == "Rekomendasi":
     st.markdown("""
         <div style='text-align:center; padding: 20px;'>
-            <h1> Temukan Perpustakaan Terbaik di Kota Anda</h1>
+            <h1> merekommendasikan perpustakaan di kota anda</h1>
             <p style='font-size:18px;'>Cari perpustakaan terbaik berbasis analisis ribuan ulasan Google Maps dengan NLP & Machine Learning</p>
         </div>
     """, unsafe_allow_html=True)
@@ -418,12 +418,11 @@ elif selected_page == "Analisis Ulasan":
     st.markdown("""
         <div style='text-align:center; padding: 20px;'>
             <h1> Analisis Sentimen & Topik Ulasan Baru</h1>
-            <p style='font-size:18px;'>Cari perpustakaan terbaik berbasis analisis ribuan ulasan Google Maps dengan NLP & Machine Learning</p>
+            <p style='font-size:18px;'>Masukkan ulasan dan sistem akan memprediksi sentimen + topik ulasan berdasarkan clustering.</p>
         </div>
     """, unsafe_allow_html=True)
 
     st.divider()
-    st.write("Masukkan ulasan dan sistem akan memprediksi sentimen + topik ulasan berdasarkan clustering.")
     
     nama_cluster = {
         0: "Fasilitas & Kenyamanan",
@@ -526,7 +525,7 @@ elif selected_page == "About":
     st.markdown("""
         <div style='text-align:center; padding: 20px;'>
             <h1> About </h1>
-            <p style='font-size:18px;'>Cari perpustakaan terbaik berbasis analisis ribuan ulasan Google Maps dengan NLP & Machine Learning</p>
+            <p style='font-size:18px;'>Tentang portofolio ini</p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -567,7 +566,7 @@ elif selected_page == "Feedback":
     st.markdown("""
         <div style='text-align:center; padding: 20px;'>
             <h1> ormulir Feedback Pengguna </h1>
-            <p style='font-size:18px;'>Cari perpustakaan terbaik berbasis analisis ribuan ulasan Google Maps dengan NLP & Machine Learning</p>
+            <p style='font-size:18px;'>Feedback untuk kami</p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -610,6 +609,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
