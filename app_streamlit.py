@@ -6,6 +6,8 @@ import joblib
 import numpy as np
 import datetime
 import math
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics.pairwise import cosine_similarity
 from streamlit_option_menu import option_menu
@@ -214,16 +216,6 @@ if selected_page == "Beranda":
             use_container_width=True
         )
     st.divider()
-    
-    cities = ["Semua Kota"] + sorted(library_data['city'].unique().tolist())
-    selected_city = st.selectbox("Filter Kota:", cities)
-
-    if selected_city != "Semua Kota":
-        df_view = library_data[library_data['city'] == selected_city]
-    else:
-        df_view = library_data.copy()
-
-    st.divider() 
     
     if not all_reviews.empty:
         st.subheader("☁️ Word Cloud Ulasan Perpustakaan (Semua Kota)")
@@ -609,6 +601,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
