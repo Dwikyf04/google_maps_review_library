@@ -232,7 +232,7 @@ elif selected_page == "Rekomendasi":
                                     library_reviews = all_reviews[all_reviews['Place_name'] == row['Place_name']]
                                     
                                     # PERBAIKAN: Gunakan variabel LABEL_POSITIF/NEGATIF
-                                    text_positif = " ".join(review for review in library_reviews[library_reviews['sentiment'] == LABEL_POSITIVE]['Komentar'])
+                                    text_positif = " ".join(review for review in library_reviews[library_reviews['sentiment'] == LABEL_POSITIf]['Komentar'])
                                     text_negatif = " ".join(review for review in library_reviews[library_reviews['sentiment'] == LABEL_NEGATIVE]['Komentar'])
                                     
                                     wc_col1, wc_col2 = st.columns(2)
@@ -365,6 +365,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
