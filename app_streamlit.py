@@ -213,7 +213,7 @@ elif selected_page == "Rekomendasi":
                     st.subheader("Detail Peringkat")
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
                         st.markdown(f"#### {i + 1}. {row['Place_name']}") 
-                ..
+                        
                         col1, col2 = st.columns([1,2])
                         with col1:
                             st.metric(label="⭐ Rating Google", value=f"{row['rating']:.1f} / 5")
@@ -376,6 +376,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
