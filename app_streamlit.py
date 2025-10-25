@@ -256,22 +256,29 @@ elif selected_page == "Rekomendasi":
                                                 st.caption(f"Gagal membuat word cloud: {e}")
                                         else:
                                             st.caption("Tidak ada data ulasan positif.")
-                                    with wc_col2:
-                                        st.write("**Kata Kunci Negatif:**")
-                                        if text_negatif:
-                                            try:
-                                                wc_neg = WordCloud(background_color="black", colormap="Reds", max_words=30, contour_width=1, contour_color='red').generate(text_negatif)
-                                                fig_neg, ax_neg = plt.subplots()
-                                                ax_neg.imshow(wc_neg, interpolation='bilinear')
-                                                ax_neg.axis('off')
-                                                st.pyplot(fig_neg, use_container_width=True)
-                                            except Exception as e:
-                                                st.caption(f"Gagal membuat word cloud: {e}")
-                                        else:
-                                            st.caption("Tidak ada data ulasan negatif.")
-                                else:
-                                    st.caption("File ulasan individual tidak dapat dimuat.")
-                        st.write("") # Spasi antar kartu
+                                  with col2:
+                            st.write("**Distribusi Sentimen:**")
+                            try:
+                                # Buat DataFrame mini untuk bagan
+                                chart_data = pd.DataFrame({
+                                    # PERBAIKAN 1: "Negatif" (bukan "Negatife")
+                                    "Tipe Sentimen": ["Positif", "Negatif", "Netral"],
+                                    "Jumlah Ulasan": [
+                                        row['jumlah_positif'],
+                                        # PERBAIKAN 2: 'jumlah_negatif' (pakai 'f')
+                                        row['jumlah_negatif'],
+                                        # PERBAIKAN 3: 'jumlah_netral' (pakai 'l')
+                                        row['jumlah_netral']
+                                    ]
+                                })
+                                # Sekarang kode ini akan berjalan
+                                st.bar_chart(chart_data, x="Tipe Sentimen", y="Jumlah Ulasan", color="Tipe Sentimen")
+                            except KeyError:
+                                # Pesan ini hanya muncul jika file CSV Anda memang belum punya kolomnya
+                                st.caption("Kolom (jumlah_negatif/netral) tidak ada di CSV.")
+                            except Exception as e:
+                                # Menangkap error lain jika terjadi
+                                st.caption(f"Gagal membuat bagan: {e}")
 
                         # --- PERUBAHAN DI SINI: Logika Expander ---
                         with st.expander(f"Lihat riview  untuk {row['Place_name']}"):
@@ -416,6 +423,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
