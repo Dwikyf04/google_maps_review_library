@@ -431,8 +431,8 @@ elif selected_page == "Analisis Ulasan":
                     cluster_name = nama_cluster.get(cluster_pred, f"Cluster {cluster_pred}")
 
                     st.subheader("📈 Hasil Analisis")
-                    st.write(f"**Sentimen Terdeteksi:** 🗣️ {sentiment_pred}")
-                    st.write(f"**Topik Utama Ulasan:** 🧩 {cluster_name}")
+                    st.write(f"**Sentimen Terdeteksi:**  {sentiment_pred}")
+                    st.write(f"**Topik Utama Ulasan:** {cluster_name}")
 
                     # Rekomendasi dinamis berdasarkan cluster
                     rekomendasi_dic = {
@@ -441,10 +441,10 @@ elif selected_page == "Analisis Ulasan":
                         2: "Pelayanan staf ramah dan cepat"
                     }
 
-                    st.info(f"🎯 Insight otomatis: {rekomendasi_dic.get(cluster_pred)}")
+                    st.info(f"Insight otomatis: {rekomendasi_dic.get(cluster_pred)}")
 
                     st.markdown("---")
-                    st.subheader("🧠 Kata-Kata Paling Berpengaruh")
+                    st.subheader("Kata-Kata Paling Berpengaruh")
 
                     # TOP TF-IDF WORDS
                     feature_names = tfidf.get_feature_names_out()
@@ -549,6 +549,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
