@@ -132,8 +132,6 @@ if selected_page == "Beranda":
 # Halaman 2: REKOMENDASI (Kode Tab 1 Lama Anda)
 # ===============================================
 # Di app_streamlit.py
-LABEL_POSITIF = 'positif'
-LABEL_NEGATIF = 'nSegative'
 elif selected_page == "Rekomendasi":
     st.header("🏆 Temukan Perpustakaan Terbaik di Kota Anda")
     
@@ -234,8 +232,8 @@ elif selected_page == "Rekomendasi":
                                     library_reviews = all_reviews[all_reviews['Place_name'] == row['Place_name']]
                                     
                                     # PERBAIKAN: Gunakan variabel LABEL_POSITIF/NEGATIF
-                                    text_positif = " ".join(review for review in library_reviews[library_reviews['sentiment'] == LABEL_POSITIF]['Komentar'])
-                                    text_negatif = " ".join(review for review in library_reviews[library_reviews['sentiment'] == LABEL_NEGATIF]['Komentar'])
+                                    text_positif = " ".join(review for review in library_reviews[library_reviews['sentiment'] == LABEL_POSITIVE]['Komentar'])
+                                    text_negatif = " ".join(review for review in library_reviews[library_reviews['sentiment'] == LABEL_NEGATIVE]['Komentar'])
                                     
                                     wc_col1, wc_col2 = st.columns(2)
                                     with wc_col1:
@@ -367,6 +365,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
