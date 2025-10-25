@@ -269,10 +269,9 @@ elif selected_page == "Rekomendasi":
                                             })
                                 # Sekarang kode ini akan berjalan
                                             st.bar_chart(chart_data, x="Tipe Sentimen", y="Jumlah Ulasan", color="Tipe Sentimen")
-                            except KeyError:
-                                # Pesan ini hanya muncul jika file CSV Anda memang belum punya kolomnya
+                                        except KeyError:
                                             st.caption("Kolom (jumlah_negatif/netral) tidak ada di CSV.")
-                            except Exception as e:
+                                        except Exception as e:
                                             st.caption(f"Gagal membuat bagan: {e}")
 
                         # --- PERUBAHAN DI SINI: Logika Expander ---
@@ -418,6 +417,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
