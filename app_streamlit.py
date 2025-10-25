@@ -131,6 +131,9 @@ if selected_page == "Beranda":
 # ===============================================
 # Halaman 2: REKOMENDASI (Kode Tab 1 Lama Anda)
 # ===============================================
+# Di app_streamlit.py
+LABEL_POSITIF = 'positif'
+LABEL_NEGATIF = 'nSegative'
 elif selected_page == "Rekomendasi":
     st.header("🏆 Temukan Perpustakaan Terbaik di Kota Anda")
     
@@ -364,6 +367,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
