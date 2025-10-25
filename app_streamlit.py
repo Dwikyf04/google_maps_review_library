@@ -234,6 +234,45 @@ elif selected_page == "Rekomendasi":
                         if 'url_google_maps' in row and pd.notna(row['url_google_maps']) and row['url_google_maps'].startswith('http'):
                             st.link_button("Lihat di Google Maps ↗️", row['url_google_maps'])
 
+                        with st.expander(f"Lihat Analisis Word Cloud untuk {row['nama_perpustakaan']}"):
+                                if not all_reviews.empty:
+                                    library_reviews = all_reviews[all_reviews['nama_perpustakaan'] == row['nama_perpustakaan']]
+                                    
+                                    # Gabungkan teks
+                                    text_positif = " ".join(review for review in library_reviews[library_reviews['sentiment'] == LABEL_POSITIF]['Komentar'])
+                                    text_negatif = " ".join(review for review in library_reviews[library_reviews['sentiment'] == LABEL_NEGATIF]['Komentar'])
+                                    
+                                    wc_col1, wc_col2 = st.columns(2)
+                                    with wc_col1:
+                                        st.write("**Kata Kunci Positif:**")
+                                        if text_positif:
+                                            try:
+                                                wc_pos = WordCloud(background_color="white", colormap="Greens", max_words=30, contour_width=1, contour_color='green').generate(text_positif)
+                                                fig_pos, ax_pos = plt.subplots()
+                                                ax_pos.imshow(wc_pos, interpolation='bilinear')
+                                                ax_pos.axis('off')
+                                                st.pyplot(fig_pos, use_container_width=True)
+                                            except Exception as e:
+                                                st.caption(f"Gagal membuat word cloud: {e}")
+                                        else:
+                                            st.caption("Tidak ada data ulasan positif.")
+                                    with wc_col2:
+                                        st.write("**Kata Kunci Negatif:**")
+                                        if text_negatif:
+                                            try:
+                                                wc_neg = WordCloud(background_color="black", colormap="Reds", max_words=30, contour_width=1, contour_color='red').generate(text_negatif)
+                                                fig_neg, ax_neg = plt.subplots()
+                                                ax_neg.imshow(wc_neg, interpolation='bilinear')
+                                                ax_neg.axis('off')
+                                                st.pyplot(fig_neg, use_container_width=True)
+                                            except Exception as e:
+                                                st.caption(f"Gagal membuat word cloud: {e}")
+                                        else:
+                                            st.caption("Tidak ada data ulasan negatif.")
+                                else:
+                                    st.caption("File ulasan individual tidak dapat dimuat.")
+                        st.write("") # Spasi antar kartu
+
                         # --- PERUBAHAN DI SINI: Logika Expander ---
                         with st.expander(f"Lihat riview  untuk {row['Place_name']}"):
                             if not all_reviews.empty:
@@ -377,6 +416,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
