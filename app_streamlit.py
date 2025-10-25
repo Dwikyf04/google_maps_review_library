@@ -6,6 +6,10 @@ import joblib
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from streamlit_option_menu import option_menu
+# === Konstanta Label Sentimen ===
+LABEL_POSITIF = "Positive"
+LABEL_NEGATIF = "Negative"
+LABEL_NETRAL = "Neutral"
 
 # --- Konfigurasi Halaman ---
 st.set_page_config(page_title="Analisis & Rekomendasi Perpus", layout="wide")
@@ -420,6 +424,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
