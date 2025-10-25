@@ -181,8 +181,6 @@ elif selected_page == "Rekomendasi":
             selected_keyword = filter_options[selected_filter_label]
 
             
-            # --- 2. PROSES & FILTER DATA ---
-            
             if selected_city:
                 st.markdown("---")
                 # (Sisa kode filter Anda)
@@ -205,7 +203,7 @@ elif selected_page == "Rekomendasi":
                     ascending=False
                 ).head(5)
 
-                
+
                 # --- 3. TAMPILKAN HASIL ---
                 
                 if not recommended_libraries.empty:
@@ -213,19 +211,20 @@ elif selected_page == "Rekomendasi":
                     st.map(recommended_libraries[['latitude', 'longitude']])
                     
                     st.subheader("Detail Peringkat")
-                    # Asumsi nama kolom Anda: 'nama_perpustakaan', 'sentiment', 'Komentar'
-                    # Asumsi label: 'Positif', 'Negatif'
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
                         st.markdown(f"#### {i + 1}. {row['Place_name']}") 
-                        # ... (Kode st.metric Anda) ...
-                        col1, col2 = st.columns(2)
+                ..
+                        col1, col2 = st.columns([1,2])
                         with col1:
                             st.metric(label="⭐ Rating Google", value=f"{row['rating']:.1f} / 5")
+                             st.metric(label="👍 Sentimen Positif", value=f"{row['persen_positif']:.0%}")
                         with col2:
-                            if 'persen_positif' in row and pd.notna(row['persen_positif']):
-                                st.metric(label="👍 Sentimen Positif", value=f"{row['persen_positif']:.0%}")
-                            elif 'skor_kualitas' in row and pd.notna(row['skor_kualitas']):
-                                st.metric(label="💯 Skor Kualitas", value=f"{row['skor_kualitas']:.2f}")
+                            st.write("**Distribusi sentimen:**")
+                            try:
+                                chart_data = pd.DataFrame({"Tipe Sentimen": ["Positif", "Negative", "Netral"],
+                                                        "Jumlah Ulasan": [row["jumlah_positif"],row["jumlah_negative"],row["jumlah_netral"]
+                                                                         ]             ]
+                                                          })
 
                         # ... (Kode st.link_button Anda) ...
                         if 'url_google_maps' in row and pd.notna(row['url_google_maps']) and row['url_google_maps'].startswith('http'):
@@ -234,11 +233,8 @@ elif selected_page == "Rekomendasi":
                         # --- PERUBAHAN DI SINI: Logika Expander ---
                         with st.expander(f"Lihat riview  untuk {row['Place_name']}"):
                             if not all_reviews.empty:
-                                # Filter ulasan hanya untuk perpustakaan ini
                                 library_reviews = all_reviews[all_reviews['Place_name'] == row['Place_name']]
-                                
-                                # --- LOGIKA BARU ---
-                                # JIKA PENGGUNA MEMILIH KEYWORD FILTER
+                            
                                 if selected_keyword:
                                     st.write(f"**review yang Menyebut '{selected_keyword}':**")
                                     # Filter ulasan yang mengandung keyword
@@ -377,6 +373,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
