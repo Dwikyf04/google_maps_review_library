@@ -125,6 +125,16 @@ if selected_page == "Beranda":
     perpustakaan terbaik di Indonesia. Sistem menggabungkan teknologi **NLP (Natural Language Processing)** 
     dan **Machine Learning** untuk memberikan hasil yang akurat dan informatif.
     """)
+    st.divider()
+    if not library_data.empty and not all_reviews.empty:
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Total Perpustakaan", f"{library_data['Place_name'].nunique()}+ Lokasi")
+        col2.metric("Total Ulasan", f"{len(all_reviews)}+ Komentar")
+        col3.metric("Jumlah Kota", f"{library_data['city'].nunique()} Kota")
+    else:
+        st.info("Data sedang dimuat...")
+
+    st.divider()
 
     st.markdown("### ✨ Fitur Utama Aplikasi")
     st.markdown("""
@@ -609,6 +619,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
