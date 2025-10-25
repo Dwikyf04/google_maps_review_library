@@ -174,6 +174,17 @@ if selected_page == "Beranda":
     if not library_data.empty:
         top_cities = library_data.groupby('city')['skor_kualitas'].mean().nlargest(5)
         st.bar_chart(top_cities)
+            # Insight Kota Terbaik
+    if not library_data.empty:
+        best_city = top_cities.index[0]
+        best_score = top_cities.iloc[0]
+
+        st.markdown("🔍 **Insight Kota:**")
+        st.write(
+            f"• **{best_city}** memiliki skor kualitas tertinggi: **{best_score:.2f}** ✅\n"
+            f"• Menunjukkan kualitas layanan dan fasilitas yang sangat baik."
+        )
+
 
     # ⭐ Distribusi Rating
     st.subheader("Distribusi Rating Perpustakaan")
@@ -516,6 +527,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
