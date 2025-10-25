@@ -250,7 +250,14 @@ if selected_page == "Beranda":
 # Halaman 2: REKOMENDASI (Kode Tab 1 Lama Anda)
 # ===============================================
 elif selected_page == "Rekomendasi":
-    st.header("🏆 Temukan Perpustakaan Terbaik di Kota Anda")
+    st.markdown("""
+        <div style='text-align:center; padding: 20px;'>
+            <h1> Temukan Perpustakaan Terbaik di Kota Anda</h1>
+            <p style='font-size:18px;'>Cari perpustakaan terbaik berbasis analisis ribuan ulasan Google Maps dengan NLP & Machine Learning</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    st.divider()
     
     if not library_data.empty:
         # Asumsi kolom Anda bernama 'kota'
@@ -583,6 +590,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
