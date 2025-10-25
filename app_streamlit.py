@@ -6,6 +6,7 @@ import joblib
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from streamlit_option_menu import option_menu
+import datetime
 # === Konstanta Label Sentimen ===
 LABEL_POSITIF = "Positive"
 LABEL_NEGATIF = "Negative"
@@ -100,7 +101,7 @@ with st.sidebar:
     st.image("https://i.pinimg.com/736x/12/f9/ed/12f9ed73b852fd466830c23ab8fb575e.jpg", width=100) # Opsional: Ganti dengan URL logo Anda
     selected_page = option_menu(
         menu_title="Menu Utama",
-        options=["Beranda", "Rekomendasi", "Analisis Ulasan", "About"],
+        options=["Beranda", "Rekomendasi", "Analisis Ulasan", "About","Feedback"],
         icons=["house-door-fill", "star-fill", "search", "info-circle-fill"],
         menu_icon="compass-fill",
         default_index=0
@@ -393,6 +394,47 @@ elif selected_page == "About":
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
 
+elif selected_page == "Feedback":
+    FEEDBACK_FILE = "feedback_pengguna.csv"
+
+    st.header("📝 Formulir Feedback Pengguna")
+    st.write("Bantu kami meningkatkan kualitas aplikasi ini dengan memberikan feedback!")
+
+# Input form
+    with st.form("feedback_form"):
+        name = st.text_input("Nama (opsional)", "")
+        city = st.text_input("Kota asal pengguna (opsional)", "")
+        rating = st.slider("Seberapa puas Anda dengan aplikasi ini?", 1, 5, 4)
+        feedback = st.text_area("Masukan / kritik / saran Anda", "")
+
+        submitted = st.form_submit_button("Kirim")
+
+    if submitted:
+        if feedback.strip() == "":
+            st.warning("Mohon isi kritik atau saran terlebih dahulu ✅")
+        else:
+            new_data = pd.DataFrame([{
+                "timestamp": datetime.datetime.now(),
+                "name": name,
+                "city": city,
+                "rating": rating,
+                "feedback": feedback
+            }])
+
+        try:
+            # Jika file sudah ada → append
+            existing_data = pd.read_csv(FEEDBACK_FILE)
+            updated_data = pd.concat([existing_data, new_data], ignore_index=True)
+        except FileNotFoundError:
+            # Jika file belum ada → buat file baru
+            updated_data = new_data
+
+        updated_data.to_csv(FEEDBACK_FILE, index=False)
+
+        st.success("✅ Terima kasih! Feedback Anda sudah dikirim.")
+        st.balloons()
+
+    
 
 
 
