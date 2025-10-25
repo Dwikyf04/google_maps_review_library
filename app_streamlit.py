@@ -4,9 +4,11 @@ import streamlit as st
 import pandas as pd
 import joblib
 import numpy as np
+import datetime
+import math
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics.pairwise import cosine_similarity
 from streamlit_option_menu import option_menu
-import datetime
 # === Konstanta Label Sentimen ===
 LABEL_POSITIF = "Positive"
 LABEL_NEGATIF = "Negative"
@@ -534,6 +536,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
