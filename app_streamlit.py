@@ -179,7 +179,7 @@ elif selected_page == "Rekomendasi":
                     matching_libraries_names = matching_reviews['Place_name'].unique() 
                     city_libraries = city_libraries[
                         # PERBAIKAN: Gunakan 'nama_perpustakaan'
-                        city_libraries['nama_perpustakaan'].isin(matching_libraries_names) 
+                        city_libraries['Place_name'].isin(matching_libraries_names) 
                     ]
                 
                 recommended_libraries = city_libraries.sort_values(
@@ -364,6 +364,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
