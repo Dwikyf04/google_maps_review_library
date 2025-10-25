@@ -127,18 +127,6 @@ if selected_page == "Beranda":
         top_cities = library_data.groupby('city')['skor_kualitas'].mean().nlargest(5)
         st.bar_chart(top_cities)
     col1, col2 = st.columns([1, 2]) # Kolom 1 lebih kecil
-
-    if not library_data.empty:
-        try:
-            # Mengelompokkan berdasarkan kota dan menghitung rata-rata skor kualitas
-            top_cities = library_data.groupby('city')['skor_kualitas'].mean().nlargest(5)
-            # Menampilkan BARCHART TOP 5 KOTA
-            st.bar_chart(top_cities, color="#FF8C00") # Anda bisa ganti warnanya
-        except KeyError as e:
-            st.error(f"Kolom {e} tidak ditemukan di data_perpustakaan.csv untuk bagan.")
-        except Exception as e:
-            st.error(f"Gagal membuat bagan kota: {e}")
-    
             
 elif selected_page == "Rekomendasi":
     st.header("🏆 Temukan Perpustakaan Terbaik di Kota Anda")
@@ -389,6 +377,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
