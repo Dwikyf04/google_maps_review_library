@@ -1,5 +1,7 @@
 pandas
 numpy
+wordcloud
+matplotlib
 selenium
 beautifulsoup4
 matplotlib
