@@ -415,7 +415,14 @@ elif selected_page == "Rekomendasi":
 
 # --- 6. Isi Tab 2: Analisis Ulasan Individual ---
 elif selected_page == "Analisis Ulasan":
-    st.header("Analisis Sentimen & Topik Ulasan Baru")
+     st.markdown("""
+        <div style='text-align:center; padding: 20px;'>
+            <h1> Analisis Sentimen & Topik Ulasan Baru</h1>
+            <p style='font-size:18px;'>Cari perpustakaan terbaik berbasis analisis ribuan ulasan Google Maps dengan NLP & Machine Learning</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    st.divider()
     st.write("Masukkan ulasan dan sistem akan memprediksi sentimen + topik ulasan berdasarkan clustering.")
     
     nama_cluster = {
@@ -516,7 +523,14 @@ elif selected_page == "Analisis Ulasan":
 
 
 elif selected_page == "About":
-    st.header("About")
+    st.markdown("""
+        <div style='text-align:center; padding: 20px;'>
+            <h1> About </h1>
+            <p style='font-size:18px;'>Cari perpustakaan terbaik berbasis analisis ribuan ulasan Google Maps dengan NLP & Machine Learning</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    st.divider()
     st.markdown("""
     web ini dibbuat oleh saya sendiri sebagai proyek untuk portofolio saya dan pengimpelentasian ilmu-ilmu yang saya pelajari baik melalui perkuliahan maupun melalui bootchamp. 
     Tujuannya adalah untuk membangun sistem rekomendasi perpustakaan berdasarkan ulasan otentik dari Google Maps. saya membuat website ini dilatarbelakangi oleh keresahan saya setiap ingin pergi ke perpustakaan tetapi 
@@ -550,9 +564,15 @@ elif selected_page == "About":
     """)
 
 elif selected_page == "Feedback":
-    FEEDBACK_FILE = "feedback_pengguna.csv"
+    st.markdown("""
+        <div style='text-align:center; padding: 20px;'>
+            <h1> ormulir Feedback Pengguna </h1>
+            <p style='font-size:18px;'>Cari perpustakaan terbaik berbasis analisis ribuan ulasan Google Maps dengan NLP & Machine Learning</p>
+        </div>
+    """, unsafe_allow_html=True)
 
-    st.header("📝 Formulir Feedback Pengguna")
+    st.divider()
+    FEEDBACK_FILE = "feedback_pengguna.csv"
     st.write("Bantu kami meningkatkan kualitas aplikasi ini dengan memberikan feedback!")
 
 # Input form
@@ -590,6 +610,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
