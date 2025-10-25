@@ -329,8 +329,7 @@ elif selected_page == "Rekomendasi":
                     st.map(recommended_libraries[['latitude', 'longitude']])
                     
                     st.subheader("Detail Peringkat")
-                    # Asumsi nama kolom Anda: 'nama_perpustakaan', 'sentiment', 'Komentar'
-                    # Asumsi label: 'Positif', 'Negatif'
+                   
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
                         st.markdown(f"#### {i + 1}. {row['Place_name']}") 
                         # ... (Kode st.metric Anda) ...
@@ -404,10 +403,9 @@ elif selected_page == "Rekomendasi":
 
 # --- 6. Isi Tab 2: Analisis Ulasan Individual ---
 elif selected_page == "Analisis Ulasan":
-    st.header("🔍 Analisis Sentimen & Topik Ulasan Baru")
+    st.header("nalisis Sentimen & Topik Ulasan Baru")
     st.write("Masukkan ulasan dan sistem akan memprediksi sentimen + topik ulasan berdasarkan clustering.")
-
-    # Mapping cluster ke topik
+    
     nama_cluster = {
         0: "Fasilitas & Kenyamanan",
         1: "Kelengkapan Koleksi",
@@ -416,62 +414,88 @@ elif selected_page == "Analisis Ulasan":
 
     if tfidf is not None and svm_model is not None and kmeans_model is not None:
 
-        user_input = st.text_area("✍️ Masukkan ulasan pengguna di sini:", "", key="input_ulasan")
+        user_input = st.text_area("Masukkan ulasan pengguna di sini:", "", key="input_ulasan")
 
         if st.button("Analisis Ulasan"):
             if user_input.strip():
-
                 try:
                     # TF-IDF transform
                     X = tfidf.transform([user_input])
 
-                    # Prediksi sentimen & cluster
+                    # Prediksi
                     sentiment_pred = svm_model.predict(X)[0]
                     cluster_pred = kmeans_model.predict(X)[0]
                     cluster_name = nama_cluster.get(cluster_pred, f"Cluster {cluster_pred}")
 
-                    st.subheader("📈 Hasil Analisis")
-                    st.write(f"**Sentimen Terdeteksi:**  {sentiment_pred}")
+                    st.subheader(" Hasil Analisis")
+                    st.write(f"**Sentimen Terdeteksi:** {sentiment_pred}")
                     st.write(f"**Topik Utama Ulasan:** {cluster_name}")
 
-                    # Rekomendasi dinamis berdasarkan cluster
                     rekomendasi_dic = {
                         0: "Fasilitas nyaman seperti ruangan AC, WiFi, dan tempat duduk nyaman",
                         1: "Ketersediaan koleksi buku dan akses digital sangat baik",
                         2: "Pelayanan staf ramah dan cepat"
                     }
-
                     st.info(f"Insight otomatis: {rekomendasi_dic.get(cluster_pred)}")
 
+                    # === Kata Kunci TF-IDF ===
                     st.markdown("---")
-                    st.subheader("Kata-Kata Paling Berpengaruh")
+                    st.subheader("Kata Penting dalam Ulasan")
 
-                    # TOP TF-IDF WORDS
                     feature_names = tfidf.get_feature_names_out()
                     scores = X.toarray().flatten()
 
                     df_scores = pd.DataFrame({
-                        'Kata': feature_names,
-                        'Skor_TFIDF': scores
+                        "Kata": feature_names,
+                        "Skor TF-IDF": scores
                     })
 
-                    top_words = df_scores[df_scores['Skor_TFIDF'] > 0].sort_values(
-                        by="Skor_TFIDF", ascending=False
-                    ).head(7)
+                    top_words = df_scores[df_scores['Skor TF-IDF'] > 0].nlargest(7, "Skor TF-IDF")
 
                     if not top_words.empty:
                         st.table(top_words)
                     else:
-                        st.caption("Tidak ada kata penting (mungkin terlalu pendek). ✅")
-                
+                        st.caption("Tidak ada kata penting (ulasan terlalu pendek).")
+
+                    # === REKOMENDASI BERDASARKAN SIMILARITY ===
+                    if 'profil_vektor' in globals() and profil_vektor is not None:
+                        st.markdown("---")
+                        st.subheader("Rekomendasi Perpustakaan yang Relevan")
+                        st.caption("Berdasarkan kemiripan teks ulasan Anda dengan ulasan perpustakaan lain")
+
+                        try:
+                            similarity_scores = cosine_similarity(X, profil_vektor).flatten()
+                            top_indices = similarity_scores.argsort()[::-1][:5]
+
+                            rekomendasi_df = pd.DataFrame({
+                                "Perpustakaan": [profil_nama[i] for i in top_indices],
+                                "Similarity (%)": [round(similarity_scores[i] * 100, 2) for i in top_indices]
+                            })
+
+                            st.dataframe(rekomendasi_df, use_container_width=True)
+
+                            if not library_data.empty:
+                                st.subheader("Lokasi Perpustakaan Rekomendasi")
+                                display_map = library_data[
+                                    library_data['Place_name'].isin(rekomendasi_df['Perpustakaan'])
+                                ]
+                                st.map(display_map[['latitude', 'longitude']])
+
+                        except Exception as e:
+                            st.warning(f"Gagal menghitung similarity: {e}")
+
+                    else:
+                        st.info("⚠️ Model rekomendasi belum tersedia.")
+
                 except Exception as e:
                     st.error(f"❌ Gagal memprediksi: {e}")
 
             else:
-                st.warning("Masukkan teks ulasan terlebih dahulu ✅")
+                st.warning("Masukkan teks ulasan terlebih dahulu!")
 
     else:
         st.error("⚠️ Model gagal dimuat. Pastikan semua file .pkl sudah tersedia dalam folder Models.")
+
 
 
 elif selected_page == "About":
@@ -549,6 +573,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
