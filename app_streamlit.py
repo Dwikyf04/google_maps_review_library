@@ -98,7 +98,7 @@ all_reviews = load_review_data()
 # ---------------------------------
 
 with st.sidebar:
-    st.image("https://i.pinimg.com/736x/12/f9/ed/12f9ed73b852fd466830c23ab8fb575e.jpg", width=100) # Opsional: Ganti dengan URL logo Anda
+    st.image("Logo.png", width=100) # Opsional: Ganti dengan URL logo Anda
     selected_page = option_menu(
         menu_title="Menu Utama",
         options=["Beranda", "Rekomendasi", "Analisis Ulasan", "About","Feedback"],
@@ -534,6 +534,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
