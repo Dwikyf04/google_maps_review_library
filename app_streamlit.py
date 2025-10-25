@@ -281,47 +281,53 @@ elif selected_page == "Rekomendasi":
                                 st.link_button("Lihat di Google Maps ↗️", row['url_google_maps'])
 
                             # Expander untuk Word Cloud
+                                # --- Word Cloud ---
+with st.expander(f"Lihat Analisis Word Cloud untuk {row['Place_name']}"): 
+    if not all_reviews.empty:
+        library_reviews = all_reviews[all_reviews['Place_name'] == row['Place_name']]
+
+        text_positif = " ".join(
+            review for review in library_reviews[library_reviews['sentiment'] == LABEL_POSITIF]['Komentar']
+        )
+        text_negatif = " ".join(
+            review for review in library_reviews[library_reviews['sentiment'] == LABEL_NEGATIF]['Komentar']
+        )
+
+        wc_col1, wc_col2 = st.columns(2)
+        with wc_col1:
+            st.write("**Kata Kunci Positif:**")
+            if text_positif.strip():
+                try:
+                    wc_pos = WordCloud(background_color="white", colormap="Greens", max_words=30)\
+                                .generate(text_positif)
+                    fig_pos, ax_pos = plt.subplots()
+                    ax_pos.imshow(wc_pos, interpolation='bilinear')
+                    ax_pos.axis('off')
+                    st.pyplot(fig_pos)
+                except Exception as e:
+                    st.caption(f"Gagal membuat word cloud: {e}")
+            else:
+                st.caption("Tidak ada data ulasan positif.")
+
+        with wc_col2:
+            st.write("**Kata Kunci Negatif:**")
+            if text_negatif.strip():
+                try:
+                    wc_neg = WordCloud(background_color="black", colormap="Reds", max_words=30)\
+                                .generate(text_negatif)
+                    fig_neg, ax_neg = plt.subplots()
+                    ax_neg.imshow(wc_neg, interpolation='bilinear')
+                    ax_neg.axis('off')
+                    st.pyplot(fig_neg)
+                except Exception as e:
+                    st.caption(f"Gagal membuat word cloud: {e}")
+            else:
+                st.caption("Tidak ada data ulasan negatif.")
+    else:
+        st.caption("File ulasan individual tidak dapat dimuat.")
+ 
                             # Ganti 'nama_perpustakaan' jika perlu
-                            with st.expander(f"Lihat Analisis Word Cloud untuk {row['Place_name']}"): 
-                                if not all_reviews.empty:
-                                    try:
-                                        # Filter ulasan untuk perpustakaan ini
-                                        # Ganti 'nama_perpustakaan' jika perlu
-                                        library_reviews = all_reviews[all_reviews['Place_name'] == row['Place_name']] 
-                                        
-                                        # Gabungkan teks (Gunakan LABEL_POSITIF/NEGATIF yang didefinisikan di atas)
-                                        # Ganti 'sentiment' dan 'Komentar' jika perlu
-                                        text_positif = " ".join(review for review in library_reviews[library_reviews['sentiment'] == LABEL_POSITIF]['Komentar'])
-                                        text_negatif = " ".join(review for review in library_reviews[library_reviews['sentiment'] == LABEL_NEGATIF]['Komentar'])
-                                        
-                                        wc_col1, wc_col2 = st.columns(2)
-                                        with wc_col1:
-                                            st.write("**Kata Kunci Positif:**")
-                                            if text_positif:
-                                                wc_pos = WordCloud(background_color="white", colormap="Greens", max_words=30, width=400, height=200).generate(text_positif)
-                                                fig_pos, ax_pos = plt.subplots()
-                                                ax_pos.imshow(wc_pos, interpolation='bilinear')
-                                                ax_pos.axis('off')
-                                                st.pyplot(fig_pos, use_container_width=True)
-                                            else:
-                                                st.caption("Tidak ada data ulasan positif.")
-                                        with wc_col2:
-                                            st.write("**Kata Kunci Negatif:**")
-                                            if text_negatif:
-                                                wc_neg = WordCloud(background_color="black", colormap="Reds", max_words=30, width=400, height=200).generate(text_negatif)
-                                                fig_neg, ax_neg = plt.subplots()
-                                                ax_neg.imshow(wc_neg, interpolation='bilinear')
-                                                ax_neg.axis('off')
-                                                st.pyplot(fig_neg, use_container_width=True)
-                                            else:
-                                                st.caption("Tidak ada data ulasan negatif.")
-                                    except KeyError as e:
-                                         st.caption(f"Kolom {e} tidak ditemukan di data ulasan individual.")
-                                    except Exception as e:
-                                         st.caption(f"Gagal membuat Word Cloud: {e}")
-                                else:
-                                    st.caption("File ulasan individual tidak dapat dimuat.")
-                        st.write("") # Memberi spasi antar kartu
+                                st.write("") # Memberi spasi antar kartu
                 else:
                     # Pesan jika tidak ada perpustakaan yang lolos semua filter
                     st.info(f"Tidak ada perpustakaan di {selected_city} yang memenuhi kriteria filter Anda.")
@@ -424,6 +430,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
