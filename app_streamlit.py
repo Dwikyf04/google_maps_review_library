@@ -256,7 +256,7 @@ elif selected_page == "Rekomendasi":
                                                 st.caption(f"Gagal membuat word cloud: {e}")
                                         else:
                                             st.caption("Tidak ada data ulasan positif.")
-                                      with col2:
+                                    with col2:
                                         st.write("**Distribusi Sentimen:**")
                                             try:
                                         chart_data = pd.DataFrame({
@@ -419,6 +419,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
