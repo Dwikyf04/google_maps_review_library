@@ -234,9 +234,9 @@ elif selected_page == "Rekomendasi":
                         if 'url_google_maps' in row and pd.notna(row['url_google_maps']) and row['url_google_maps'].startswith('http'):
                             st.link_button("Lihat di Google Maps ↗️", row['url_google_maps'])
 
-                        with st.expander(f"Lihat Analisis Word Cloud untuk {row['nama_perpustakaan']}"):
+                        with st.expander(f"Lihat Analisis Word Cloud untuk {row['Place_name']}"):
                                 if not all_reviews.empty:
-                                    library_reviews = all_reviews[all_reviews['nama_perpustakaan'] == row['nama_perpustakaan']]
+                                    library_reviews = all_reviews[all_reviews['Place_name'] == row['Place_namme']]
                                     
                                     # Gabungkan teks
                                     text_positif = " ".join(review for review in library_reviews[library_reviews['sentiment'] == LABEL_POSITIF]['Komentar'])
@@ -416,6 +416,7 @@ elif selected_page == "About":
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
+
 
 
 
