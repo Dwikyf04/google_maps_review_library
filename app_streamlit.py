@@ -185,7 +185,7 @@ if selected_page == "Beranda":
             f"• Menunjukkan kualitas layanan dan fasilitas yang sangat baik."
         )
 
-
+    st.sidebar.markdown("---")
     # ⭐ Distribusi Rating
     st.subheader("Distribusi Rating Perpustakaan")
     if not library_data.empty:
@@ -536,6 +536,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
