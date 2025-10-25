@@ -395,7 +395,9 @@ elif selected_page == "About":
     """)
 
 elif selected_page == "Feedback":
-    FEEDBACK_FILE = "feedback_pengguna.csv"
+    if os.path.exists("feedback_pengguna.csv"):
+        df_feedback = pd.read_csv("feedback_pengguna.csv")
+        st.dataframe(df_feedback, use_container_width=True)
 
     st.header("📝 Formulir Feedback Pengguna")
     st.write("Bantu kami meningkatkan kualitas aplikasi ini dengan memberikan feedback!")
@@ -435,6 +437,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
