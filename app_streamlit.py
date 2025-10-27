@@ -215,7 +215,10 @@ if selected_page == "Beranda":
             top_positive[['Place_name', 'city', 'rating', 'persen_positif']],
             use_container_width=True
         )
-    st.divider()
+    st.divider().
+    st.markdown("### ⭐ Rating vs Sentimen Positif")
+    scatter_df = library_data[['rating', 'persen_positif']].dropna()
+    st.scatter_chart(scatter_df)
     
     #if not all_reviews.empty:
         #st.subheader("☁️ Word Cloud Ulasan Perpustakaan (Semua Kota)")
@@ -229,6 +232,7 @@ if selected_page == "Beranda":
             #st.pyplot(fig_wc)
         #else:
             #st.caption("Tidak ada ulasan.")
+
 
 
 # ===============================================
@@ -620,6 +624,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
