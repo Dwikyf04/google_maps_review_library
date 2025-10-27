@@ -525,7 +525,9 @@ elif selected_page == "About":
     st.markdown("""
     web ini dibbuat oleh saya sendiri sebagai proyek untuk portofolio saya dan pengimpelentasian ilmu-ilmu yang saya pelajari baik melalui perkuliahan maupun melalui bootchamp. 
     Tujuannya adalah untuk membangun sistem rekomendasi perpustakaan berdasarkan ulasan otentik dari Google Maps. saya membuat website ini dilatarbelakangi oleh keresahan saya setiap ingin pergi ke perpustakaan tetapi 
-    masih perlu bertanya ke teman terkait review perpustakaan tersebut.
+    masih perlu bertanya ke teman terkait review perpustakaan tersebut. Hal ini juga Sejalan dengan temuan Solomon et.al  (2012), media sosial memiliki peran penting dalam memengaruhi perilaku konsumen. 
+    Mereka menjelaskan bahwa media sosial menyediakan ruang interaksi bebas bagi para penggunanya untuk saling bertukar informasi berupa ulasan, penilaian, foto, serta pengalaman pribadi. 
+    Budaya yang terbentuk di dalam platform tersebut dapat memberikan dampak besar terhadap keputusan seseorang dalam membeli atau menggunakan suatu layanan, termasuk dalam menentukan pilihan destinasi yang ingin dikunjungi (Rutbah & Prama, 2025).
 
     ### Metodologi
     Proyek ini menggabungkan dua pendekatan *machine learning*:
@@ -553,7 +555,8 @@ elif selected_page == "About":
     5. **Referensi**
        * Fajri Koto, and Gemala Y. Rahmaningtyas "InSet Lexicon: Evaluation of a Word List for Indonesian Sentiment Analysis in Microblogs". IEEE in the 21st International Conference on Asian Language Processing (IALP), Singapore, December 2017.*
        * Rutba, S. A., & Pramana, S. (2025). Aspect-based Sentiment Analysis and Topic Modelling of International Media on Indonesia Tourism Sector Recovery. Indonesian Journal of Tourism and Leisure, 6(1), 76-94.* 
-       *https://github.com/adeariniputri/text-preprocesing*
+       * https://github.com/adeariniputri/text-preprocesing*
+       * Solomon, M., Russell-Bennett, R., & Previte, J. (2012). Consumer behaviour: Buying, having, being (3rd ed.). Pearson Australia.
     6. **Dataset**
         * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
@@ -605,6 +608,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
