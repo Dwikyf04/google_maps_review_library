@@ -138,27 +138,27 @@ if selected_page == "Beranda":
 
     st.divider()
 
-       # ✅ Fitur Utama
+
     st.markdown("### 🚀 Fitur Utama Aplikasi")
     fitur_cols = st.columns(2)
     fitur_cols[1].success("🎯 Rekomendasi Perpustakaan Terbaik")
     fitur_cols[0].info("🔎 Analisis Sentimen Ulasan Baru")
-    #fitur_cols[2].warning("📊 Visualisasi Data Interaktif")
+  
 
     st.divider()
     
 
-    # 🗺️ Peta Persebaran
+ 
     st.subheader("Peta Sebaran Perpustakaan")
     if not library_data.empty:
         st.map(library_data[['latitude', 'longitude', 'Place_name']])
 
-    # 📊 Lima Kota Skor Terbaik
+
     st.subheader("Kota dengan Skor Kualitas Rata-rata Tertinggi")
     if not library_data.empty:
         top_cities = library_data.groupby('city')['skor_kualitas'].mean().nlargest(5)
         st.bar_chart(top_cities)
-            # Insight Kota Terbaik
+   
     if not library_data.empty:
         best_city = top_cities.index[0]
         best_score = top_cities.iloc[0]
@@ -169,12 +169,12 @@ if selected_page == "Beranda":
             f"• Menunjukkan kualitas layanan dan fasilitas yang sangat baik."
         )
     st.divider()
-    # ⭐ Distribusi Rating
+
     st.subheader("Distribusi Rating Perpustakaan")
     if not library_data.empty:
         rating_counts = library_data['rating'].value_counts().sort_index()
         st.bar_chart(rating_counts)
-        # Insight Distribusi Rating
+        
     if not library_data.empty:
         avg_rating = library_data['rating'].mean()
         high_rating_pct = (library_data['rating'] >= 4.0).mean() * 100
@@ -186,7 +186,7 @@ if selected_page == "Beranda":
         )
 
     st.divider()
-    # 👍 Sentimen Positif vs Negatif
+
     st.subheader("Distribusi Sentimen Positif vs Negatif")
     if 'persen_positif' in library_data.columns:
         sentiment_summary = pd.DataFrame({
@@ -207,7 +207,7 @@ if selected_page == "Beranda":
         
     st.divider()
 
-    # 🏆 Top 10 Sentimen Positif
+ 
     st.subheader("Top 10 Perpustakaan dengan Sentimen Positif Tertinggi")
     if not library_data.empty:
         top_positive = library_data.sort_values(by="persen_positif", ascending=False).head(10)
@@ -215,36 +215,14 @@ if selected_page == "Beranda":
             top_positive[['Place_name', 'city', 'rating', 'persen_positif']],
             use_container_width=True
         )
-    st.divider().
+    st.divider()
+    
     st.markdown("### ⭐ Rating vs Sentimen Positif")
     scatter_df = library_data[['rating', 'persen_positif']].dropna()
     st.scatter_chart(scatter_df)
-    
-    #if not all_reviews.empty:
-        #st.subheader("☁️ Word Cloud Ulasan Perpustakaan (Semua Kota)")
-        #text_reviews = " ".join(all_reviews['Komentar'].astype(str))
-        #if text_reviews.strip():
-            #wc = WordCloud(width=800, height=500, background_color="white").generate(text_reviews)
-            
-            #fig_wc, ax_wc = plt.subplots()
-            #ax_wc.imshow(wc, interpolation='bilinear')
-            #ax_wc.axis('off')
-            #st.pyplot(fig_wc)
-        #else:
-            #st.caption("Tidak ada ulasan.")
 
 
 
-# ===============================================
-# Halaman 2: REKOMENDASI (Kode Tab 1 Lama Anda)
-# ===============================================
-# Di app_streamlit.py
-# ===============================================
-# Halaman 2: REKOMENDASI 
-# ===============================================
-# ===============================================
-# Halaman 2: REKOMENDASI (Kode Tab 1 Lama Anda)
-# ===============================================
 elif selected_page == "Rekomendasi":
     st.markdown("""
         <div style='text-align:center; padding: 20px;'>
@@ -624,6 +602,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
