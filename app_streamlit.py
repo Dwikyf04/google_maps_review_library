@@ -217,7 +217,7 @@ if selected_page == "Beranda":
         )
     st.divider()
     
-    st.markdown("### ⭐ Rating vs Sentimen Positif")
+    st.markdown("###Rating vs Sentimen Positif")
     scatter_df = library_data[['rating', 'persen_positif']].dropna()
     st.scatter_chart(scatter_df)
 
@@ -255,7 +255,7 @@ elif selected_page == "Rekomendasi":
                 "Sentimen Paling Positif": "persen_positif"
             }
             sort_by_label = st.selectbox(
-                "📊 Urutkan berdasarkan:",
+                " Urutkan berdasarkan:",
                 options=sort_options.keys()
             )
             sort_by_column = sort_options[sort_by_label] # Dapatkan nama kolom
@@ -321,16 +321,16 @@ elif selected_page == "Rekomendasi":
                         # ... (Kode st.metric Anda) ...
                         col1, col2 = st.columns(2)
                         with col1:
-                            st.metric(label="⭐ Rating Google", value=f"{row['rating']:.1f} / 5")
+                            st.metric(label="Rating Google", value=f"{row['rating']:.1f} / 5")
                         with col2:
                             if 'persen_positif' in row and pd.notna(row['persen_positif']):
-                                st.metric(label="👍 Sentimen Positif", value=f"{row['persen_positif']:.0%}")
+                                st.metric(label="Sentimen Positif", value=f"{row['persen_positif']:.0%}")
                             elif 'skor_kualitas' in row and pd.notna(row['skor_kualitas']):
-                                st.metric(label="💯 Skor Kualitas", value=f"{row['skor_kualitas']:.2f}")
+                                st.metric(label=" Skor Kualitas", value=f"{row['skor_kualitas']:.2f}")
 
                         # ... (Kode st.link_button Anda) ...
                         if 'url_google_maps' in row and pd.notna(row['url_google_maps']) and row['url_google_maps'].startswith('http'):
-                            st.link_button("Lihat di Google Maps ↗️", row['url_google_maps'])
+                            st.link_button("Lihat di Google Maps ", row['url_google_maps'])
 
                         # --- PERUBAHAN DI SINI: Logika Expander ---
                         with st.expander(f"Lihat ulasan untuk {row['Place_name']}"):
@@ -589,11 +589,9 @@ elif selected_page == "Feedback":
             }])
 
         try:
-            # Jika file sudah ada → append
             existing_data = pd.read_csv(FEEDBACK_FILE)
             updated_data = pd.concat([existing_data, new_data], ignore_index=True)
         except FileNotFoundError:
-            # Jika file belum ada → buat file baru
             updated_data = new_data
 
         updated_data.to_csv(FEEDBACK_FILE, index=False)
@@ -602,6 +600,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
