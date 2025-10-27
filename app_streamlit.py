@@ -611,60 +611,62 @@ elif selected_page == "Feedback":
     st.markdown("""
         <div style='text-align:center; padding: 15px;'>
             <h2>Formulir Feedback Pengguna</h2>
-            <p style='font-size:17px;'>Masukkan Anda akan sangat membantu pengembangan aplikasi ini</p>
+            <p style='font-size:17px;'>Masukan Anda sangat berharga bagi pengembangan aplikasi ini 🙌</p>
         </div>
     """, unsafe_allow_html=True)
 
     st.divider()
 
-    # === KONEKSI GOOGLE SHEETS ===
+    # === KONEKSI KE GOOGLE SHEETS — MENGGUNAKAN STREAMLIT SECRETS ===
+    SCOPE = [
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive"
+    ]
+
     try:
-        scope = [
-            'https://www.googleapis.com/auth/spreadsheets',
-            'https://www.googleapis.com/auth/drive'
-        ]
         creds_dict = st.secrets["gcp_service_account"]
-        creds = ServiceAccountCredentials.from_json_keyfile_dict((creads_dict, scope))
+        creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, SCOPE)
         client = gspread.authorize(creds)
         sheet = client.open("feedback_portofolio").sheet1
     except Exception as e:
-        st.error(f"Gagal terhubung ke Google Sheets: {e}")
-        st.stop()
+        st.error(f"⚠️ Tidak dapat terhubung ke Google Sheets: {e}")
+        sheet = None
 
     # === FORM INPUT FEEDBACK ===
     with st.form("feedback_form"):
         user_name = st.text_input("Nama (opsional)")
-        user_city = st.text_input("Kota (opsional)")
-        user_rating = st.slider("Seberapa puas Anda dengan aplikasi ini?", 1, 5, 4)
-        user_feedback = st.text_area("Tuliskan masukan Anda di sini ✍️")
+        user_city = st.text_input("Kota Asal (opsional)")
+        user_rating = st.slider("Seberapa puas Anda dengan aplikasi ini?", 1, 5, 5)
+        user_feedback = st.text_area("Kritik / Saran Anda ✍️")
 
         submitted = st.form_submit_button("Kirim Feedback ✅")
 
     # === SIMPAN FEEDBACK ===
     if submitted:
         if not user_feedback.strip():
-            st.warning("Mohon isi masukan terlebih dahulu ✅")
+            st.warning("Mohon isi feedback terlebih dahulu ✅")
+        elif sheet is None:
+            st.error("❌ Feedback gagal dikirim karena koneksi database belum siap.")
         else:
-            if sheet is not None:
-                try:
-                    sheet.append_row([
-                        datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                        user_name,
-                        user_city,
-                        user_rating,
-                        user_feedback
-                    ])
-                    st.success("✨ Terima kasih! Feedback Anda berhasil dikirim.")
-                    st.balloons()
-                except Exception as e:
-                    st.error(f"Gagal menyimpan feedback: {e}")
-            else:
-                st.error("Sheets tidak tersedia — periksa settings Secrets.")
+            try:
+                sheet.append_row([
+                    datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    user_name,
+                    user_city,
+                    user_rating,
+                    user_feedback
+                ])
+                st.success("✨ Terima kasih! Feedback Anda berhasil dikirim.")
+                st.balloons()
+            except Exception as e:
+                st.error(f"❌ Gagal menyimpan feedback: {e}")
+
 
 
 
 
     
+
 
 
 
