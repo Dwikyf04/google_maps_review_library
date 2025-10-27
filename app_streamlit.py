@@ -623,7 +623,8 @@ elif selected_page == "Feedback":
             'https://www.googleapis.com/auth/spreadsheets',
             'https://www.googleapis.com/auth/drive'
         ]
-        creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
+        creds_dict = st.secrets["gcp_service_account"]
+        creds = ServiceAccountCredentials.from_json_keyfile_dict((creads_dict, scope)
         client = gspread.authorize(creds)
         sheet = client.open("feedback_portofolio").sheet1
     except Exception as e:
@@ -633,7 +634,7 @@ elif selected_page == "Feedback":
     # === FORM INPUT FEEDBACK ===
     with st.form("feedback_form"):
         user_name = st.text_input("Nama (opsional)")
-        user_city = st.text_input("Asal Kota (opsional)")
+        user_city = st.text_input("Kota (opsional)")
         user_rating = st.slider("Seberapa puas Anda dengan aplikasi ini?", 1, 5, 4)
         user_feedback = st.text_area("Tuliskan masukan Anda di sini ✍️")
 
@@ -644,22 +645,27 @@ elif selected_page == "Feedback":
         if not user_feedback.strip():
             st.warning("Mohon isi masukan terlebih dahulu ✅")
         else:
-            try:
-                sheet.append_row([
-                    datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    user_name,
-                    user_city,
-                    user_rating,
-                    user_feedback
-                ])
-                st.success("✨ Terima kasih! Feedback Anda berhasil dikirim.")
-                st.balloons()
-            except Exception as e:
-                st.error(f"Gagal menyimpan feedback: {e}")
+            if sheet is not None:
+                try:
+                    sheet.append_row([
+                        datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        user_name,
+                        user_city,
+                        user_rating,
+                        user_feedback
+                    ])
+                    st.success("✨ Terima kasih! Feedback Anda berhasil dikirim.")
+                    st.balloons()
+                except Exception as e:
+                    st.error(f"Gagal menyimpan feedback: {e}")
+            else:
+                st.error("Sheets tidak tersedia — periksa settings Secrets.")
+
 
 
 
     
+
 
 
 
