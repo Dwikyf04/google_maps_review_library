@@ -522,6 +522,7 @@ elif selected_page == "About":
     """, unsafe_allow_html=True)
 
     st.divider()
+    
     st.markdown("""
     <div style='text-align: justify; font-size: 17px; line-height: 1.6;'>
     web ini dibbuat oleh saya sendiri sebagai proyek untuk portofolio saya dan pengimpelentasian ilmu-ilmu yang saya pelajari baik melalui perkuliahan maupun melalui bootchamp. 
@@ -530,10 +531,10 @@ elif selected_page == "About":
     Mereka menjelaskan bahwa media sosial menyediakan ruang interaksi bebas bagi para penggunanya untuk saling bertukar informasi berupa ulasan, penilaian, foto, serta pengalaman pribadi. 
     Budaya yang terbentuk di dalam platform tersebut dapat memberikan dampak besar terhadap keputusan seseorang dalam membeli atau menggunakan suatu layanan, termasuk dalam menentukan pilihan destinasi yang ingin dikunjungi (Rutbah & Prama, 2025).
     </div>
-    """
+    """)
                 
     st.divider()
-    
+
     st.markdown("""
     ### Metodologi
     Proyek ini menggabungkan dua pendekatan *machine learning*:
@@ -614,6 +615,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
