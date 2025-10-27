@@ -624,7 +624,7 @@ elif selected_page == "Feedback":
             'https://www.googleapis.com/auth/drive'
         ]
         creds_dict = st.secrets["gcp_service_account"]
-        creds = ServiceAccountCredentials.from_json_keyfile_dict((creads_dict, scope)
+        creds = ServiceAccountCredentials.from_json_keyfile_dict((creads_dict, scope))
         client = gspread.authorize(creds)
         sheet = client.open("feedback_portofolio").sheet1
     except Exception as e:
@@ -665,6 +665,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
