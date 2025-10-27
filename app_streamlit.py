@@ -546,10 +546,13 @@ elif selected_page == "About":
         * Skor dihitung secara offline menggunakan formula:
         * `skor_kualitas = (0.6 * Rating_Google_Normalized) + (0.4 * Persentase_Sentimen_Positif)`
     
-    4.  **Rekomendasi Sesuai Selera (Tab Analisis)**
+    4.  **Rekomendasi Sesuai Selera (Tab Analisis ulasan)**
         * Menggunakan **Content-Based Filtering**.
         * Profil TF-IDF dari setiap perpustakaan dicocokkan dengan vektor TF-IDF dari input pengguna menggunakan **Cosine Similarity**.
-    
+
+    5. **Referensi**
+       * Fajri Koto, and Gemala Y. Rahmaningtyas "InSet Lexicon: Evaluation of a Word List for Indonesian Sentiment Analysis in Microblogs". IEEE in the 21st International Conference on Asian Language Processing (IALP), Singapore, December 2017.*
+       * Rutba, S. A., & Pramana, S. (2025). Aspect-based Sentiment Analysis and Topic Modelling of International Media on Indonesia Tourism Sector Recovery. Indonesian Journal of Tourism and Leisure, 6(1), 76-94.* 
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
@@ -601,6 +604,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
