@@ -553,6 +553,7 @@ elif selected_page == "About":
     5. **Referensi**
        * Fajri Koto, and Gemala Y. Rahmaningtyas "InSet Lexicon: Evaluation of a Word List for Indonesian Sentiment Analysis in Microblogs". IEEE in the 21st International Conference on Asian Language Processing (IALP), Singapore, December 2017.*
        * Rutba, S. A., & Pramana, S. (2025). Aspect-based Sentiment Analysis and Topic Modelling of International Media on Indonesia Tourism Sector Recovery. Indonesian Journal of Tourism and Leisure, 6(1), 76-94.* 
+       *https://github.com/adeariniputri/text-preprocesing*
     ### Dataset
     * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
@@ -604,6 +605,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
