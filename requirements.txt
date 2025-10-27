@@ -8,6 +8,8 @@ matplotlib
 scikit-learn
 streamlit
 streamlit-option-menu
+gspread
+oauth2client
 folium
 streamlit-folium
 pyspellchecker
