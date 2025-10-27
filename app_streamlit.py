@@ -525,12 +525,16 @@ elif selected_page == "About":
     st.markdown("""
     <div style='text-align: justify; font-size: 17px; line-height: 1.6;'>
     web ini dibbuat oleh saya sendiri sebagai proyek untuk portofolio saya dan pengimpelentasian ilmu-ilmu yang saya pelajari baik melalui perkuliahan maupun melalui bootchamp. 
-    Tujuannya adalah untuk membangun sistem rekomendasi perpustakaan berdasarkan ulasan otentik dari Google Maps. saya membuat website ini dilatarbelakangi oleh keresahan saya setiap ingin pergi ke perpustakaan tetapi 
-    masih perlu bertanya ke teman terkait review perpustakaan tersebut. Hal ini juga Sejalan dengan temuan Solomon et.al  (2012), media sosial memiliki peran penting dalam memengaruhi perilaku konsumen. 
+    saya membuat website ini dilatarbelakangi oleh keresahan saya setiap ingin pergi ke perpustakaan tetapi masih perlu bertanya ke teman terkait review perpustakaan tersebut. 
+    Hal ini juga Sejalan dengan temuan Solomon et.al  (2012), media sosial memiliki peran penting dalam memengaruhi perilaku konsumen. 
     Mereka menjelaskan bahwa media sosial menyediakan ruang interaksi bebas bagi para penggunanya untuk saling bertukar informasi berupa ulasan, penilaian, foto, serta pengalaman pribadi. 
     Budaya yang terbentuk di dalam platform tersebut dapat memberikan dampak besar terhadap keputusan seseorang dalam membeli atau menggunakan suatu layanan, termasuk dalam menentukan pilihan destinasi yang ingin dikunjungi (Rutbah & Prama, 2025).
     </div>
+    """
+                
     st.divider()
+    
+    st.markdown("""
     ### Metodologi
     Proyek ini menggabungkan dua pendekatan *machine learning*:
     
@@ -610,6 +614,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
