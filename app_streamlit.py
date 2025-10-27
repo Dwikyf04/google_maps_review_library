@@ -7,11 +7,13 @@ import numpy as np
 import datetime
 import math
 import matplotlib.pyplot as plt
+import folium
+from streamlit_folium import st_folium
 from wordcloud import WordCloud
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics.pairwise import cosine_similarity
 from streamlit_option_menu import option_menu
-# === Konstanta Label Sentimen ===
+
 LABEL_POSITIF = "Positive"
 LABEL_NEGATIF = "Negative"
 LABEL_NETRAL = "Neutral"
@@ -221,6 +223,55 @@ if selected_page == "Beranda":
     scatter_df = library_data[['rating', 'persen_positif']].dropna()
     st.scatter_chart(scatter_df)
 
+
+    st.markdown("## 🗺️ Dashboard Pemetaan Perpustakaan (Interaktif)")
+
+    if not library_data.empty:
+
+    # Filter Rating Minimum
+        min_rating_map = st.slider(
+            "Filter berdasarkan rating minimum:",
+            min_value=1.0, max_value=5.0, value=3.5, step=0.1
+        )
+
+        filtered_map_data = library_data[library_data['rating'] >= min_rating_map]
+
+        # Membuat Map
+        m = folium.Map(location=[-2.5, 118], zoom_start=5)  # lokasi rata-rata Indonesia
+
+        # Tambahkan Marker
+        for _, row in filtered_map_data.iterrows():
+            rating = row['rating']
+        
+            # Warna marker berdasarkan rating
+            if rating >= 4.5:
+                marker_color = "darkgreen"
+            elif rating >= 4.0:
+                marker_color = "green"
+            elif rating >= 3.5:
+                marker_color = "orange"
+            else:
+                marker_color = "red"
+
+            tooltip_info = (
+                f"<b>{row['Place_name']}</b><br>"
+                f"Rating: {rating} ⭐<br>"
+                f"Sentimen Positif: {row['persen_positif']:.0%}<br>"
+                f"Kota: {row['city']}<br>"
+                f"<a href='{row['url_google_maps']}' target='_blank'>📍 Lihat di Google Maps</a>"
+            )
+
+            folium.Marker(
+                location=[row['latitude'], row['longitude']],
+                popup=tooltip_info,
+                tooltip=row['Place_name'],
+                icon=folium.Icon(color=marker_color)
+            ).add_to(m)
+
+        st_folium(m, width=800, height=500)
+
+    else:
+        st.warning("Data perpustakaan kosong atau gagal dimuat.")
 
 
 elif selected_page == "Rekomendasi":
@@ -600,6 +651,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
