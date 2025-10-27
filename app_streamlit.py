@@ -141,10 +141,10 @@ if selected_page == "Beranda":
     st.divider()
 
 
-    st.markdown("### 🚀 Fitur Utama Aplikasi")
+    st.markdown("### Fitur Utama Aplikasi")
     fitur_cols = st.columns(2)
-    fitur_cols[1].success("🎯 Rekomendasi Perpustakaan Terbaik")
-    fitur_cols[0].info("🔎 Analisis Sentimen Ulasan Baru")
+    fitur_cols[1].success("Rekomendasi Perpustakaan Terbaik")
+    fitur_cols[0].info("Analisis Sentimen Ulasan Baru")
   
 
     st.divider()
@@ -181,7 +181,7 @@ if selected_page == "Beranda":
         avg_rating = library_data['rating'].mean()
         high_rating_pct = (library_data['rating'] >= 4.0).mean() * 100
 
-        st.markdown(f"🔍 **Insight Rating:**")
+        st.markdown(f"**Insight Rating:**")
         st.write(
             f"• Rata-rata rating perpustakaan: **{avg_rating:.2f} / 5**\n"
             f"• {high_rating_pct:.1f}% perpustakaan memiliki rating **≥ 4.0** ⭐\n"
@@ -224,11 +224,10 @@ if selected_page == "Beranda":
     st.scatter_chart(scatter_df)
 
 
-    st.markdown("## 🗺️ Dashboard Pemetaan Perpustakaan (Interaktif)")
+    st.markdown("## Pemetaan Perpustakaan ")
 
     if not library_data.empty:
 
-    # Filter Rating Minimum
         min_rating_map = st.slider(
             "Filter berdasarkan rating minimum:",
             min_value=1.0, max_value=5.0, value=3.5, step=0.1
@@ -236,14 +235,11 @@ if selected_page == "Beranda":
 
         filtered_map_data = library_data[library_data['rating'] >= min_rating_map]
 
-        # Membuat Map
-        m = folium.Map(location=[-2.5, 118], zoom_start=5)  # lokasi rata-rata Indonesia
+        m = folium.Map(location=[-2.5, 118], zoom_start=5)  
 
-        # Tambahkan Marker
         for _, row in filtered_map_data.iterrows():
             rating = row['rating']
-        
-            # Warna marker berdasarkan rating
+    
             if rating >= 4.5:
                 marker_color = "darkgreen"
             elif rating >= 4.0:
@@ -651,6 +647,7 @@ elif selected_page == "Feedback":
         st.balloons()
 
     
+
 
 
 
