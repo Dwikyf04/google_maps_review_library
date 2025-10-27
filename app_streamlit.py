@@ -8,6 +8,9 @@ import datetime
 import math
 import matplotlib.pyplot as plt
 import folium
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+from datetime import datetime
 from streamlit_folium import st_folium
 from wordcloud import WordCloud
 from sklearn.preprocessing import MinMaxScaler
@@ -603,50 +606,61 @@ elif selected_page == "About":
     """)
 
 elif selected_page == "Feedback":
+
+    # === HEADER ===
     st.markdown("""
-        <div style='text-align:center; padding: 20px;'>
-            <h1> Formulir Feedback Pengguna </h1>
-            <p style='font-size:18px;'>Feedback untuk kami</p>
+        <div style='text-align:center; padding: 15px;'>
+            <h2>Formulir Feedback Pengguna</h2>
+            <p style='font-size:17px;'>Masukkan Anda akan sangat membantu pengembangan aplikasi ini</p>
         </div>
     """, unsafe_allow_html=True)
 
     st.divider()
-    FEEDBACK_FILE = "feedback_pengguna.csv"
-    st.write("Bantu kami meningkatkan kualitas aplikasi ini dengan memberikan feedback!")
 
-# Input form
+    # === KONEKSI GOOGLE SHEETS ===
+    try:
+        scope = [
+            'https://www.googleapis.com/auth/spreadsheets',
+            'https://www.googleapis.com/auth/drive'
+        ]
+        creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
+        client = gspread.authorize(creds)
+        sheet = client.open("feedback_portofolio").sheet1
+    except Exception as e:
+        st.error(f"Gagal terhubung ke Google Sheets: {e}")
+        st.stop()
+
+    # === FORM INPUT FEEDBACK ===
     with st.form("feedback_form"):
-        name = st.text_input("Nama (opsional)", "")
-        city = st.text_input("Kota asal pengguna (opsional)", "")
-        rating = st.slider("Seberapa puas Anda dengan aplikasi ini?", 1, 5, 4)
-        feedback = st.text_area("Masukan / kritik / saran Anda", "")
+        user_name = st.text_input("Nama (opsional)")
+        user_city = st.text_input("Asal Kota (opsional)")
+        user_rating = st.slider("Seberapa puas Anda dengan aplikasi ini?", 1, 5, 4)
+        user_feedback = st.text_area("Tuliskan masukan Anda di sini ✍️")
 
-        submitted = st.form_submit_button("Kirim")
+        submitted = st.form_submit_button("Kirim Feedback ✅")
 
+    # === SIMPAN FEEDBACK ===
     if submitted:
-        if feedback.strip() == "":
-            st.warning("Mohon isi kritik atau saran terlebih dahulu ✅")
+        if not user_feedback.strip():
+            st.warning("Mohon isi masukan terlebih dahulu ✅")
         else:
-            new_data = pd.DataFrame([{
-                "timestamp": datetime.datetime.now(),
-                "name": name,
-                "city": city,
-                "rating": rating,
-                "feedback": feedback
-            }])
+            try:
+                sheet.append_row([
+                    datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    user_name,
+                    user_city,
+                    user_rating,
+                    user_feedback
+                ])
+                st.success("✨ Terima kasih! Feedback Anda berhasil dikirim.")
+                st.balloons()
+            except Exception as e:
+                st.error(f"Gagal menyimpan feedback: {e}")
 
-        try:
-            existing_data = pd.read_csv(FEEDBACK_FILE)
-            updated_data = pd.concat([existing_data, new_data], ignore_index=True)
-        except FileNotFoundError:
-            updated_data = new_data
 
-        updated_data.to_csv(FEEDBACK_FILE, index=False)
-
-        st.success("✅ Terima kasih! Feedback Anda sudah dikirim.")
-        st.balloons()
 
     
+
 
 
 
