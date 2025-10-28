@@ -407,12 +407,12 @@ elif selected_page == "Rekomendasi":
 
                     for ext in image_formats:
                         img_url = f"{GITHUB_IMAGE_URL}/{filename}.{ext}"
-                    try:
-                        st.image(img_url, width=250, caption=row['Place_name'])
-                        image_found = True
-                        break
-                    except:
-                        continue
+                        try:
+                            st.image(img_url, width=250, caption=row['Place_name'])
+                            image_found = True
+                            break
+                        except:
+                            continue
 
                     if not image_found:
                         st.warning("📌 Gambar belum tersedia")
@@ -719,6 +719,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
