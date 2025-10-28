@@ -223,14 +223,13 @@ if selected_page == "Beranda":
     st.divider()
 
     st.subheader("☁️ Word Cloud Review")
+        all_text = " ".join(str(text) for text in df['review_text'].dropna())
+        wordcloud = WordCloud(width=1200, height=600, background_color="white").generate(all_text)
 
-    all_text = " ".join(str(text) for text in df['review_text'].dropna())
-    wordcloud = WordCloud(width=1200, height=600, background_color="white").generate(all_text)
-
-    fig_wc, ax_wc = plt.subplots(figsize=(12, 6))
-    ax_wc.imshow(wordcloud, interpolation="bilinear")
-    ax_wc.axis("off")
-    st.pyplot(fig_wc)
+        fig_wc, ax_wc = plt.subplots(figsize=(12, 6))
+        ax_wc.imshow(wordcloud, interpolation="bilinear")
+        ax_wc.axis("off")
+        st.pyplot(fig_wc)
 
     st.write("---")
 
@@ -681,6 +680,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
