@@ -16,6 +16,7 @@ from wordcloud import WordCloud
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics.pairwise import cosine_similarity
 from streamlit_option_menu import option_menu
+from collections import Counter
 
 LABEL_POSITIF = "Positive"
 LABEL_NEGATIF = "Negative"
@@ -688,6 +689,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
