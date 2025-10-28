@@ -400,23 +400,23 @@ elif selected_page == "Rekomendasi":
                         Place_name = row['Place_name']
                         st.markdown(f"### {i + 1}. {row['Place_name']}")
 
-                    
+                        file_base = row['Image_filename'] 
                         filename = normalize_filename(Place_name)
                         image_formats = ["jpg", "jpeg", "png", "webp"]
+                        gambar_url = None
                         image_displayed = False
 
                     for ext in image_formats:
-                        img_url = f"{GITHUB_IMAGE_URL}/{filename}.{ext}"
-                        try:
-                            st.image(img_url, width=250, caption=row['Place_name'])
-                            image_found = True
+                        img_url = GITHUB_IMAGE_URL + file_base + ext
+                        response = requests.get(url)
+                        if response.status_code == 200:
+                            gambar_url = url
                             break
-                        except:
-                            continue
 
-                    if not image_found:
+                    if gambar_url:
+                        st.image(gambar_url, width=220, caption=row['Place_name'])
+                    else:
                         st.warning("📌 Gambar belum tersedia")
-                        st.image("https://via.placeholder.com/250?text=No+Image", width=250)
             
                    
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
@@ -716,6 +716,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
