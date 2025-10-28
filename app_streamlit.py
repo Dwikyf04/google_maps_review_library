@@ -401,14 +401,12 @@ elif selected_page == "Rekomendasi":
                         Place_name = row['Place_name']
                         st.markdown(f"### {i + 1}. {row['Place_name']}")
 
-                        file_base = row['Image_filename'] 
-                        
                         image_formats = ["jpg", "jpeg", "png", "webp"]
                         gambar_url = None
                        
 
                     for ext in image_formats:
-                        img_url = GITHUB_IMAGE_URL + file_base + ext
+                        img_url = GITHUB_IMAGE_URL + ext
                         response = requests.get(url)
                         if response.status_code == 200:
                             gambar_url = url
@@ -432,7 +430,6 @@ elif selected_page == "Rekomendasi":
                             elif 'skor_kualitas' in row and pd.notna(row['skor_kualitas']):
                                 st.metric(label=" Skor Kualitas", value=f"{row['skor_kualitas']:.2f}")
 
-                        # ... (Kode st.link_button Anda) ...
                         if 'url_google_maps' in row and pd.notna(row['url_google_maps']) and row['url_google_maps'].startswith('http'):
                             st.link_button("Lihat di Google Maps ", row['url_google_maps'])
 
@@ -717,6 +714,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
