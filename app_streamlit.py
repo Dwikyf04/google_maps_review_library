@@ -400,7 +400,7 @@ elif selected_page == "Rekomendasi":
                         st.markdown(f"### {i + 1}. {row['Place_name']}")
 
                     
-                        filename = normalize_filename(place_name)
+                        filename = normalize_filename(Place_name)
                         image_formats = ["jpg", "jpeg", "png", "webp"]
                         image_displayed = False
 
@@ -715,6 +715,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
