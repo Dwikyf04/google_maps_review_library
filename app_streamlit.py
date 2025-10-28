@@ -9,6 +9,7 @@ import math
 import matplotlib.pyplot as plt
 import folium
 import gspread
+import re
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 from streamlit_folium import st_folium
@@ -380,9 +381,15 @@ elif selected_page == "Rekomendasi":
                     ascending=False
                 ).head(5)
 
-                
+                st.divider()
                 # --- 3. TAMPILKAN HASIL ---
                 GITHUB_IMAGE_URL = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/images"
+                def normalize_filename(name):
+                    name = name.lower().strip()
+                    name = name.replace(" ", "-")  # ganti spasi jadi dash
+                    name = re.sub(r"[^a-z0-9\-]", "", name)  # hapus simbol aneh
+                    return name
+                    
                 if not recommended_libraries.empty:
                     st.subheader("Peta Lokasi Teratas")
                     st.map(recommended_libraries[['latitude', 'longitude']])
@@ -393,17 +400,9 @@ elif selected_page == "Rekomendasi":
                         st.markdown(f"### {i + 1}. {row['Place_name']}")
 
                     
-                        filename = (
-                            row['Place_name']
-                            .replace(" ", "_")
-                            .replace("/", "_")
-                            .replace(".", "_")
-                            .lower()
-                        )
-
-                        
+                        filename = normalize_filename(place_name)
                         image_formats = ["jpg", "jpeg", "png", "webp"]
-                        image_found = False
+                        image_displayed = False
 
                     for ext in image_formats:
                         img_url = f"{GITHUB_IMAGE_URL}/{filename}.{ext}"
@@ -716,6 +715,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
