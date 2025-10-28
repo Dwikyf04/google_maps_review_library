@@ -384,6 +384,7 @@ elif selected_page == "Rekomendasi":
 
                 st.divider()
                 # --- 3. TAMPILKAN HASIL ---
+                Images_fullname = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/"
                 GITHUB_IMAGE_URL = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/images/"
                 def normalize_filename(name):
                     name = name.lower().strip()
@@ -399,9 +400,9 @@ elif selected_page == "Rekomendasi":
 
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
                         st.markdown(f"### {i + 1}. {row['Place_name']}")
-
+            
                         if "Image_filename" in row and pd.notna(row["Image_filename"]):
-                            file_base = normalize_filename(str(row["Image_filename"]))
+                            file_base = row["Image_filename"].lower().replace(" ", "-")
                         else:
                             file_base = normalize_filename(row["Place_name"])
                 
@@ -446,7 +447,7 @@ elif selected_page == "Rekomendasi":
                              
                                 if selected_keyword:
                                     st.write(f"**Ulasan yang Menyebut '{selected_keyword}':**")
-                                    # Filter ulasan yang mengandung keyword
+                                   
                                     matching_keyword_reviews = library_reviews[
                                         library_reviews['Komentar'].str.contains(selected_keyword, case=False, na=False)
                                     ]
@@ -718,6 +719,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
