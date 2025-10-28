@@ -383,7 +383,7 @@ elif selected_page == "Rekomendasi":
 
                 st.divider()
                 # --- 3. TAMPILKAN HASIL ---
-                GITHUB_IMAGE_URL = f"https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/images/{row['Image_filename']}"
+                GITHUB_IMAGE_URL = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/images/"
                 def normalize_filename(name):
                     name = name.lower().strip()
                     name = name.replace(" ", "-")  # ganti spasi jadi dash
@@ -716,6 +716,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
