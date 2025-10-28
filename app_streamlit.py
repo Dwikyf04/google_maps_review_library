@@ -388,6 +388,16 @@ elif selected_page == "Rekomendasi":
                     st.map(recommended_libraries[['latitude', 'longitude']])
                     
                     st.subheader("Detail Peringkat")
+                    # === Tampilkan gambar perpustakaan jika tersedia ===
+                    image_path = f"Images/{row['Place_name'].replace(' ', '_').lower()}.jpg"
+
+                    try:
+                        st.image(image_path, width=230, caption=row['Place_name'])
+                    except:
+                        st.caption("📌 Gambar belum tersedia")
+                        image_url = f"https://raw.githubusercontent.com/Dwikyf04/google_maps_review/main/Images/{row['Place_name'].replace(' ', '_').lower()}.jpg"
+                    st.image(image_url, width=230)
+
                    
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
                         st.markdown(f"#### {i + 1}. {row['Place_name']}") 
@@ -689,6 +699,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
