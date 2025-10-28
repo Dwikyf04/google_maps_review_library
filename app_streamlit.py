@@ -220,8 +220,30 @@ if selected_page == "Beranda":
             use_container_width=True
         )
     st.divider()
-
+    if not all_reviews.empty:
+        st.subheader("☁️ Word Cloud Ulasan Perpustakaan (Semua Kota)")
+        text_reviews = " ".join(all_reviews['Komentar'].astype(str))
+        if text_reviews.strip():
+            wc = WordCloud(width=800, height=500, background_color="white").generate(text_reviews)
+            
+            fig_wc, ax_wc = plt.subplots()
+            ax_wc.imshow(wc, interpolation='bilinear')
+            ax_wc.axis('off')
+            st.pyplot(fig_wc)
+        else:
+            st.caption("Tidak ada ulasan.")
     
+    st.divider()
+    st.subheader("🔍 Kata yang Paling Banyak Muncul")
+    words = [word.lower() for word in all_text.split() if len(word) > 3]
+    top_words = Counter(words).most_common(10)
+
+    words_df = pd.DataFrame(top_words, columns=["Kata", "Frekuensi"])
+    st.table(words_df)
+
+    st.write("---")
+    st.divider()
+
     st.markdown("###Rating vs Sentimen Positif")
     scatter_df = library_data[['rating', 'persen_positif']].dropna()
     st.scatter_chart(scatter_df)
@@ -666,6 +688,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
