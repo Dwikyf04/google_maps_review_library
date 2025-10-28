@@ -397,6 +397,7 @@ elif selected_page == "Rekomendasi":
                     st.subheader("Detail Peringkat")
 
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
+                        Place_name = row['Place_name']
                         st.markdown(f"### {i + 1}. {row['Place_name']}")
 
                     
@@ -715,6 +716,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
