@@ -390,11 +390,8 @@ elif selected_page == "Rekomendasi":
                     name = name.replace(" ", "-")  # ganti spasi jadi dash
                     name = re.sub(r"[^a-z0-9\-]", "", name)  # hapus simbol aneh
                     return name
-                def show_recommendations(recommended_libraries):
-                    if recommended_libraries.empty:
-                        st.info("Tidak ada rekomendasi perpustakaan untuk ditampilkan.")
-                        return
-                        
+                    
+                if not recommended_libraries.empty:
                     st.subheader("Peta Lokasi Teratas")
                     st.map(recommended_libraries[['latitude', 'longitude']])
                     
@@ -412,6 +409,7 @@ elif selected_page == "Rekomendasi":
 
                     for ext in image_formats:
                         img_url = f"{GITHUB_IMAGE_URL}{file_base}.{ext}"
+                        response = requests.get(img_url)
                         if response.status_code == 200:
                             gambar_url = url
                             break
