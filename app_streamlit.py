@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import folium
 import gspread
 import re
-import request
+import requests
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 from streamlit_folium import st_folium
@@ -717,6 +717,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
