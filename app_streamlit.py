@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import folium
 import gspread
 import re
+import request
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 from streamlit_folium import st_folium
@@ -401,10 +402,10 @@ elif selected_page == "Rekomendasi":
                         st.markdown(f"### {i + 1}. {row['Place_name']}")
 
                         file_base = row['Image_filename'] 
-                        filename = normalize_filename(Place_name)
+                        
                         image_formats = ["jpg", "jpeg", "png", "webp"]
                         gambar_url = None
-                        image_displayed = False
+                       
 
                     for ext in image_formats:
                         img_url = GITHUB_IMAGE_URL + file_base + ext
@@ -716,6 +717,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
