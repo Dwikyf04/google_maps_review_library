@@ -395,7 +395,7 @@ elif selected_page == "Rekomendasi":
                         st.image(image_path, width=230, caption=row['Place_name'])
                     except:
                         st.caption("📌 Gambar belum tersedia")
-                        image_url = f"https://raw.githubusercontent.com/Dwikyf04/google_maps_review/main/Images/{row['Place_name'].replace(' ', '_').lower()}.jpg"
+                        image_url = f"https://raw.githubusercontent.com/Dwikyf04/google_maps_review/main/images/{row['Place_name'].replace(' ', '_').lower()}.jpg.JPEG"
                     st.image(image_url, width=230)
 
                    
@@ -699,6 +699,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
