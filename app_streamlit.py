@@ -79,7 +79,6 @@ def load_review_data(file_path="data_perpustakaan_review.csv"):
     File ini digunakan untuk menampilkan ulasan.
     """
     try:
-        # Kita hanya butuh kolom-kolom ini untuk menghemat memori
         df_reviews = pd.read_csv(
             file_path,
             usecols=['Place_name', 'sentiment', 'Komentar'] 
@@ -223,12 +222,12 @@ if selected_page == "Beranda":
     st.divider()
 
     st.subheader("☁️ Word Cloud Review")
-    all_text = " ".join(str(text) for text in df['Komentar'].dropna())
-    wordcloud = WordCloud(width=1200, height=600, background_color="white").generate(all_text)
+        all_text = " ".join(str(text) for text in df['Komentar'].dropna())
+        wordcloud = WordCloud(width=1200, height=600, background_color="white").generate(all_text)
 
-    fig_wc, ax_wc = plt.subplots(figsize=(12, 6))
-    ax_wc.imshow(wordcloud, interpolation="bilinear")
-    ax_wc.axis("off")
+        fig_wc, ax_wc = plt.subplots(figsize=(12, 6))
+        ax_wc.imshow(wordcloud, interpolation="bilinear")
+        ax_wc.axis("off")
     st.pyplot(fig_wc)
 
 
@@ -678,6 +677,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
