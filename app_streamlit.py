@@ -221,7 +221,7 @@ if selected_page == "Beranda":
         )
     st.divider()
 
-    all_text = " ".join(df_reviews["Komentar"].astype(str).tolist())
+    all_text = " ".join(df["Komentar"].astype(str).tolist())
 
     if not all_text.strip():
         st.warning("Tidak ada teks yang bisa dibuat Word Cloud.")
@@ -685,6 +685,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
