@@ -382,22 +382,42 @@ elif selected_page == "Rekomendasi":
 
                 
                 # --- 3. TAMPILKAN HASIL ---
-                
+                GITHUB_IMAGE_URL = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review/main/images"
                 if not recommended_libraries.empty:
                     st.subheader("Peta Lokasi Teratas")
                     st.map(recommended_libraries[['latitude', 'longitude']])
                     
                     st.subheader("Detail Peringkat")
-                    # === Tampilkan gambar perpustakaan jika tersedia ===
-                    image_path = f"Images/{row['Place_name'].replace(' ', '_').lower()}.jpg"
 
+                    for i, (_, row) in enumerate(recommended_libraries.iterrows()):
+                        st.markdown(f"### {i + 1}. {row['Place_name']}")
+
+                    # Sanitasi nama file: ubah ke lowercase + ganti spasi/judul
+                        filename = (
+                            row['Place_name']
+                            .replace(" ", "_")
+                            .replace("/", "_")
+                            .replace(".", "_")
+                            .lower()
+                        )
+
+                        # Coba semua format gambar umum di GitHub
+                        image_formats = ["jpg", "jpeg", "png", "webp"]
+                        image_found = False
+
+                    for ext in image_formats:
+                        img_url = f"{GITHUB_IMAGE_URL}/{filename}.{ext}"
                     try:
-                        st.image(image_path, width=230, caption=row['Place_name'])
+                        st.image(img_url, width=250, caption=row['Place_name'])
+                        image_found = True
+                        break
                     except:
-                        st.caption("📌 Gambar belum tersedia")
-                        image_url = f"https://raw.githubusercontent.com/Dwikyf04/google_maps_review/main/images/{row['Place_name'].replace(' ', '_').lower()}.jpg.JPEG"
-                    st.image(image_url, width=230)
+                        continue
 
+                    if not image_found:
+                        st.warning("📌 Gambar belum tersedia")
+                        st.image("https://via.placeholder.com/250?text=No+Image", width=250)
+            
                    
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
                         st.markdown(f"#### {i + 1}. {row['Place_name']}") 
@@ -699,6 +719,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
