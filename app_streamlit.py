@@ -235,7 +235,7 @@ if selected_page == "Beranda":
     
     st.divider()
     st.subheader("🔍 Kata yang Paling Banyak Muncul")
-    words = [word.lower() for word in all_text.split() if len(word) > 3]
+    words = [word.lower() for word in text_reviews.split() if len(word) > 3]
     top_words = Counter(words).most_common(10)
 
     words_df = pd.DataFrame(top_words, columns=["Kata", "Frekuensi"])
@@ -688,6 +688,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
