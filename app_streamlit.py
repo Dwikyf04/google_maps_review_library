@@ -221,15 +221,23 @@ if selected_page == "Beranda":
         )
     st.divider()
 
-    st.subheader("☁️ Word Cloud Review")
-        all_text = " ".join(str(text) for text in df['Komentar'].dropna())
-        wordcloud = WordCloud(width=1200, height=600, background_color="white").generate(all_text)
+    all_text = " ".join(df_reviews["Komentar"].astype(str).tolist())
+
+    if not all_text.strip():
+        st.warning("Tidak ada teks yang bisa dibuat Word Cloud.")
+
+        wordcloud = WordCloud(
+            width=1200, height=600,
+            background_color="white"
+        ).generate(all_text)
 
         fig_wc, ax_wc = plt.subplots(figsize=(12, 6))
         ax_wc.imshow(wordcloud, interpolation="bilinear")
         ax_wc.axis("off")
-    st.pyplot(fig_wc)
 
+        st.pyplot(fig_wc, use_container_width=True)
+
+    st.markdown("---")
 
     st.divider()
     
@@ -677,6 +685,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
