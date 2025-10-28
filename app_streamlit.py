@@ -382,7 +382,7 @@ elif selected_page == "Rekomendasi":
 
                 
                 # --- 3. TAMPILKAN HASIL ---
-                GITHUB_IMAGE_URL = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review/main/images"
+                GITHUB_IMAGE_URL = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/images"
                 if not recommended_libraries.empty:
                     st.subheader("Peta Lokasi Teratas")
                     st.map(recommended_libraries[['latitude', 'longitude']])
@@ -392,7 +392,7 @@ elif selected_page == "Rekomendasi":
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
                         st.markdown(f"### {i + 1}. {row['Place_name']}")
 
-                    # Sanitasi nama file: ubah ke lowercase + ganti spasi/judul
+                    
                         filename = (
                             row['Place_name']
                             .replace(" ", "_")
@@ -401,7 +401,7 @@ elif selected_page == "Rekomendasi":
                             .lower()
                         )
 
-                        # Coba semua format gambar umum di GitHub
+                        
                         image_formats = ["jpg", "jpeg", "png", "webp"]
                         image_found = False
 
@@ -421,7 +421,7 @@ elif selected_page == "Rekomendasi":
                    
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
                         st.markdown(f"#### {i + 1}. {row['Place_name']}") 
-                        # ... (Kode st.metric Anda) ...
+                        
                         col1, col2 = st.columns(2)
                         with col1:
                             st.metric(label="Rating Google", value=f"{row['rating']:.1f} / 5")
@@ -435,14 +435,13 @@ elif selected_page == "Rekomendasi":
                         if 'url_google_maps' in row and pd.notna(row['url_google_maps']) and row['url_google_maps'].startswith('http'):
                             st.link_button("Lihat di Google Maps ", row['url_google_maps'])
 
-                        # --- PERUBAHAN DI SINI: Logika Expander ---
+                       
                         with st.expander(f"Lihat ulasan untuk {row['Place_name']}"):
                             if not all_reviews.empty:
-                                # Filter ulasan hanya untuk perpustakaan ini
+                               
                                 library_reviews = all_reviews[all_reviews['Place_name'] == row['Place_name']]
                                 
-                                # --- LOGIKA BARU ---
-                                # JIKA PENGGUNA MEMILIH KEYWORD FILTER
+                             
                                 if selected_keyword:
                                     st.write(f"**Ulasan yang Menyebut '{selected_keyword}':**")
                                     # Filter ulasan yang mengandung keyword
@@ -451,7 +450,7 @@ elif selected_page == "Rekomendasi":
                                     ]
                                     
                                     if not matching_keyword_reviews.empty:
-                                        # Tampilkan 3 contoh, warnai berdasarkan sentimen
+                                   
                                         for _, review_row in matching_keyword_reviews.head(3).iterrows():
                                             if review_row['sentiment'] == 'Positif':
                                                 st.success(f"• {review_row['Komentar']}")
@@ -462,7 +461,6 @@ elif selected_page == "Rekomendasi":
                                     else:
                                         st.caption(f"Tidak ada ulasan yang menyebut '{selected_keyword}'.")
                                 
-                                # JIKA PENGGUNA TIDAK MEMILIH FILTER (Tampilkan Semua)
                                 else:
                                     st.write("**Ulasan Positif:**")
                                     pos_reviews = library_reviews[library_reviews['sentiment'] == 'Positif']['Komentar'].head(3)
@@ -490,7 +488,6 @@ elif selected_page == "Rekomendasi":
         st.error("Data perpustakaan (Ringkasan) tidak dapat dimuat.")
 
 
-# --- 6. Isi Tab 2: Analisis Ulasan Individual ---
 elif selected_page == "Analisis Ulasan":
     st.markdown("""
         <div style='text-align:center; padding: 20px;'>
@@ -719,6 +716,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
