@@ -390,24 +390,28 @@ elif selected_page == "Rekomendasi":
                     name = name.replace(" ", "-")  # ganti spasi jadi dash
                     name = re.sub(r"[^a-z0-9\-]", "", name)  # hapus simbol aneh
                     return name
-                    
-                if not recommended_libraries.empty:
+                def show_recommendations(recommended_libraries):
+                    if recommended_libraries.empty:
+                        st.info("Tidak ada rekomendasi perpustakaan untuk ditampilkan.")
+                        return
+                        
                     st.subheader("Peta Lokasi Teratas")
                     st.map(recommended_libraries[['latitude', 'longitude']])
                     
                     st.subheader("Detail Peringkat")
 
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
-                        Place_name = row['Place_name']
                         st.markdown(f"### {i + 1}. {row['Place_name']}")
+                        if "Image_filename" in row and pd.notna(row["Image_filename"]):
+                            file_base = row["Image_filename"].lower().replace(" ", "-")
+                        else:
+                            file_base = normalize_filename(row["Place_name"])
 
                         image_formats = ["jpg", "jpeg", "png", "webp"]
                         gambar_url = None
-                       
 
                     for ext in image_formats:
-                        img_url = GITHUB_IMAGE_URL + ext
-                        response = requests.get(url)
+                        img_url = f"{GITHUB_IMAGE_URL}{file_base}.{ext}"
                         if response.status_code == 200:
                             gambar_url = url
                             break
@@ -714,6 +718,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
