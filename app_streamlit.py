@@ -397,7 +397,7 @@ elif selected_page == "Rekomendasi":
                         name = name.lower().strip()
                         name = name.replace(" ", "-")  # ganti spasi jadi dash
                         name = re.sub(r"[^a-z0-9\-]", "", name)  # hapus simbol aneh
-                    return name
+                        return name
 
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
                         st.markdown(f"### {i + 1}. {row['Place_name']}")
@@ -724,6 +724,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
