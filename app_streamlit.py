@@ -430,7 +430,7 @@ elif selected_page == "Rekomendasi":
                     st.divider()
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
                         with st.container(border=True):
-                        st.markdown(f"#### {i + 1}. {row['Place_name']}") 
+                        
                         
                         col1, col2 = st.columns(2)
                         with col1:
@@ -725,6 +725,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
