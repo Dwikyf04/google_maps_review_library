@@ -386,6 +386,7 @@ elif selected_page == "Rekomendasi":
                 # --- 3. TAMPILKAN HASIL ---
                 Images_fullname = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/"
                 GITHUB_IMAGE_URL = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/images/"
+        
                 def normalize_filename(name):
                     name = name.lower().strip()
                     name = name.replace(" ", "-")  # ganti spasi jadi dash
@@ -400,8 +401,9 @@ elif selected_page == "Rekomendasi":
 
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
                         st.markdown(f"### {i + 1}. {row['Place_name']}")
-            
-                        if "Image_filename" in row and pd.notna(row["Image_filename"]):
+                        
+                        
+                        if "Images_filename" in row and pd.notna(row["Images_filname"]):
                             file_base = row["Image_filename"].lower().replace(" ", "-")
                         else:
                             file_base = normalize_filename(row["Place_name"])
@@ -414,7 +416,7 @@ elif selected_page == "Rekomendasi":
                         img_url = f"{GITHUB_IMAGE_URL}{file_base}.{ext}"
                         response = requests.get(img_url)
                         if response.status_code == 200:
-                            gambar_url = url
+                            gambar_url = img_url
                             break
 
                     if gambar_url:
@@ -719,6 +721,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
