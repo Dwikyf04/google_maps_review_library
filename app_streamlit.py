@@ -411,7 +411,7 @@ elif selected_page == "Rekomendasi":
                                     pass # Abaikan error koneksi
 
                             if gambar_url:
-                                st.image(gambar_url, caption=row['Place_name'], use_column_width=True)
+                                st.image(gambar_url, caption=row['Place_name'], use_container_width=True)
                             else:
                                 st.caption("🖼️ Gambar tidak tersedia")
                             # --- Akhir Logika Gambar ---
@@ -721,6 +721,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
