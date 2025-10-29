@@ -386,6 +386,7 @@ elif selected_page == "Rekomendasi":
                 # --- 3. TAMPILKAN HASIL ---
                 Image_filename = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/"
                 GITHUB_IMAGE_URL = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/images/"
+                DEFAULT_IMAGE = GITHUB_IMAGE_URL + "default.jpg
                 def normalize_filename(name):
                         name = name.lower().strip()
                         name = name.replace(" ", "-")  # ganti spasi jadi dash
@@ -422,7 +423,8 @@ elif selected_page == "Rekomendasi":
                         except requests.exceptions.RequestException:
                             pass
 
-                    if gambar_url:
+                    if not gambar_url:
+                        gambar_url = DEFAULT_IMAGE
                         st.image(gambar_url, width=220, caption=row['Place_name'])
                     else:
                         st.warning("📌 Gambar belum tersedia")
@@ -725,6 +727,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
