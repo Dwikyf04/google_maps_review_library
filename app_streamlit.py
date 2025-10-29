@@ -386,6 +386,7 @@ elif selected_page == "Rekomendasi":
                 # --- 3. TAMPILKAN HASIL ---
                 #Image_filename = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/"
                 GITHUB_IMAGE_URL = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/images/"
+                DEFAULT_IMAGE = GITHUB_IMAGE_URL + "default.jpg"
                 def normalize_filename(name):
                         name = name.lower().strip()
                         name = name.replace(" ", "-")  # ganti spasi jadi dash
@@ -399,33 +400,31 @@ elif selected_page == "Rekomendasi":
                     st.subheader("Detail Peringkat")
                    
 
-                    for i, (_, row) in enumerate(recommended_libraries.iterrows()):
-                        st.markdown(f"### {i + 1}. {row['Place_name']}")
+                    for idx, (_, row) in enumerate(recommended_libraries.iterrows(), start=1):
+                        place_name = str(row["Place_name"]).strip()
+                        st.markdown(f"### {i + 1}. {place_name}")
                         
-                        
-                        if "Image_filename" in row and pd.notna(row["Image_filename"]):
-                            file_base = normalize_filename(row["Image_filename"])
-                        else:
-                            file_base = normalize_filename(row["Place_name"])
-                
+                        file_base = (
+                            normalize_filename(str(row["Image_filename"]))
+                            if "Image_filename" in row and pd.notna(row["Image_filename"])
+                            else normalize_filename(place_name)
+                        )                
 
                         image_formats = ["jpg", "jpeg", "png", "webp"]
                         gambar_url = None
 
                     for ext in image_formats:
                         img_url = f"{GITHUB_IMAGE_URL}{file_base}.{ext}"
-                        try:
-                            response = requests.head(img_url, timeout=5) 
-                            if response.status_code == 200:
-                                    gambar_url = img_url 
-                                    break 
-                        except requests.exceptions.RequestException:
-                            pass
-
+                         r = requests.get(url)
+                         if r.status_code == 200:
+                              gambar_url = img_url 
+                              break 
+        
                     if not gambar_url:
-                        st.image(gambar_url, width=220, caption=row['Place_name'])
-                    else:
-                        st.warning("📌 Gambar belum tersedia")
+                        gambar_url = DEFAULT_IMAGE
+                    st.image(image_url, width=350, caption=place_name)
+
+                    
             
                     st.divider()
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
@@ -725,6 +724,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
