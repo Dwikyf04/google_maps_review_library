@@ -384,7 +384,7 @@ elif selected_page == "Rekomendasi":
 
                 st.divider()
                 # --- 3. TAMPILKAN HASIL ---
-                Images_fullname = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/"
+                Image_filename = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/"
                 GITHUB_IMAGE_URL = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/images/"
         
                 def normalize_filename(name):
@@ -721,6 +721,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
