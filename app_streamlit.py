@@ -427,7 +427,7 @@ elif selected_page == "Rekomendasi":
                     else:
                         st.warning("📌 Gambar belum tersedia")
             
-                   
+                st.divider()
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
                         st.markdown(f"#### {i + 1}. {row['Place_name']}") 
                         
@@ -724,6 +724,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
