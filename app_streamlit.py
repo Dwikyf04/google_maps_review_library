@@ -403,7 +403,7 @@ elif selected_page == "Rekomendasi":
                         st.markdown(f"### {i + 1}. {row['Place_name']}")
                         
                         
-                        if "Image_filename" in row and pd.notna(row["Image_filname"]):
+                        if "Image_filename" in row and pd.notna(row["Image_filename"]):
                             file_base = row["Image_filename"].split('.')[0]
                         else:
                             file_base = normalize_filename(row["Place_name"])
@@ -724,6 +724,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
