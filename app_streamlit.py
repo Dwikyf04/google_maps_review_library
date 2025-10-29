@@ -419,7 +419,7 @@ elif selected_page == "Rekomendasi":
 
                     if not gambar_url:
                         gambar_url = DEFAULT_IMAGE
-                    st.image(image_url, width=350, caption=place_name)
+                    st.image(gambar_url, width=350, caption=place_name)
 
                     
             
@@ -721,6 +721,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
