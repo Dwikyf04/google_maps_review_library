@@ -419,8 +419,8 @@ elif selected_page == "Rekomendasi":
                             if response.status_code == 200:
                                     gambar_url = img_url 
                                     break 
-                            except requests.exceptions.RequestException:
-                                pass
+                        except requests.exceptions.RequestException:
+                            pass
 
                     if gambar_url:
                         st.image(gambar_url, width=220, caption=row['Place_name'])
@@ -724,6 +724,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
