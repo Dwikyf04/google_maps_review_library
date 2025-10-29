@@ -412,7 +412,7 @@ elif selected_page == "Rekomendasi":
 
                     for ext in image_formats:
                         img_url = f"{GITHUB_IMAGE_URL}{file_base}.{ext}"
-                        r = requests.get(url)
+                        r = requests.get(img_url)
                         if r.status_code == 200:
                             image_url = url
                             break
@@ -721,6 +721,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
