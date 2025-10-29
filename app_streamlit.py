@@ -385,19 +385,19 @@ elif selected_page == "Rekomendasi":
                 st.divider()
                 # --- 3. TAMPILKAN HASIL ---
                 Image_filename = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/"
+                GITHUB_IMAGE_URL = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/images/"
+                def normalize_filename(name):
+                        name = name.lower().strip()
+                        name = name.replace(" ", "-")  # ganti spasi jadi dash
+                        name = re.sub(r"[^a-z0-9\-]", "", name)  # hapus simbol aneh
+                        return name
                 
-                            
                 if not recommended_libraries.empty:
                     st.subheader("Peta Lokasi Teratas")
                     st.map(recommended_libraries[['latitude', 'longitude']])
                     
                     st.subheader("Detail Peringkat")
-                    GITHUB_IMAGE_URL = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/images/"
-                    def normalize_filename(name):
-                        name = name.lower().strip()
-                        name = name.replace(" ", "-")  # ganti spasi jadi dash
-                        name = re.sub(r"[^a-z0-9\-]", "", name)  # hapus simbol aneh
-                        return name
+                   
 
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
                         st.markdown(f"### {i + 1}. {row['Place_name']}")
@@ -724,6 +724,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
