@@ -385,26 +385,26 @@ elif selected_page == "Rekomendasi":
                 st.divider()
                 # --- 3. TAMPILKAN HASIL ---
                 Image_filename = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/"
-                GITHUB_IMAGE_URL = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/images/"
-        
-                def normalize_filename(name):
-                    name = name.lower().strip()
-                    name = name.replace(" ", "-")  # ganti spasi jadi dash
-                    name = re.sub(r"[^a-z0-9\-]", "", name)  # hapus simbol aneh
-                    return name
-                    
+                
+                            
                 if not recommended_libraries.empty:
                     st.subheader("Peta Lokasi Teratas")
                     st.map(recommended_libraries[['latitude', 'longitude']])
                     
                     st.subheader("Detail Peringkat")
+                    GITHUB_IMAGE_URL = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/images/"
+                    def normalize_filename(name):
+                        name = name.lower().strip()
+                        name = name.replace(" ", "-")  # ganti spasi jadi dash
+                        name = re.sub(r"[^a-z0-9\-]", "", name)  # hapus simbol aneh
+                    return nam
 
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
                         st.markdown(f"### {i + 1}. {row['Place_name']}")
                         
                         
                         if "Image_filename" in row and pd.notna(row["Image_filname"]):
-                            file_base = row["Image_filename"].lower().replace(" ", "-")
+                            file_base = row["Image_filename"].split('.')[0]
                         else:
                             file_base = normalize_filename(row["Place_name"])
                 
@@ -414,10 +414,13 @@ elif selected_page == "Rekomendasi":
 
                     for ext in image_formats:
                         img_url = f"{GITHUB_IMAGE_URL}{file_base}.{ext}"
-                        response = requests.get(img_url)
-                        if response.status_code == 200:
-                            gambar_url = img_url
-                            break
+                        try:
+                            response = requests.head(img_url, timeout=5) 
+                                if response.status_code == 200:
+                                    gambar_url = img_url 
+                                    break 
+                            except requests.exceptions.RequestException:
+                                pass
 
                     if gambar_url:
                         st.image(gambar_url, width=220, caption=row['Place_name'])
@@ -721,6 +724,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
