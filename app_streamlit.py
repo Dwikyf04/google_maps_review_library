@@ -428,11 +428,11 @@ elif selected_page == "Rekomendasi":
                                 st.write("**Distribusi Sentimen:**")
                                 try:
                                     chart_data = pd.DataFrame({
-                                        "Tipe Sentimen": ["Positif", "Negatif", "Netral"], # Perbaiki typo jika perlu
+                                        "Tipe Sentimen": ["positif", "negative", "neutral"], # Perbaiki typo jika perlu
                                         "Jumlah Ulasan": [
                                             row['jumlah_positif'], 
-                                            row['jumlah_negatif'], # Perbaiki nama kolom jika perlu
-                                            row['jumlah_netral']   # Perbaiki nama kolom jika perlu
+                                            row['jumlah_negative'], 
+                                            row['jumlah_neutral']  
                                         ]
                                     })
                                     st.bar_chart(chart_data, x="Tipe Sentimen", y="Jumlah Ulasan", color="Tipe Sentimen")
@@ -721,6 +721,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
