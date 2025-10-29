@@ -417,6 +417,8 @@ elif selected_page == "Rekomendasi":
                             if r.status_code == 200:
                                 gambar_url = img_url
                                 break
+                        except:
+                            pass
 
                     if gambar_url:
                         st.image(gambar_url, width=350, caption=place_name)
@@ -721,6 +723,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
