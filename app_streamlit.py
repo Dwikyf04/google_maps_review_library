@@ -401,15 +401,12 @@ elif selected_page == "Rekomendasi":
                    
 
                     for idx, (_, row) in enumerate(recommended_libraries.iterrows(), start=1):
-                        place_name = str(row["Place_name"]).strip()
-                        st.markdown(f"### {i + 1}. {place_name}")
                         
-                        file_base = (
-                            normalize_filename(str(row["Image_filename"]))
-                            if "Image_filename" in row and pd.notna(row["Image_filename"])
-                            else normalize_filename(place_name)
-                        )                
-
+                        place_name = str(row["Place_name"]).strip()
+                        st.markdown(f"### {idx}. {place_name}")
+                        
+                        file_base = normalize_filename(str(row.get("Image_filename", place_name)))
+                        
                         image_formats = ["jpg", "jpeg", "png", "webp"]
                         gambar_url = None
 
@@ -724,6 +721,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
