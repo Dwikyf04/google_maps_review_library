@@ -416,7 +416,7 @@ elif selected_page == "Rekomendasi":
                         img_url = f"{GITHUB_IMAGE_URL}{file_base}.{ext}"
                         try:
                             response = requests.head(img_url, timeout=5) 
-                                if response.status_code == 200:
+                            if response.status_code == 200:
                                     gambar_url = img_url 
                                     break 
                             except requests.exceptions.RequestException:
@@ -724,6 +724,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
