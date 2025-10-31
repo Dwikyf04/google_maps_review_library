@@ -120,182 +120,139 @@ with st.sidebar:
     st.sidebar.markdown("---")
     st.sidebar.caption("Dibuat oleh Nanda | 2025")
 
-if selected_page == "Beranda":
+# [GANTI BAGIAN INI DI app.py ANDA]
+
+elif selected_page == "Beranda":
+    
+    # 1. Kotak Info Biru (Mirip target)
+    st.info("ℹ️ **Selamat Datang di Sistem Rekomendasi Buku!** Temukan buku favorit Anda berikutnya di sini.")
+
+    # 2. Search Bar (Mirip target)
+    st.text_input(
+        "Search, what are you looking for?", 
+        placeholder="Cari berdasarkan judul, penulis, atau topik...",
+        key="home_search"
+    )
+    
+    st.write("") # Memberi spasi
+    
+    # 3. Grid Ikon (Menggunakan HTML/CSS kustom untuk meniru tampilan)
+    
+    # Definisikan CSS untuk tombol-tombol ikon
+    # Ini adalah 'sihir' untuk membuat tampilannya mirip
     st.markdown("""
-        <div style='text-align:center; padding: 20px;'>
-            <h1>Sistem Rekomendasi Perpustakaan Indonesia</h1>
-            <p style='font-size:18px;'>Cari perpustakaan terbaik berbasis analisis ribuan ulasan Google Maps dengan NLP & Machine Learning</p>
-        </div>
+    <style>
+    .icon-button {
+        background-color: #16a085; /* Warna hijau mirip target */
+        border-radius: 15px;      /* Sudut membulat */
+        padding: 20px;
+        text-align: center;
+        color: white !important;  /* Paksa warna teks jadi putih */
+        height: 140px;            /* Tinggi konsisten */
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: background-color 0.3s;
+    }
+    .icon-button:hover {
+        background-color: #1abc9c; /* Warna hover lebih cerah */
+        color: white !important;   /* Paksa warna teks jadi putih */
+        text-decoration: none;
+    }
+    .icon-button-icon {
+        font-size: 48px;          /* Ukuran ikon emoji */
+        line-height: 1;
+    }
+    .icon-button-text {
+        margin-top: 10px;
+        font-weight: bold;
+        font-size: 14px;
+    }
+    /* Sembunyikan dekorasi link default Streamlit */
+    a:link, a:visited {
+        text-decoration: none !important;
+        color: inherit !important;
+    }
+    </style>
     """, unsafe_allow_html=True)
-    st.divider()
-
-    st.write("""
-    Aplikasi ini menganalisis ribuan ulasan **Google Maps** untuk membantu pengguna menemukan 
-    perpustakaan terbaik di Indonesia. Sistem menggabungkan teknologi **NLP (Natural Language Processing)** 
-    dan **Machine Learning** untuk memberikan hasil yang akurat dan informatif.
-    """)
-    st.divider()
-    if not library_data.empty and not all_reviews.empty:
-        col1, col2, col3 = st.columns(3)
-        col1.metric("Total Perpustakaan", f"{library_data['Place_name'].nunique()}+ Perpustkaaan")
-        col2.metric("Total Komentar", f"{len(all_reviews)}+ Komentar")
-        col3.metric("Jumlah Kota", f"{library_data['city'].nunique()} Kota")
-    else:
-        st.info("Data sedang dimuat...")
-
-    st.divider()
-
-
-    st.markdown("### Fitur Utama Aplikasi")
-    fitur_cols = st.columns(2)
-    fitur_cols[1].success("Rekomendasi Perpustakaan Terbaik")
-    fitur_cols[0].info("Analisis Sentimen Ulasan Baru")
-  
-
-    st.divider()
     
+    col1, col2, col3, col4, col5 = st.columns(5)
+    
+    # Tombol-tombol ini menggunakan HTML kustom agar bisa di-style.
+    # Karena itu, mereka tidak bisa diklik untuk mengubah halaman Streamlit
+    # secara langsung. Mereka saat ini HANYA VISUAL.
+    
+    with col1:
+        st.markdown("""
+            <div class="icon-button">
+                <div class="icon-button-icon">📅</div>
+                <div class="icon-button-text">Latest Additions</div>
+            </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+            <div class="icon-button">
+                <div class="icon-button-icon">🔎</div>
+                <div class="icon-button-text">Advanced Search</div>
+            </div>
+        """, unsafe_allow_html=True)
 
- 
-    st.subheader("Peta Sebaran Perpustakaan")
-    if not library_data.empty:
-        st.map(library_data[['latitude', 'longitude', 'Place_name']])
-
-
-    st.subheader("Kota dengan Skor Kualitas Rata-rata Tertinggi")
-    if not library_data.empty:
-        top_cities = library_data.groupby('city')['skor_kualitas'].mean().nlargest(5)
-        st.bar_chart(top_cities)
-   
-    if not library_data.empty:
-        best_city = top_cities.index[0]
-        best_score = top_cities.iloc[0]
-
-        st.markdown("🔍 **Insight Kota:**")
-        st.write(
-            f"• **{best_city}** memiliki skor kualitas tertinggi: **{best_score:.2f}** ✅\n"
-            f"• Menunjukkan kualitas layanan dan fasilitas yang sangat baik."
-        )
-    st.divider()
-
-    st.subheader("Distribusi Rating Perpustakaan")
-    if not library_data.empty:
-        rating_counts = library_data['rating'].value_counts().sort_index()
-        st.bar_chart(rating_counts)
+    with col3:
+        st.markdown("""
+            <div class="icon-button">
+                <div class="icon-button-icon">🗂️</div>
+                <div class="icon-button-text">Browse Repository</div>
+            </div>
+        """, unsafe_allow_html=True)
         
-    if not library_data.empty:
-        avg_rating = library_data['rating'].mean()
-        high_rating_pct = (library_data['rating'] >= 4.0).mean() * 100
+    with col4:
+        st.markdown("""
+            <div class="icon-button">
+                <div class="icon-button-icon">ℹ️</div>
+                <div class="icon-button-text">About us</div>
+            </div>
+        """, unsafe_allow_html=True)
 
-        st.markdown(f"**Insight Rating:**")
-        st.write(
-            f"• Rata-rata rating perpustakaan: **{avg_rating:.2f} / 5**\n"
-            f"• {high_rating_pct:.1f}% perpustakaan memiliki rating **≥ 4.0** ⭐\n"
-        )
+    with col5:
+        st.markdown("""
+            <div class="icon-button">
+                <div class="icon-button-icon">📜</div>
+                <div class="icon-button-text">Policies</div>
+            </div>
+        """, unsafe_allow_html=True)
 
     st.divider()
 
-    st.subheader("Distribusi Sentimen Positif vs Negatif")
-    if 'persen_positif' in library_data.columns:
-        sentiment_summary = pd.DataFrame({
-            "Positif (%)": library_data['persen_positif'] * 100,
-            "Negatif (%)": (1 - library_data['persen_positif']) * 100
-        })
-        st.line_chart(sentiment_summary)
-    else:
-        st.warning("Data sentimen positif belum tersedia!")
-    if 'persen_positif' in library_data.columns:
-        avg_positive = library_data['persen_positif'].mean() * 100
-
-        st.markdown("🔍 **Insight Sentimen:**")
-        st.write(
-            f"• Sentimen positif rata-rata: **{avg_positive:.1f}%** 👍\n"
-            f"• Pengunjung perpustakaan di Indonesia **dominan puas**."
-        )
+    # --- SISA DARI HALAMAN BERANDA ANDA ---
+    # (Letakkan kode metrik dan chart Anda sebelumnya di sini)
+    
+    st.subheader("Data Overview")
+    if not df_books.empty:
+        m1, m2, m3 = st.columns(3)
         
-    st.divider()
-
- 
-    st.subheader("Top 10 Perpustakaan dengan Sentimen Positif Tertinggi")
-    if not library_data.empty:
-        top_positive = library_data.sort_values(by="persen_positif", ascending=False).head(10)
-        st.dataframe(
-            top_positive[['Place_name', 'city', 'rating', 'persen_positif']],
-            use_container_width=True
-        )
-    st.divider()
-    if not all_reviews.empty:
-        st.subheader("☁️ Word Cloud Ulasan Perpustakaan (Semua Kota)")
-        text_reviews = " ".join(all_reviews['Komentar'].astype(str))
-        if text_reviews.strip():
-            wc = WordCloud(width=800, height=500, background_color="white").generate(text_reviews)
-            
-            fig_wc, ax_wc = plt.subplots()
-            ax_wc.imshow(wc, interpolation='bilinear')
-            ax_wc.axis('off')
-            st.pyplot(fig_wc)
-        else:
-            st.caption("Tidak ada ulasan.")
-    
-    st.divider()
-    st.subheader("🔍 Kata yang Paling Banyak Muncul")
-    words = [word.lower() for word in text_reviews.split() if len(word) > 3]
-    top_words = Counter(words).most_common(10)
-
-    words_df = pd.DataFrame(top_words, columns=["Kata", "Frekuensi"])
-    st.table(words_df)
-
-    st.write("---")
-    st.divider()
-
-    st.markdown("###Rating vs Sentimen Positif")
-    scatter_df = library_data[['rating', 'persen_positif']].dropna()
-    st.scatter_chart(scatter_df)
-
-
-    st.markdown("## Pemetaan Perpustakaan ")
-
-    if not library_data.empty:
-
-        min_rating_map = st.slider(
-            "Filter berdasarkan rating minimum:",
-            min_value=1.0, max_value=5.0, value=3.5, step=0.1
-        )
-
-        filtered_map_data = library_data[library_data['rating'] >= min_rating_map]
-
-        m = folium.Map(location=[-2.5, 118], zoom_start=5)  
-
-        for _, row in filtered_map_data.iterrows():
-            rating = row['rating']
-    
-            if rating >= 4.5:
-                marker_color = "darkgreen"
-            elif rating >= 4.0:
-                marker_color = "green"
-            elif rating >= 3.5:
-                marker_color = "orange"
+        m1.metric("Total Judul Buku", f"{df_books['title'].nunique()} Judul")
+        
+        try:
+            if 'authors' in df_books.columns:
+                all_authors = df_books['authors'].dropna().astype(str).unique()
+                m2.metric("Total Penulis", f"{len(all_authors)} Penulis")
             else:
-                marker_color = "red"
+                m2.metric("Total Penulis", "N/A")
+        except Exception:
+            m2.metric("Total Penulis", "N/A")
 
-            tooltip_info = (
-                f"<b>{row['Place_name']}</b><br>"
-                f"Rating: {rating} ⭐<br>"
-                f"Sentimen Positif: {row['persen_positif']:.0%}<br>"
-                f"Kota: {row['city']}<br>"
-                f"<a href='{row['url_google_maps']}' target='_blank'>📍 Lihat di Google Maps</a>"
-            )
-
-            folium.Marker(
-                location=[row['latitude'], row['longitude']],
-                popup=tooltip_info,
-                tooltip=row['Place_name'],
-                icon=folium.Icon(color=marker_color)
-            ).add_to(m)
-
-        st_folium(m, width=800, height=500)
-
+        if 'categories' in df_books.columns:
+            m3.metric("Jumlah Kategori", f"{df_books['categories'].nunique()} Kategori")
+        else:
+            m3.metric("Jumlah Kategori", "N/A")
+            
+        st.dataframe(df_books[['title', 'authors', 'categories']].head(10), use_container_width=True)
+        
     else:
-        st.warning("Data perpustakaan kosong atau gagal dimuat.")
+        st.info("Data buku belum dimuat...")
 
 
 # ===============================================
@@ -721,6 +678,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
