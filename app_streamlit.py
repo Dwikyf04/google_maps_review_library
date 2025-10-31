@@ -122,7 +122,7 @@ with st.sidebar:
 
 # [GANTI BAGIAN INI DI app.py ANDA]
 
-elif selected_page == "Beranda":
+if selected_page == "Beranda":
     st.write("""
     Aplikasi ini menganalisis ribuan ulasan **Google Maps** untuk membantu pengguna menemukan 
     perpustakaan terbaik di Indonesia. Sistem menggabungkan teknologi **NLP (Natural Language Processing)** 
@@ -781,6 +781,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
