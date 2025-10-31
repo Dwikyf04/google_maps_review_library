@@ -287,36 +287,69 @@ if selected_page == "Beranda":
     st.scatter_chart(scatter_df)
 
 
-    st.markdown("## Pemetaan Perpustakaan ")
+    # Pastikan Anda sudah mengimpor library ini di bagian atas file Anda:
+# import folium
+# from streamlit_folium import st_folium
+
+    st.markdown("## 🗺️ Pemetaan Perpustakaan")
 
     if not library_data.empty:
-
+    
+    # 1. Buat filter interaktif
         min_rating_map = st.slider(
             "Filter berdasarkan rating minimum:",
-            min_value=1.0, max_value=5.0, value=3.5, step=0.1
+            min_value=1.0, 
+            max_value=5.0, 
+            value=3.5, 
+            step=0.1,
+            key="map_rating_slider" # Key penting untuk menjaga state slider
         )
 
-        filtered_map_data = library_data[library_data['rating'] >= min_rating_map]
+    # 2. Filter data berdasarkan input slider
+    # Tambahkan .copy() untuk menghindari Peringatan SettingWithCopyWarning
+        filtered_map_data = library_data[library_data['rating'] >= min_rating_map].copy()
 
-        m = folium.Map(location=[-2.5, 118], zoom_start=5)  
+    # 3. Buat peta dasar Folium, berpusat di Indonesia
+        m = folium.Map(location=[-2.5, 118], zoom_start=5)
 
+    # 4. Loop data dan tambahkan marker
         for _, row in filtered_map_data.iterrows():
             rating = row['rating']
 
+        # Tentukan warna marker berdasarkan rating
+            if rating >= 4.5:
+                marker_color = "darkgreen"
+            elif rating >= 4.0:
+                marker_color = "green"
+            elif rating >= 3.5:
+                marker_color = "orange"
+            else:
+                marker_color = "red"
+
+        # Buat konten tooltip/popup
+        # Menggunakan .get() membuat kode lebih aman jika ada kolom yang hilang
             tooltip_info = (
-                f"<b>{row['Place_name']}</b><br>"
+                f"<b>{row.get('Place_name', 'Nama Tidak Ada')}</b><br>"
                 f"Rating: {rating} ⭐<br>"
-                f"Sentimen Positif: {row['persen_positif']:.0%}<br>"
-                f"Kota: {row['city']}<br>"
-                f"<a href='{row['url_google_maps']}' target='_blank'>📍 Lihat di Google Maps</a>"
+                f"Sentimen Positif: {row.get('persen_positif', 0):.0%}<br>"
+                f"Kota: {row.get('city', 'N/A')}<br>"
+                f"<a href='{row.get('url_google_maps', '#')}' target='_blank'>📍 Lihat di Google Maps</a>"
             )
 
+        # Tambahkan marker ke peta
             folium.Marker(
                 location=[row['latitude'], row['longitude']],
                 popup=tooltip_info,
-                tooltip=row['Place_name'],
+                tooltip=row.get('Place_name', 'Marker'),
                 icon=folium.Icon(color=marker_color)
             ).add_to(m)
+
+    # 5. Tampilkan peta di Streamlit
+    # Gunakan use_container_width=True agar lebar peta responsif
+        st_folium(m, use_container_width=True, height=500)
+
+    else:
+        st.warning("Data perpustakaan kosong atau gagal dimuat.")
 
 # ===============================================
 # Halaman 2: REKOMENDASI (Kode Lengkap & Diperbaiki)
@@ -741,6 +774,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
