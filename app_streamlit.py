@@ -148,7 +148,6 @@ if selected_page == "Beranda":
 
     st.divider()
 
-
  
     st.subheader("Peta Sebaran Perpustakaan")
     if not library_data.empty:
@@ -238,9 +237,7 @@ if selected_page == "Beranda":
 
     words_df = pd.DataFrame(top_words, columns=["Kata", "Frekuensi"])
     st.table(words_df)
-    # Tombol-tombol ini menggunakan HTML kustom agar bisa di-style.
-    # Karena itu, mereka tidak bisa diklik untuk mengubah halaman Streamlit
-    # secara langsung. Mereka saat ini HANYA VISUAL.
+
     
     with col1:
         st.markdown("""
@@ -305,27 +302,6 @@ if selected_page == "Beranda":
 
         for _, row in filtered_map_data.iterrows():
             rating = row['rating']
-    # --- SISA DARI HALAMAN BERANDA ANDA ---
-    # (Letakkan kode metrik dan chart Anda sebelumnya di sini)
-
-            if rating >= 4.5:
-                marker_color = "darkgreen"
-            elif rating >= 4.0:
-                marker_color = "green"
-            elif rating >= 3.5:
-                marker_color = "orange"
-    st.subheader("Data Overview")
-    if not df_books.empty:
-        m1, m2, m3 = st.columns(3)
-        
-        m1.metric("Total Judul Buku", f"{df_books['title'].nunique()} Judul")
-        
-        try:
-            if 'authors' in df_books.columns:
-                all_authors = df_books['authors'].dropna().astype(str).unique()
-                m2.metric("Total Penulis", f"{len(all_authors)} Penulis")
-            else:
-                marker_color = "red"
 
             tooltip_info = (
                 f"<b>{row['Place_name']}</b><br>"
@@ -341,22 +317,6 @@ if selected_page == "Beranda":
                 tooltip=row['Place_name'],
                 icon=folium.Icon(color=marker_color)
             ).add_to(m)
-
-        st_folium(m, width=800, height=500)
-                m2.metric("Total Penulis", "N/A")
-        except Exception:
-            m2.metric("Total Penulis", "N/A")
-
-        if 'categories' in df_books.columns:
-            m3.metric("Jumlah Kategori", f"{df_books['categories'].nunique()} Kategori")
-        else:
-            m3.metric("Jumlah Kategori", "N/A")
-            
-        st.dataframe(df_books[['title', 'authors', 'categories']].head(10), use_container_width=True)
-        
-    else:
-        st.warning("Data perpustakaan kosong atau gagal dimuat.")
-        st.info("Data buku belum dimuat...")
 
 # ===============================================
 # Halaman 2: REKOMENDASI (Kode Lengkap & Diperbaiki)
@@ -781,6 +741,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
