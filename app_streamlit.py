@@ -123,6 +123,13 @@ with st.sidebar:
 # [GANTI BAGIAN INI DI app.py ANDA]
 
 if selected_page == "Beranda":
+    st.markdown("""
+        <div style='text-align:center; padding: 10px;'>
+            <h1>Rekomendasi Perpustakaan di Indonesia</h1>
+            <p style='font-size:18px;'>Temukan perpustakaan terbaik berbasis analisis ribuan ulasan Google Maps</p>
+        </div>
+    """, unsafe_allow_html=True)
+    st.divider()
     st.write("""
     Aplikasi ini menganalisis ribuan ulasan **Google Maps** untuk membantu pengguna menemukan 
     perpustakaan terbaik di Indonesia. Sistem menggabungkan teknologi **NLP (Natural Language Processing)** 
@@ -774,6 +781,7 @@ elif selected_page == "Feedback":
 
 
     
+
 
 
 
