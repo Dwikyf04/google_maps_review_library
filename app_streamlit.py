@@ -3,7 +3,6 @@ import pandas as pd
 import joblib
 import numpy as np
 import datetime
-import math
 import matplotlib.pyplot as plt
 import folium
 import gspread
