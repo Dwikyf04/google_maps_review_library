@@ -1,0 +1,8 @@
+pandas
+numpy
+selenium
+beautifulsoup4
+matplotlib
+scikit-learn
+streamlit
+joblib

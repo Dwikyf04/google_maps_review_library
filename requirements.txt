@@ -1,0 +1,16 @@
+pandas
+numpy
+wordcloud
+matplotlib
+selenium
+beautifulsoup4
+matplotlib
+scikit-learn
+streamlit
+streamlit-option-menu
+gspread
+oauth2client
+folium
+streamlit-folium
+pyspellchecker
+altair<5
