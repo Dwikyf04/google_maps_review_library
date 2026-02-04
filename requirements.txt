@@ -4,7 +4,6 @@ wordcloud
 matplotlib
 selenium
 beautifulsoup4
-matplotlib
 scikit-learn
 streamlit
 streamlit-option-menu
