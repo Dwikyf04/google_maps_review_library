@@ -16,4 +16,3 @@ wordcloud
 gspread
 oauth2client
 altair
-libgl1-mesa-glx
