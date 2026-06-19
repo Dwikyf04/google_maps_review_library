@@ -1,5 +1,4 @@
 import os
-os.system("pip uninstall -y opencv-python opencv-contrib-python")
 import streamlit as st
 import pandas as pd
 import joblib
