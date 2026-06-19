@@ -4,10 +4,7 @@ numpy
 matplotlib
 joblib
 scikit-learn
-opencv-python-headless
 Pillow
-easyocr
-ultralytics
 folium
 streamlit-folium
 streamlit-option-menu
