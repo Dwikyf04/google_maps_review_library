@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import folium
 import gspread
 import requests
-import cv2
+# import cv2
 import re
 import easyocr
 from PIL import Image
