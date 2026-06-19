@@ -3,15 +3,11 @@ import streamlit as st
 import pandas as pd
 import joblib
 import numpy as np
-import datetime
 import matplotlib.pyplot as plt
 import folium
 import gspread
 import requests
-# import cv2
 import re
-# import easyocr
-from PIL import Image
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 from streamlit_folium import st_folium
@@ -20,15 +16,12 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics.pairwise import cosine_similarity
 from streamlit_option_menu import option_menu
 from collections import Counter
-from ultralytics import YOLO
+
 LABEL_POSITIF = "Positive"
 LABEL_NEGATIF = "Negative"
 LABEL_NETRAL = "Neutral"
 
-
 st.set_page_config(page_title="Analisis & Rekomendasi Perpus", layout="wide")
-
-
 
 @st.cache_resource
 def load_models():
@@ -44,44 +37,35 @@ def load_models():
         return tfidf, svm_model, kmeans_model, profil_nama, profil_vektor
     except FileNotFoundError:
         st.error("File model (.pkl) tidak ditemukan di folder /Models.")
-        return None, None, None
+        return None, None, None, None, None
     except Exception as e:
         st.error(f"Gagal memuat model: {e}")
-        return None, None, None
+        return None, None, None, None, None
 
-# @st.cache_data
-# def load_vision_model():
-#     model = YOLO('best.pt')
-#     reader = easyocr.Reader(['en', 'id'], gpu=False)
-#     return model, reader
+def load_library_data(file_path="data_perpustakaan.csv"):
+    """
+    Memuat data perpustakaan yang SUDAH DIOLAH (RINGKASAN) dari file CSV.
+    File ini digunakan untuk Tab Rekomendasi.
+    """
+    try:
+        df = pd.read_csv(file_path)
+        df['rating'] = pd.to_numeric(df['rating'], errors='coerce')
+        df['skor_kualitas'] = pd.to_numeric(df['skor_kualitas'], errors='coerce')
+        df['persen_positif'] = pd.to_numeric(df['persen_positif'], errors='coerce')
+        df['latitude'] = pd.to_numeric(df['latitude'], errors='coerce')
+        df['longitude'] = pd.to_numeric(df['longitude'], errors='coerce')
+        df.dropna(subset=['skor_kualitas', 'rating', 'city', 'Place_name', 'latitude', 'longitude'], inplace=True)
+        return df
+    except FileNotFoundError:
+        st.error(f"File data '{file_path}' (RINGKASAN) tidak ditemukan.")
+        return pd.DataFrame()
+    except KeyError as e:
+        st.error(f"Kolom {e} tidak ditemukan di 'data_perpustakaan.csv'.")
+        return pd.DataFrame()
+    except Exception as e:
+        st.error(f"Terjadi kesalahan saat memuat data CSV (Ringkasan): {e}")
+        return pd.DataFrame()
 
-# vision_model, ocr_reader = load_vision_model()    
-# def load_library_data(file_path="data_perpustakaan.csv"):
-#     """
-#     Memuat data perpustakaan yang SUDAH DIOLAH (RINGKASAN) dari file CSV.
-#     File ini digunakan untuk Tab Rekomendasi.
-#     """
-#     try:
-#         df = pd.read_csv(file_path)
-#         # (Pastikan nama kolom 'kota' dan 'nama_perpustakaan' sesuai dengan file Anda)
-#         df['rating'] = pd.to_numeric(df['rating'], errors='coerce')
-#         df['skor_kualitas'] = pd.to_numeric(df['skor_kualitas'], errors='coerce')
-#         df['persen_positif'] = pd.to_numeric(df['persen_positif'], errors='coerce')
-#         df['latitude'] = pd.to_numeric(df['latitude'], errors='coerce')
-#         df['longitude'] = pd.to_numeric(df['longitude'], errors='coerce')
-#         df.dropna(subset=['skor_kualitas', 'rating', 'city', 'Place_name', 'latitude', 'longitude'], inplace=True)
-#         return df
-#     except FileNotFoundError:
-#         st.error(f"File data '{file_path}' (RINGKASAN) tidak ditemukan.")
-#         return pd.DataFrame()
-#     except KeyError as e:
-#         st.error(f"Kolom {e} tidak ditemukan di 'data_perpustakaan.csv'.")
-#         return pd.DataFrame()
-#     except Exception as e:
-#         st.error(f"Terjadi kesalahan saat memuat data CSV (Ringkasan): {e}")
-#         return pd.DataFrame()
-
-# --- BARU: Fungsi untuk memuat SEMUA ulasan individual ---
 @st.cache_data
 def load_review_data(file_path="data_perpustakaan_review.csv"):
     """
@@ -99,21 +83,16 @@ def load_review_data(file_path="data_perpustakaan_review.csv"):
         st.warning(f"File '{file_path}' (Ulasan Individual) tidak ditemukan. Contoh ulasan tidak akan ditampilkan.")
         return pd.DataFrame()
     except ValueError:
-        # Error jika usecols tidak ditemukan
         st.warning(f"Kolom di '{file_path}' tidak lengkap. Setidaknya butuh 'Place_name', 'sentiment', 'Komentar'.")
         return pd.DataFrame()
     except Exception as e:
         st.warning(f"Gagal memuat file ulasan individual: {e}")
         return pd.DataFrame()
-# ---------------------------------------------------------
-
 
 # --- 2. Memuat Semua Data & Model ---
 tfidf, svm_model, kmeans_model, profil_nama, profil_vektor = load_models()
 library_data = load_library_data()
-# --- BARU: Memuat semua ulasan ---
 all_reviews = load_review_data()
-# ---------------------------------
 
 with st.sidebar:
     st.image("Logo.png", width=100) # Opsional: Ganti dengan URL logo Anda
@@ -125,71 +104,7 @@ with st.sidebar:
         default_index=0
     )
     st.sidebar.markdown("---")
-
-    # st.sidebar.header('Scan judul buku')
-    # pilihan_input = st.sidebar.radio("Pilih cara input:", ["Kamera HP", "Upload Gambar"])
-
-    # img_file = None
-
-    # if pilihan_input == 'Kamera HP':
-    #     img_file = st.camera_input("Ambil cover dengan hp")
-    # else:
-    #     img_file = st.file_uploader("Upload File gambar", type=["jpeg","jpg","png"])   
-
-    #     if img_file is not None:
-    #         bytes_data = img_file.getvalue()
-    #         cv2_img = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
-
-    #         result = vision_model(cv2_img, conf=0.25)
-
-    #         buku_ketemu = False
-    #         list_deteksi = []
-
-    #         for box in result[0].boxes:
-    #             cls_id = int(box.cls[0])
-    #             nama_benda = vision_model.names[cls_id]
-    #             conf = float(box.conf[0])
-
-    #             list_deteksi.append(f"{nama_benda} ({conf*100:.0f}%)")
-
-    #             if nama_benda == 'book':
-    #                 buku_ketemu = True
-
-    #                 x1, y1, x2, y2 = map(int, box.xyxy[0])
-
-    #                 crop_img = cv2_img[y1:y2, x1:x2]
-
-    #                 st.sidebar.image(crop_img,caption='Area cover terdeteksi',channels="BGR")
-
-    #                 with st.spinner('tunggu sebenar yaa, buku sedang dicari'):
-    #                     hasil_teks = ocr_reader.readtext(crop_img, detail=0)
-    #                     judul_lengkap = "" "".join(hasil_teks)
-    #                 st.success('buku adaa')
-    #                 st.markdown(f'judul terbaca:{judul_lengkap}') 
-    #                 st.info(judul_lengkap)
-
-    #                 break
-    #         if not buku_ketemu:
-    #             with st.spinner('membaca seluruh gambar'):
-    #                 hasil_teks = ocr_reader.readtext(cv2_img,detail=0)
-    #                 judul_lengkap = " ".join(hasil_teks)
-    #             if len(judul_lengkap)>1:
-    #                 st.sidebar.success("buku berhasil dietemukan")
-    #                 st.sidebar.markdown(f"Judul buku:")
-    #                 st.sidebar.image(cv2_img, caption="Scan Full Image", channels="BGR")
-    #             else:
-    #                 st.sidebar.error("buku gagal ditemukan")     
-    #                 st.sidebar.caption("Tips: Pastikan gambar terang dan tulisan terbaca jelas.")
-    #             st.caption("Tips: Coba pegang buku agar covernya rata dan cahayanya terang.")
-
-    #             st.sidebar.markdown("---")
-    #             st.sidebar.caption("mencari buku secara keseluruhan")
-
-                       
-
     st.sidebar.caption("Dibuat oleh Nanda | 2025")
-
-
 
 if selected_page == "Beranda":
     st.markdown("""
@@ -201,10 +116,10 @@ if selected_page == "Beranda":
     st.divider()
     st.write("""
     Aplikasi ini menganalisis ribuan ulasan **Google Maps** untuk membantu pengguna menemukan 
-    perpustakaan terbaik di Indonesia. Sistem menggabungkan teknologi **NLP (Natural Language Processing)** 
-    dan **Machine Learning** untuk memberikan hasil yang akurat dan informatif.
+    perpustakaan terbaik di Indonesia. Sistem menggabungkan teknologi **NLP (Natural Language Processing)** dan **Machine Learning** untuk memberikan hasil yang akurat dan informatif.
     """)
     st.divider()
+    
     if not library_data.empty and not all_reviews.empty:
         col1, col2, col3 = st.columns(3)
         col1.metric("Total Perpustakaan", f"{library_data['Place_name'].nunique()}+ Perpustkaaan")
@@ -215,20 +130,16 @@ if selected_page == "Beranda":
 
     st.divider()
 
-
     st.markdown("### Fitur Utama Aplikasi")
     fitur_cols = st.columns(2)
     fitur_cols[1].success("Rekomendasi Perpustakaan Terbaik")
     fitur_cols[0].info("Analisis Sentimen Ulasan Baru")
   
-
     st.divider()
 
- 
     st.subheader("Peta Sebaran Perpustakaan")
     if not library_data.empty:
         st.map(library_data[['latitude', 'longitude', 'Place_name']])
-
 
     st.subheader("Kota dengan Skor Kualitas Rata-rata Tertinggi")
     if not library_data.empty:
@@ -238,7 +149,6 @@ if selected_page == "Beranda":
     if not library_data.empty:
         best_city = top_cities.index[0]
         best_score = top_cities.iloc[0]
-
         st.markdown("🔍 **Insight Kota:**")
         st.write(
             f"• **{best_city}** memiliki skor kualitas tertinggi: **{best_score:.2f}** ✅\n"
@@ -272,9 +182,9 @@ if selected_page == "Beranda":
         st.line_chart(sentiment_summary)
     else:
         st.warning("Data sentimen positif belum tersedia!")
+        
     if 'persen_positif' in library_data.columns:
         avg_positive = library_data['persen_positif'].mean() * 100
-
         st.markdown("🔍 **Insight Sentimen:**")
         st.write(
             f"• Sentimen positif rata-rata: **{avg_positive:.1f}%** 👍\n"
@@ -282,7 +192,6 @@ if selected_page == "Beranda":
         )
         
     st.divider()
-
  
     st.subheader("Top 10 Perpustakaan dengan Sentimen Positif Tertinggi")
     if not library_data.empty:
@@ -292,28 +201,27 @@ if selected_page == "Beranda":
             use_container_width=True
         )
     st.divider()
+    
     if not all_reviews.empty:
         st.subheader("☁️ Word Cloud Ulasan Perpustakaan (Semua Kota)")
         text_reviews = " ".join(all_reviews['Komentar'].astype(str))
         if text_reviews.strip():
             wc = WordCloud(width=800, height=500, background_color="white").generate(text_reviews)
-            
             fig_wc, ax_wc = plt.subplots()
             ax_wc.imshow(wc, interpolation='bilinear')
             ax_wc.axis('off')
             st.pyplot(fig_wc)
         else:
             st.caption("Tidak ada ulasan.")
+            
     col1, col2, col3, col4, col5 = st.columns(5)
 
     st.divider()
     st.subheader("🔍 Kata yang Paling Banyak Muncul")
     words = [word.lower() for word in text_reviews.split() if len(word) > 3]
     top_words = Counter(words).most_common(10)
-
     words_df = pd.DataFrame(top_words, columns=["Kata", "Frekuensi"])
     st.table(words_df)
-
     
     with col1:
         st.markdown("""
@@ -358,41 +266,27 @@ if selected_page == "Beranda":
     st.write("---")
     st.divider()
 
-    st.markdown("###Rating vs Sentimen Positif")
+    st.markdown("### Rating vs Sentimen Positif")
     scatter_df = library_data[['rating', 'persen_positif']].dropna()
     st.scatter_chart(scatter_df)
-
-
-    # Pastikan Anda sudah mengimpor library ini di bagian atas file Anda:
-# import folium
-# from streamlit_folium import st_folium
 
     st.markdown("## 🗺️ Pemetaan Perpustakaan")
 
     if not library_data.empty:
-    
-    # 1. Buat filter interaktif
         min_rating_map = st.slider(
             "Filter berdasarkan rating minimum:",
             min_value=1.0, 
             max_value=5.0, 
             value=3.5, 
             step=0.1,
-            key="map_rating_slider" # Key penting untuk menjaga state slider
+            key="map_rating_slider"
         )
 
-    # 2. Filter data berdasarkan input slider
-    # Tambahkan .copy() untuk menghindari Peringatan SettingWithCopyWarning
         filtered_map_data = library_data[library_data['rating'] >= min_rating_map].copy()
-
-    # 3. Buat peta dasar Folium, berpusat di Indonesia
         m = folium.Map(location=[-2.5, 118], zoom_start=5)
 
-    # 4. Loop data dan tambahkan marker
         for _, row in filtered_map_data.iterrows():
             rating = row['rating']
-
-        # Tentukan warna marker berdasarkan rating
             if rating >= 4.5:
                 marker_color = "darkgreen"
             elif rating >= 4.0:
@@ -402,8 +296,6 @@ if selected_page == "Beranda":
             else:
                 marker_color = "red"
 
-        # Buat konten tooltip/popup
-        # Menggunakan .get() membuat kode lebih aman jika ada kolom yang hilang
             tooltip_info = (
                 f"<b>{row.get('Place_name', 'Nama Tidak Ada')}</b><br>"
                 f"Rating: {rating} ⭐<br>"
@@ -412,7 +304,6 @@ if selected_page == "Beranda":
                 f"<a href='{row.get('url_google_maps', '#')}' target='_blank'>📍 Lihat di Google Maps</a>"
             )
 
-        # Tambahkan marker ke peta
             folium.Marker(
                 location=[row['latitude'], row['longitude']],
                 popup=tooltip_info,
@@ -420,15 +311,12 @@ if selected_page == "Beranda":
                 icon=folium.Icon(color=marker_color)
             ).add_to(m)
 
-    # 5. Tampilkan peta di Streamlit
-    # Gunakan use_container_width=True agar lebar peta responsif
         st_folium(m, use_container_width=True, height=500)
-
     else:
         st.warning("Data perpustakaan kosong atau gagal dimuat.")
 
 # ===============================================
-# Halaman 2: REKOMENDASI (Kode Lengkap & Diperbaiki)
+# Halaman 2: REKOMENDASI 
 # ===============================================
 elif selected_page == "Rekomendasi":
     st.markdown("""
@@ -439,14 +327,9 @@ elif selected_page == "Rekomendasi":
     """, unsafe_allow_html=True)
     st.divider()
     
-    # --- Pastikan library_data dimuat ---
     if not library_data.empty:
-        # Ganti 'city' jika nama kolom kota Anda berbeda
         available_cities = sorted(library_data['city'].unique()) 
-        
         if available_cities:
-            
-            # --- 1. KUMPULKAN SEMUA INPUT PENGGUNA ---
             selected_city = st.selectbox(
                 "📍 Pilih Kota Anda:", options=available_cities, index=None, placeholder="Pilih kota..."
             )
@@ -458,30 +341,26 @@ elif selected_page == "Rekomendasi":
             sort_by_label = st.selectbox("📊 Urutkan berdasarkan:", options=sort_options.keys())
             sort_by_column = sort_options[sort_by_label]
             min_rating = st.slider("Minimal rating:", min_value=1.0, max_value=5.0, value=3.5, step=0.1)
+            
             st.markdown("---")
             st.subheader("Filter Tambahan Berdasarkan Topik Ulasan")
             filter_options = {
                 "Tampilkan Semua": None, "Koleksi Lengkap": "lengkap", "Ramah Disabilitas": "disabilitas",
-                "Tempat Nyaman": "nyaman", "Pelayanan Staf": "ramah" # Sesuaikan keyword
+                "Tempat Nyaman": "nyaman", "Pelayanan Staf": "ramah" 
             }
             selected_filter_label = st.selectbox("Tampilkan perpustakaan yang sering disebut:", options=filter_options.keys())
             selected_keyword = filter_options[selected_filter_label]
 
-            # --- 2. PROSES & FILTER DATA ---
             if selected_city:
                 st.markdown("---")
                 st.subheader(f"Rekomendasi di {selected_city} (Diurutkan: {sort_by_label}, Min Rating: {min_rating}⭐)")
                 
-                # Filter Awal
-                # Ganti 'city' jika perlu
                 city_libraries = library_data[
                     (library_data['city'] == selected_city) & 
                     (library_data['rating'] >= min_rating)
                 ].copy()
 
-                # Filter Keyword
                 if selected_keyword and not all_reviews.empty:
-                    # Ganti 'Komentar' dan 'Place_name' jika perlu
                     matching_reviews = all_reviews[
                         all_reviews['Komentar'].str.contains(selected_keyword, case=False, na=False)
                     ]
@@ -490,12 +369,9 @@ elif selected_page == "Rekomendasi":
                         city_libraries['Place_name'].isin(matching_libraries_names) 
                     ]
                 
-                # Urutkan
                 recommended_libraries = city_libraries.sort_values(
                     by=sort_by_column, ascending=False
                 ).head(5)
-
-                # --- 3. TAMPILKAN HASIL ---
                 
                 if not recommended_libraries.empty:
                     st.subheader("Peta Lokasi Teratas")
@@ -506,49 +382,40 @@ elif selected_page == "Rekomendasi":
 
                     st.subheader("Detail Peringkat")
                     
-                    # Definisikan URL dasar gambar dan fungsi normalisasi DI LUAR LOOP
                     GITHUB_IMAGE_URL = "https://raw.githubusercontent.com/Dwikyf04/google_maps_review_library/main/images/"
                     
                     def normalize_filename(name):
-                        name = str(name).lower().strip() # Pastikan string
+                        name = str(name).lower().strip() 
                         name = name.replace(" ", "-")
                         name = re.sub(r"[^a-z0-9\-]", "", name)
                         return name
 
-                    # --- SATU LOOP UTAMA UNTUK MENAMPILKAN SEMUA ---
                     for i, (_, row) in enumerate(recommended_libraries.iterrows()):
-                        # Membuat kontainer (kartu)
                         with st.container(border=True):
-                            
-                            # --- Logika Menampilkan Gambar ---
                             gambar_url = None
                             if "Image_filename" in row and pd.notna(row["Image_filename"]):
-                                file_base = str(row["Image_filename"]).split('.')[0] # Ambil nama tanpa ekstensi
+                                file_base = str(row["Image_filename"]).split('.')[0] 
                             else:
-                                file_base = normalize_filename(row["Place_name"]) # Buat dari nama tempat
+                                file_base = normalize_filename(row["Place_name"]) 
 
                             image_formats = ["jpg", "jpeg", "png", "webp"]
-                            
                             for ext in image_formats:
                                 img_url = f"{GITHUB_IMAGE_URL}{file_base}.{ext}"
                                 try:
-                                    response = requests.head(img_url, timeout=3) # Cek header saja
+                                    response = requests.head(img_url, timeout=3) 
                                     if response.status_code == 200:
                                         gambar_url = img_url
-                                        break # Hentikan jika ketemu
+                                        break 
                                 except requests.exceptions.RequestException:
-                                    pass # Abaikan error koneksi
+                                    pass 
 
                             if gambar_url:
                                 st.image(gambar_url, caption=row['Place_name'], use_container_width=True)
                             else:
                                 st.caption("🖼️ Gambar tidak tersedia")
-                            # --- Akhir Logika Gambar ---
 
-                            # Tampilkan Nama Perpustakaan
                             st.markdown(f"### {i + 1}. {row['Place_name']}") 
                             
-                            # Tampilkan Metrik & Bagan
                             col1, col2 = st.columns([1, 2])
                             with col1:
                                 st.metric(label="⭐ Rating Google", value=f"{row['rating']:.1f} / 5")
@@ -557,7 +424,7 @@ elif selected_page == "Rekomendasi":
                                 st.write("**Distribusi Sentimen:**")
                                 try:
                                     chart_data = pd.DataFrame({
-                                        "Tipe Sentimen": ["positif", "negative", "neutral"], # Perbaiki typo jika perlu
+                                        "Tipe Sentimen": ["positif", "negative", "neutral"], 
                                         "Jumlah Ulasan": [
                                             row['jumlah_positif'], 
                                             row['jumlah_negative'], 
@@ -570,11 +437,9 @@ elif selected_page == "Rekomendasi":
                                 except Exception as e:
                                      st.caption(f"Gagal membuat bagan: {e}")
                             
-                            # Tampilkan Link Google Maps
                             if 'url_google_maps' in row and pd.notna(row['url_google_maps']) and row['url_google_maps'].startswith('http'):
                                 st.link_button("Lihat di Google Maps ↗️", row['url_google_maps'])
 
-                            # Tampilkan Expander Ulasan
                             with st.expander(f"Lihat contoh ulasan untuk {row['Place_name']}"): 
                                 if not all_reviews.empty:
                                     try:
@@ -587,15 +452,15 @@ elif selected_page == "Rekomendasi":
                                             ]
                                             if not matching_keyword_reviews.empty:
                                                 for _, review_row in matching_keyword_reviews.head(3).iterrows():
-                                                    if review_row['sentiment'] == 'Positif': # Gunakan LABEL_POSITIF jika perlu
+                                                    if review_row['sentiment'] == 'Positif':
                                                         st.success(f"• {review_row['Komentar']}")
-                                                    elif review_row['sentiment'] == 'Negatif': # Gunakan LABEL_NEGATIF jika perlu
+                                                    elif review_row['sentiment'] == 'Negatif':
                                                         st.warning(f"• {review_row['Komentar']}")
                                                     else: 
                                                         st.info(f"• {review_row['Komentar']}")
                                             else:
                                                 st.caption(f"Tidak ada contoh ulasan yang menyebut '{selected_keyword}'.")
-                                        else: # Tampilkan default Positif/Negatif
+                                        else: 
                                             st.write("**Contoh Ulasan Positif:**")
                                             pos_reviews = library_reviews[library_reviews['sentiment'] == LABEL_POSITIF]['Komentar'].head(3)
                                             if not pos_reviews.empty:
@@ -613,7 +478,7 @@ elif selected_page == "Rekomendasi":
                                          st.caption(f"Gagal menampilkan ulasan: {e}")
                                 else:
                                     st.caption("File ulasan individual tidak dapat dimuat.")
-                        st.write("") # Spasi antar kartu
+                        st.write("") 
                 else:
                     st.info(f"Tidak ada perpustakaan di {selected_city} yang memenuhi kriteria filter Anda.")
         else:
@@ -621,7 +486,9 @@ elif selected_page == "Rekomendasi":
     else:
         st.error("Data perpustakaan (Ringkasan) tidak dapat dimuat.")
 
-
+# ===============================================
+# Halaman 3: Analisis Ulasan
+# ===============================================
 elif selected_page == "Analisis Ulasan":
     st.markdown("""
         <div style='text-align:center; padding: 20px;'>
@@ -639,16 +506,13 @@ elif selected_page == "Analisis Ulasan":
     }
 
     if tfidf is not None and svm_model is not None and kmeans_model is not None:
-
         user_input = st.text_area("Masukkan ulasan pengguna di sini:", "", key="input_ulasan")
 
         if st.button("Analisis Ulasan"):
             if user_input.strip():
                 try:
-                    # TF-IDF transform
                     X = tfidf.transform([user_input])
 
-                    # Prediksi
                     sentiment_pred = svm_model.predict(X)[0]
                     cluster_pred = kmeans_model.predict(X)[0]
                     cluster_name = nama_cluster.get(cluster_pred, f"Cluster {cluster_pred}")
@@ -664,7 +528,6 @@ elif selected_page == "Analisis Ulasan":
                     }
                     st.info(f"Insight otomatis: {rekomendasi_dic.get(cluster_pred)}")
 
-                    # === Kata Kunci TF-IDF ===
                     st.markdown("---")
                     st.subheader("Kata Penting dalam Ulasan")
 
@@ -683,7 +546,6 @@ elif selected_page == "Analisis Ulasan":
                     else:
                         st.caption("Tidak ada kata penting (ulasan terlalu pendek).")
 
-                    # === REKOMENDASI BERDASARKAN SIMILARITY ===
                     if 'profil_vektor' in globals() and profil_vektor is not None:
                         st.markdown("---")
                         st.subheader("Rekomendasi Perpustakaan yang Relevan")
@@ -714,21 +576,18 @@ elif selected_page == "Analisis Ulasan":
                                     st.caption(f"{row['Place_name']} tidak memiliki tautan Google Maps.")
                         except Exception as e:
                             st.warning(f"Gagal menghitung similarity: {e}")
-
                     else:
                         st.info("⚠️ Model rekomendasi belum tersedia.")
-
                 except Exception as e:
                     st.error(f"❌ Gagal memprediksi: {e}")
-
             else:
                 st.warning("Masukkan teks ulasan terlebih dahulu!")
-
     else:
         st.error("⚠️ Model gagal dimuat. Pastikan semua file .pkl sudah tersedia dalam folder Models.")
 
-
-
+# ===============================================
+# Halaman 4: About
+# ===============================================
 elif selected_page == "About":
     st.markdown("""
         <div style='text-align:center; padding: 20px;'>
@@ -782,17 +641,17 @@ elif selected_page == "About":
 
     5. **Referensi**
        * Fajri Koto, and Gemala Y. Rahmaningtyas "InSet Lexicon: Evaluation of a Word List for Indonesian Sentiment Analysis in Microblogs". IEEE in the 21st International Conference on Asian Language Processing (IALP), Singapore, December 2017.*
-       * Rutba, S. A., & Pramana, S. (2025). Aspect-based Sentiment Analysis and Topic Modelling of International Media on Indonesia Tourism Sector Recovery. Indonesian Journal of Tourism and Leisure, 6(1), 76-94.* 
-       * https://github.com/adeariniputri/text-preprocesing*
+       * Rutba, S. A., & Pramana, S. (2025). Aspect-based Sentiment Analysis and Topic Modelling of International Media on Indonesia Tourism Sector Recovery. Indonesian Journal of Tourism and Leisure, 6(1), 76-94.* * https://github.com/adeariniputri/text-preprocesing*
        * Solomon, M., Russell-Bennett, R., & Previte, J. (2012). Consumer behaviour: Buying, having, being (3rd ed.). Pearson Australia.
        * cover-book-wk7mq_dataset, title = cover book Dataset , type = Open Source Dataset , author = Book Cover ,howpublished =  https://universe.roboflow.com/book-cover-yj4it/cover-book-wk7mq ,url = https://universe.roboflow.com/book-cover-yj4it/cover-book-wk7mq ,journal = Roboflow Universe ,  publisher =  Roboflow ,   year = 2025 ,  month = aug ,   note = visited on 2025-11-30 ,         
     6. **Dataset**
         * Seluruh data ulasan dan rating diambil dari **Google Maps**.
     """)
 
+# ===============================================
+# Halaman 5: Feedback
+# ===============================================
 elif selected_page == "Feedback":
-
-    # === HEADER ===
     st.markdown("""
         <div style='text-align:center; padding: 15px;'>
             <h2>Formulir Feedback Pengguna</h2>
@@ -802,7 +661,6 @@ elif selected_page == "Feedback":
 
     st.divider()
 
-    # === KONEKSI KE GOOGLE SHEETS — MENGGUNAKAN STREAMLIT SECRETS ===
     SCOPE = [
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive"
@@ -817,7 +675,6 @@ elif selected_page == "Feedback":
         st.error(f"⚠️ Tidak dapat terhubung ke Google Sheets: {e}")
         sheet = None
 
-    # === FORM INPUT FEEDBACK ===
     with st.form("feedback_form"):
         user_name = st.text_input("Nama (opsional)")
         user_city = st.text_input("Kota Asal (opsional)")
@@ -826,7 +683,6 @@ elif selected_page == "Feedback":
 
         submitted = st.form_submit_button("Kirim Feedback ✅")
 
-    # === SIMPAN FEEDBACK ===
     if submitted:
         if not user_feedback.strip():
             st.warning("Mohon isi feedback terlebih dahulu ✅")
