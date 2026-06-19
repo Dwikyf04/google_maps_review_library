@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import folium
 import gspread
 import requests
-# import cv2
+import cv2
 import re
 import easyocr
 from PIL import Image
@@ -126,64 +126,64 @@ with st.sidebar:
     )
     st.sidebar.markdown("---")
 
-    # st.sidebar.header('Scan judul buku')
-    # pilihan_input = st.sidebar.radio("Pilih cara input:", ["Kamera HP", "Upload Gambar"])
+    st.sidebar.header('Scan judul buku')
+    pilihan_input = st.sidebar.radio("Pilih cara input:", ["Kamera HP", "Upload Gambar"])
 
-    # img_file = None
+    img_file = None
 
-    # if pilihan_input == 'Kamera HP':
-    #     img_file = st.camera_input("Ambil cover dengan hp")
-    # else:
-    #     img_file = st.file_uploader("Upload File gambar", type=["jpeg","jpg","png"])   
+    if pilihan_input == 'Kamera HP':
+        img_file = st.camera_input("Ambil cover dengan hp")
+    else:
+        img_file = st.file_uploader("Upload File gambar", type=["jpeg","jpg","png"])   
 
-    #     if img_file is not None:
-    #         bytes_data = img_file.getvalue()
-    #         cv2_img = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
+        if img_file is not None:
+            bytes_data = img_file.getvalue()
+            cv2_img = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
 
-    #         result = vision_model(cv2_img, conf=0.25)
+            result = vision_model(cv2_img, conf=0.25)
 
-    #         buku_ketemu = False
-    #         list_deteksi = []
+            buku_ketemu = False
+            list_deteksi = []
 
-    #         for box in result[0].boxes:
-    #             cls_id = int(box.cls[0])
-    #             nama_benda = vision_model.names[cls_id]
-    #             conf = float(box.conf[0])
+            for box in result[0].boxes:
+                cls_id = int(box.cls[0])
+                nama_benda = vision_model.names[cls_id]
+                conf = float(box.conf[0])
 
-    #             list_deteksi.append(f"{nama_benda} ({conf*100:.0f}%)")
+                list_deteksi.append(f"{nama_benda} ({conf*100:.0f}%)")
 
-    #             if nama_benda == 'book':
-    #                 buku_ketemu = True
+                if nama_benda == 'book':
+                    buku_ketemu = True
 
-    #                 x1, y1, x2, y2 = map(int, box.xyxy[0])
+                    x1, y1, x2, y2 = map(int, box.xyxy[0])
 
-    #                 crop_img = cv2_img[y1:y2, x1:x2]
+                    crop_img = cv2_img[y1:y2, x1:x2]
 
-    #                 st.sidebar.image(crop_img,caption='Area cover terdeteksi',channels="BGR")
+                    st.sidebar.image(crop_img,caption='Area cover terdeteksi',channels="BGR")
 
-    #                 with st.spinner('tunggu sebenar yaa, buku sedang dicari'):
-    #                     hasil_teks = ocr_reader.readtext(crop_img, detail=0)
-    #                     judul_lengkap = "" "".join(hasil_teks)
-    #                 st.success('buku adaa')
-    #                 st.markdown(f'judul terbaca:{judul_lengkap}') 
-    #                 st.info(judul_lengkap)
+                    with st.spinner('tunggu sebenar yaa, buku sedang dicari'):
+                        hasil_teks = ocr_reader.readtext(crop_img, detail=0)
+                        judul_lengkap = "" "".join(hasil_teks)
+                    st.success('buku adaa')
+                    st.markdown(f'judul terbaca:{judul_lengkap}') 
+                    st.info(judul_lengkap)
 
-    #                 break
-    #         if not buku_ketemu:
-    #             with st.spinner('membaca seluruh gambar'):
-    #                 hasil_teks = ocr_reader.readtext(cv2_img,detail=0)
-    #                 judul_lengkap = " ".join(hasil_teks)
-    #             if len(judul_lengkap)>1:
-    #                 st.sidebar.success("buku berhasil dietemukan")
-    #                 st.sidebar.markdown(f"Judul buku:")
-    #                 st.sidebar.image(cv2_img, caption="Scan Full Image", channels="BGR")
-    #             else:
-    #                 st.sidebar.error("buku gagal ditemukan")     
-    #                 st.sidebar.caption("Tips: Pastikan gambar terang dan tulisan terbaca jelas.")
-    #             st.caption("Tips: Coba pegang buku agar covernya rata dan cahayanya terang.")
+                    break
+            if not buku_ketemu:
+                with st.spinner('membaca seluruh gambar'):
+                    hasil_teks = ocr_reader.readtext(cv2_img,detail=0)
+                    judul_lengkap = " ".join(hasil_teks)
+                if len(judul_lengkap)>1:
+                    st.sidebar.success("buku berhasil dietemukan")
+                    st.sidebar.markdown(f"Judul buku:")
+                    st.sidebar.image(cv2_img, caption="Scan Full Image", channels="BGR")
+                else:
+                    st.sidebar.error("buku gagal ditemukan")     
+                    st.sidebar.caption("Tips: Pastikan gambar terang dan tulisan terbaca jelas.")
+                st.caption("Tips: Coba pegang buku agar covernya rata dan cahayanya terang.")
 
-    #             st.sidebar.markdown("---")
-    #             st.sidebar.caption("mencari buku secara keseluruhan")
+                st.sidebar.markdown("---")
+                st.sidebar.caption("mencari buku secara keseluruhan")
 
                        
 
